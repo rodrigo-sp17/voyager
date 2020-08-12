@@ -75,6 +75,7 @@ class MonitorFrame extends javax.swing.JFrame {
         databasePanel = new javax.swing.JPanel();
         searchTextField = new javax.swing.JTextField();
         editButton = new javax.swing.JButton();
+        deleteButton = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         crewDBTable = new javax.swing.JTable();
 
@@ -190,13 +191,20 @@ class MonitorFrame extends javax.swing.JFrame {
         databasePanel.setName("databasePanel"); // NOI18N
 
         searchTextField.setFont(new java.awt.Font("Calibri", 0, 14)); // NOI18N
-        searchTextField.setToolTipText("Search members...");
+        searchTextField.setToolTipText("Digite aqui para filtrar");
 
         editButton.setBackground(new java.awt.Color(0, 51, 102));
         editButton.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         editButton.setForeground(new java.awt.Color(255, 255, 255));
         editButton.setText("Editar");
         editButton.setActionCommand("edit");
+
+        deleteButton.setBackground(new java.awt.Color(200, 0, 0));
+        deleteButton.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        deleteButton.setForeground(new java.awt.Color(255, 255, 255));
+        deleteButton.setText("Deletar");
+        deleteButton.setActionCommand("delete");
+        deleteButton.setEnabled(false);
 
         crewDBTable.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         crewDBTable.setFont(new java.awt.Font("Calibri", 0, 12)); // NOI18N
@@ -220,7 +228,9 @@ class MonitorFrame extends javax.swing.JFrame {
                         .addComponent(searchTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 759, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(editButton, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 234, Short.MAX_VALUE)))
+                        .addGap(18, 18, 18)
+                        .addComponent(deleteButton, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 123, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         databasePanelLayout.setVerticalGroup(
@@ -229,7 +239,8 @@ class MonitorFrame extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(databasePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(searchTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(editButton, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(editButton, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(deleteButton, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 631, Short.MAX_VALUE)
                 .addContainerGap())
@@ -280,6 +291,9 @@ class MonitorFrame extends javax.swing.JFrame {
         crewDBTable.getColumnModel().getColumn(3).setCellRenderer(centerRenderer);
         crewDBTable.getColumnModel().getColumn(4).setCellRenderer(centerRenderer);
         crewDBTable.getColumnModel().getColumn(5).setCellRenderer(centerRenderer);
+        crewDBTable.getColumnModel().getColumn(6).setCellRenderer(centerRenderer);
+        crewDBTable.getColumnModel().getColumn(7).setCellRenderer(centerRenderer);
+        crewDBTable.getColumnModel().getColumn(8).setCellRenderer(centerRenderer);        
     }    
     
     
@@ -307,6 +321,7 @@ class MonitorFrame extends javax.swing.JFrame {
     javax.swing.JTable crewDBTable;
     javax.swing.JPanel databasePanel;
     javax.swing.JToggleButton databaseTab;
+    javax.swing.JButton deleteButton;
     javax.swing.JButton editButton;
     private javax.swing.Box.Filler filler1;
     javax.swing.JButton jButton2;

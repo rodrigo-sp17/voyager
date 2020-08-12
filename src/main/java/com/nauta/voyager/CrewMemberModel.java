@@ -63,9 +63,14 @@ public class CrewMemberModel extends StateNotifier {
     
     // Deletes crew member with specified ID
     public int deleteCrewMember(int id) {
-        crewMemberList.remove(id);
-        fireStateChanged();
-        return 0;
+        boolean removed = crewMemberList.removeIf(n -> (n.getId() == id));
+        if (removed) {
+            fireStateChanged();
+            return 0;
+        } else {
+            System.err.println("CrewMemberModel: deleteCrewMember() could not find the member to delete");            
+            return -1;
+        }
     }
         
     // Getter
@@ -73,7 +78,7 @@ public class CrewMemberModel extends StateNotifier {
     
     // Updates model after edition
     public void updateModel() {
-        fireStateChanged();
+        fireStateChanged();        
     }
     
 }

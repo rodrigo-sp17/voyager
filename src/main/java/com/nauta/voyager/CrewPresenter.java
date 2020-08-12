@@ -13,6 +13,7 @@ import javax.swing.event.*;
 import java.util.*;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableRowSorter;
+import javax.swing.table.TableModel;
 import java.io.*;
 
 /*
@@ -68,11 +69,16 @@ public class CrewPresenter implements StateListener {
         view.setCrewDBTableFormat();        
         
         // Sets searchCrewDBTable for event handling
-        view.crewDBTable.addMouseListener(new CrewDBTableHandler());
+        CrewDBTableHandler tableHandler = new CrewDBTableHandler();
+        view.crewDBTable.addMouseListener(tableHandler);
+        view.crewDBTable.getSelectionModel().addListSelectionListener(tableHandler);
         view.searchTextField.getDocument().addDocumentListener(
                 new SearchCrewTableHandler());
-        view.editButton.addActionListener(new CrewViewButtonsHandler());
-        setEditButtonState();       
+        CrewViewButtonsHandler buttonsHandler = new CrewViewButtonsHandler();
+        view.editButton.addActionListener(buttonsHandler);        
+        setEditButtonState();
+        view.deleteButton.addActionListener(buttonsHandler);
+        setDeleteButtonState();
     }
     
     
@@ -80,8 +86,8 @@ public class CrewPresenter implements StateListener {
         // Reloads CrewDBTable model
         CrewTableModel tModel = (CrewTableModel) view.crewDBTable.getModel();
         tModel.loadData();
-        
-        // 
+        view.crewDBTable.setRowSorter(sorter);
+        //        
     }
     
     private void writeGUIStateToDomain() {        
@@ -149,7 +155,7 @@ public class CrewPresenter implements StateListener {
         // 
     }
     
-    class CrewDBTableHandler implements MouseListener {
+    class CrewDBTableHandler implements MouseListener, ListSelectionListener {
         @Override
         public void mouseClicked(MouseEvent e) {
             // Opens EditDialog when item clicked twice on the table
@@ -182,31 +188,75 @@ public class CrewPresenter implements StateListener {
         public void mouseExited(MouseEvent e) {
             return;
         }
+        
+        @Override
+        public void valueChanged(ListSelectionEvent s) {
+            // When selection changes, sets state of delete button
+            System.out.println("Selection changed");
+            setDeleteButtonState();
+        }
     }
     
     class CrewViewButtonsHandler implements ActionListener {
         // Listens for changes in POB View components, implements action
         @Override
         public void actionPerformed(ActionEvent e) {
-            //
-            if ("edit".equals(e.getActionCommand())) {
-                // Creates new EditDialog with data from table               
-                JTable table = view.crewDBTable;
-                CrewTableModel tableModel = (CrewTableModel) table.getModel();
-                Integer id = (Integer) tableModel.getValueAt(table.convertRowIndexToModel(0), 0);
-                new EditPersonDialog(model.getCrewMember(id), model, true, properties);                
-            } else if ("add".equals(e.getActionCommand())) {
-                // Add addition code
-            }
+            switch (e.getActionCommand()) {
+                case "edit":
+                    // Instantiates new EditDialog with data from table               
+                    JTable table = view.crewDBTable;
+                    TableModel tableModel = table.getModel();
+                    Integer id = (Integer) tableModel.getValueAt(table.convertRowIndexToModel(0), 0);
+                    new EditPersonDialog(model.getCrewMember(id), model, true, properties);
+                    break;
+                case "add":
+                    // Instantiates new EditDialog with an empty CrewMember
+                    new EditPersonDialog(new CrewMember(), model, false, properties);
+                    break;
+                case "delete":
+                    int[] rows = view.crewDBTable.getSelectedRows();
+                    int delete = JOptionPane.showConfirmDialog(
+                            view,
+                            "Tem certeza que deseja excluir o(s)\n" + 
+                                    rows.length + 
+                                    " registro(s) selecionado(s)?",
+                            "Excluir Registros",
+                            JOptionPane.OK_CANCEL_OPTION,
+                            JOptionPane.WARNING_MESSAGE,
+                            null                            
+                            );
+                    if (delete == JOptionPane.OK_OPTION) {
+                        int counter = 0;
+                        for (int rowIndex : rows) {
+                            Integer personId = (Integer) view.crewDBTable
+                                    .getModel()
+                                    .getValueAt(view.crewDBTable.convertRowIndexToModel(rowIndex), 0);
+                            if (model.deleteCrewMember(personId) < 0) {
+                                JOptionPane.showMessageDialog(view,
+                                        "Ops...Não foi possível deletar!",
+                                        "Erro de Exclusão",
+                                        JOptionPane.ERROR_MESSAGE);
+                                return;
+                            } else {
+                                ++counter;
+                            }
+                        }                       
+                        JOptionPane.showMessageDialog(view, "Deletado(s) "
+                                + counter + " registro(s)!");
+                    }
+                    break;                  
+            }       
             // Requests focus back on to searchTextField
             view.searchTextField.requestFocusInWindow();
             view.searchTextField.select(0, view.searchTextField.getText().length());
         }
     }
     
+    
+    
     // General purpose methods
     private void setEditButtonState() {
-        // Sets initial edit button status
+        // Sets Edit button status
         switch (view.crewDBTable.getRowCount()) {
             case 0:
                 view.editButton.setEnabled(true);
@@ -224,7 +274,18 @@ public class CrewPresenter implements StateListener {
                 view.editButton.setText("Editar");
                 view.editButton.setActionCommand("edit");
         }
-    }    
+    }
+    
+    private void setDeleteButtonState() {
+        // Sets Delete button status. If something is selected, Delete is enabled.
+        if (view.crewDBTable.getSelectedRow() < 0) {
+            view.deleteButton.setEnabled(false);
+        } else {
+            view.deleteButton.setEnabled(true);
+        }       
+    }
+
+    
     
     private Properties loadProperties() {
         // Loads properties from specified folder. If not, loads default.
@@ -259,10 +320,13 @@ public class CrewPresenter implements StateListener {
         private final String[] columnNames = {
         "ID",
         "NOME",
-        "EMPRESA",
         "FUNÇÃO",
+        "EMPRESA",
         "SISPAT",
-        "DATA DE NASCIMENTO"
+        "NACIONALIDADE",
+        "DATA DE NASCIMENTO",
+        "CIR/ID",
+        "VALIDADE CIR/ID"
         };    
         private Object[][] data;
         
@@ -278,10 +342,13 @@ public class CrewPresenter implements StateListener {
             for (int i = 0; i < listSize; i++) {
                 this.data[i][0] = list.get(i).getId();
                 this.data[i][1] = list.get(i).getName();
-                this.data[i][2] = list.get(i).getCompany();
-                this.data[i][3] = list.get(i).getFunction();
+                this.data[i][2] = list.get(i).getFunction();
+                this.data[i][3] = list.get(i).getCompany();
                 this.data[i][4] = list.get(i).getSispat();
-                this.data[i][5] = list.get(i).getBirthDate();            
+                this.data[i][5] = list.get(i).getNationality();
+                this.data[i][6] = list.get(i).getBirthDate();
+                this.data[i][7] = list.get(i).getCir();
+                this.data[i][8] = list.get(i).getCirExpDate();
             }
             fireTableDataChanged();
         }

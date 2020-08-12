@@ -28,7 +28,7 @@ class StateNotifier {
         if (listeners == null) {
             listeners = new ArrayList<>();
         }
-        listeners.add(sl);
+        listeners.add(sl);        
     }
     
     /**

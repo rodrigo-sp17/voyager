@@ -50,7 +50,8 @@ public class CrewMember {
         this.cir = "801P2222222";
         this.cirExpDate = new GregorianCalendar(2020, 5, 17).getTime();
     }
-    // Empty constructor
+    
+    // Instantiates an empty crewmember, just to hold values
     CrewMember() {
         this.id = numMembers++;
     }    

@@ -13,6 +13,7 @@ import java.text.SimpleDateFormat;
 
 /*
  * TODO
+ * - Validade Date Fields
  * - Remove dependency on specific model by creating interface, maybe CRUDModel
  * - 
 */
