@@ -19,8 +19,6 @@ import java.io.*;
 /*
 TODO:
 - Implement loadProperties correctly
-- Implement what to do when button is ADD
-- Implement Delete button
 - Update Table Model with all the appropriate columns
 - Add custom filter checkboxes below searchTextField
 - Regex Filter - Remove hardcoded ints
@@ -86,6 +84,7 @@ public class CrewPresenter implements StateListener {
         // Reloads CrewDBTable model
         CrewTableModel tModel = (CrewTableModel) view.crewDBTable.getModel();
         tModel.loadData();
+        sorter = new TableRowSorter<>(tModel);
         view.crewDBTable.setRowSorter(sorter);
         //        
     }
@@ -146,7 +145,7 @@ public class CrewPresenter implements StateListener {
                 rf = RowFilter.regexFilter("(?i)" + view.searchTextField.getText(),
                         0, 1, 2, 3, 4, 5);
             } catch (java.util.regex.PatternSyntaxException e) {
-                // TODO - test if this try catch block can be eliminated
+                // TODO - catch filter exception
                 return;
             }
             sorter.setRowFilter(rf);
@@ -163,6 +162,7 @@ public class CrewPresenter implements StateListener {
             Point point = e.getPoint();
             int row = table.rowAtPoint(point);
             if (e.getClickCount() == 2) {
+                //Integer id = (Integer) table.getValueAt(table.getSelectedRow(), 0);
                 Integer id = (Integer) view.crewDBTable.getModel()
                     .getValueAt(view.crewDBTable.convertRowIndexToModel(row), 0);
                 new EditPersonDialog(model.getCrewMember(id), model, true, properties);                
@@ -206,6 +206,7 @@ public class CrewPresenter implements StateListener {
                     // Instantiates new EditDialog with data from table               
                     JTable table = view.crewDBTable;
                     TableModel tableModel = table.getModel();
+                    //Integer id = (Integer) table.getValueAt(table.getSelectedRow(), 0);
                     Integer id = (Integer) tableModel.getValueAt(table.convertRowIndexToModel(0), 0);
                     new EditPersonDialog(model.getCrewMember(id), model, true, properties);
                     break;

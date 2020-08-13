@@ -5,20 +5,14 @@
  */
 package com.nauta.voyager;
 
-import java.util.List;
-import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.TableRowSorter;
-import javax.swing.RowFilter;
-import javax.swing.event.*;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
 /* 
 TODO
-
-- Colors - build enums for basic app color and inverted color
+- Colors - build enums or constants for basic app color and inverted color
 - 
 */ 
 /**
@@ -280,7 +274,7 @@ class MonitorFrame extends javax.swing.JFrame {
         // Sets Vertical Center alighment render for columns
         DefaultTableCellRenderer midRenderer = new DefaultTableCellRenderer();
         midRenderer.setVerticalAlignment(DefaultTableCellRenderer.CENTER);
-
+        
         // Defines columns visual properties
         crewDBTable.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
         crewDBTable.getColumnModel().getColumn(0).setPreferredWidth(40);
@@ -291,7 +285,7 @@ class MonitorFrame extends javax.swing.JFrame {
         crewDBTable.getColumnModel().getColumn(3).setCellRenderer(centerRenderer);
         crewDBTable.getColumnModel().getColumn(4).setCellRenderer(centerRenderer);
         crewDBTable.getColumnModel().getColumn(5).setCellRenderer(centerRenderer);
-        crewDBTable.getColumnModel().getColumn(6).setCellRenderer(centerRenderer);
+        crewDBTable.getColumnModel().getColumn(6).setCellRenderer(centerRenderer);        
         crewDBTable.getColumnModel().getColumn(7).setCellRenderer(centerRenderer);
         crewDBTable.getColumnModel().getColumn(8).setCellRenderer(centerRenderer);        
     }    

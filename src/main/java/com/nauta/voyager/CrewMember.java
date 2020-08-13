@@ -1,6 +1,7 @@
 package com.nauta.voyager;
 
 import java.util.*;
+import java.time.*;
 
 
 public class CrewMember {
@@ -12,18 +13,18 @@ public class CrewMember {
     private String function;
     private String sispat;
     private String cir;
-    private Date cirExpDate;
-    private Date birthDate;
+    private LocalDate cirExpDate;
+    private LocalDate birthDate;
     private String nationality;
     
     // Mutable crew member data
     private String shift;
-    private Date boardingDate;
+    private LocalDate boardingDate;
     private String cabin;
     
     // Constructors
     CrewMember(String name, String company, String function, String sispat, 
-        Date birthDate, String shift, Date boardingDate, String cabin) {
+        LocalDate birthDate, String shift, LocalDate boardingDate, String cabin) {
             this.id = numMembers++;
             this.name = name;
             this.company = company;
@@ -42,13 +43,13 @@ public class CrewMember {
         this.company = company;
         this.function = function;
         this.sispat = "11111111";
-        this.birthDate = new GregorianCalendar(2020, 5, 15).getTime();
+        this.birthDate = LocalDate.parse("1995-05-15");
         this.shift = "someshift";
-        this.boardingDate = new GregorianCalendar(2020, 5, 15).getTime();
+        this.boardingDate = LocalDate.parse("2020-05-15");
         this.cabin = "cabine X";
         this.nationality = "BRASILEIRA";
         this.cir = "801P2222222";
-        this.cirExpDate = new GregorianCalendar(2020, 5, 17).getTime();
+        this.cirExpDate = LocalDate.parse("2021-01-10");
     }
     
     // Instantiates an empty crewmember, just to hold values
@@ -77,19 +78,19 @@ public class CrewMember {
     public String getCir() {
         return cir;
     }
-    public Date getCirExpDate() {
+    public LocalDate getCirExpDate() {
         return cirExpDate;
     }
     public String getSispat() {
         return sispat;
     }    
-    public Date getBirthDate() {
+    public LocalDate getBirthDate() {
         return birthDate;
     }    
     public String getShift() {
         return shift;
     }
-    public Date getBoardingDate() {
+    public LocalDate getBoardingDate() {
         return boardingDate;
     }
     public String getCabin() {
@@ -118,19 +119,19 @@ public class CrewMember {
     public void setCir(String cir) {
         this.cir = cir;
     }
-    public void setCirExpDate(Date date) {
+    public void setCirExpDate(LocalDate date) {
         this.cirExpDate = date;
     }
     public void setSispat(String sispat) {
         this.sispat = sispat;
     }
-    public void setBirthDate(Date birthDate) {
+    public void setBirthDate(LocalDate birthDate) {
         this.birthDate = birthDate;
     }
     public void setShift(String shift) {
         this.shift = shift;
     }
-    public void setBoardingDate(Date boardingDate) {
+    public void setBoardingDate(LocalDate boardingDate) {
         this.boardingDate = boardingDate;
     }
     public void setCabin(String cabin) {

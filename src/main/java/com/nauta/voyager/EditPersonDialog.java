@@ -7,31 +7,31 @@ package com.nauta.voyager;
 
 import java.awt.event.*;
 import java.util.*;
-import java.text.ParseException;
 import javax.swing.text.MaskFormatter;
-import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.*;
 
 /*
  * TODO
- * - Validade Date Fields
+ * - Input validation for all fields (Date, Names, etc) 
  * - Remove dependency on specific model by creating interface, maybe CRUDModel
  * - 
 */
 
 /**
  *
- * @author escritorio
+ * @author rodrigo
  */
 public class EditPersonDialog extends javax.swing.JDialog {
     
     // User-created variables declaration
     private CrewMember person;
     private CrewMemberModel model;
-    private Properties loadedProperties;
+    private final Properties loadedProperties;
     private boolean editMode = false;
     
     // Format of the dates used on the dialog
-    SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
     /**
      * Creates new form EditCrewMemberDialog
@@ -46,14 +46,10 @@ public class EditPersonDialog extends javax.swing.JDialog {
         this.person = person;
         this.model = model;
         this.loadedProperties = properties;
+        this.editMode = isEditing;
         initComponents();
         initPresentationLogic();
-        
-        // If called for editing, loads GUI state from passed CrewMember
-        if (isEditing == true) {
-            this.editMode = true;
-            loadGUIState();
-        }
+        loadGUIState();
         setVisible(true);
     }    
 
@@ -359,17 +355,20 @@ public class EditPersonDialog extends javax.swing.JDialog {
     }       
     
     private void loadGUIState() {        
-        // Fills fields with received value
-        nameField.setText(person.getName());
-        functionField.setSelectedItem(person.getFunction());
-        companyField.setText(person.getCompany());
-        sispatField.setText(person.getSispat());
-        nationalityField.setText(person.getNationality().toUpperCase());        
-        cirField.setText(person.getCir());
-        
-        // Date Fields
-        birthDateField.setText(formatter.format(person.getBirthDate()));
-        cirExpDateField.setText(formatter.format(person.getCirExpDate()));               
+        // Loads GUI State if in Edit Mode
+        if (editMode) {
+            // Fills fields with received value
+            nameField.setText(person.getName());
+            functionField.setSelectedItem(person.getFunction());
+            companyField.setText(person.getCompany());
+            sispatField.setText(person.getSispat());
+            nationalityField.setText(person.getNationality().toUpperCase());        
+            cirField.setText(person.getCir());
+
+            // Date Fields
+            birthDateField.setText(person.getBirthDate().format(formatter));
+            cirExpDateField.setText(person.getCirExpDate().format(formatter));
+        }        
     }
     
     private void writeGUIState() {
@@ -381,11 +380,11 @@ public class EditPersonDialog extends javax.swing.JDialog {
         person.setNationality(nationalityField.getText());
         person.setCir(cirField.getText());
         
-        // Parses date fields from string to Dates        
+        // Parses date fields from string to LocalDates        
         try {    
-            person.setBirthDate(formatter.parse(birthDateField.getText()));
-            person.setCirExpDate(formatter.parse(cirExpDateField.getText()));
-        } catch (ParseException e) {
+            person.setBirthDate(LocalDate.parse(birthDateField.getText(), formatter));
+            person.setCirExpDate(LocalDate.parse(cirExpDateField.getText(), formatter));
+        } catch (DateTimeParseException e) {
             System.err.println("Edit Person - Could not save date to Crew Member: " + e);
         }
     }    
@@ -411,8 +410,7 @@ public class EditPersonDialog extends javax.swing.JDialog {
                     break;
                 case "cancel":
                     person = null;
-                    model = null;
-                    loadedProperties = null;
+                    model = null;                    
                     setVisible(false);
                     break;
             }  

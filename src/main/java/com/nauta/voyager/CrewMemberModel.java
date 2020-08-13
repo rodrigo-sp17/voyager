@@ -9,9 +9,9 @@ import java.util.*;
 
 /*
 TODO:
+* Implement Update
 - Check if notifying listeners implementation is adequate
 - Implement updateModel method
-- List index must be same of DataBase!
 */
 
 /**
@@ -34,29 +34,25 @@ public class CrewMemberModel extends StateNotifier {
        
     
     // Creates crewmember with new ID
-    public void insertCrewMember(CrewMember member) {
-        // TODO - code to insert crewmember in model
+    public void insertCrewMember(CrewMember member) {        
         crewMemberList.add(member);
         fireStateChanged();     
     }
 
     // Gets crewmember with specified ID
     public CrewMember getCrewMember(int id) {
-        CrewMember result;
-        try {
-            result = crewMemberList.get(id);
-            return result;
-        } catch (IndexOutOfBoundsException e) {
-            System.err.println("CrewMemberModel: could not find CrewMember in list");
-            System.err.println("List size is: " + crewMemberList.size());
-            return null;
-        }        
+        for (CrewMember c : crewMemberList) {
+            if (c.getId() == id) {
+                return c;
+            } 
+        }
+        System.err.println("CrewMemberModel: getCrewMember(...) could not find CrewMember in list");
+        return null;               
     }
     
     // Updates crew member with specified ID
     public int updateCrewMember(int id, CrewMember updatedMember) {
-        // TODO
-        crewMemberList.set(id, updatedMember);
+        // TODO       
         fireStateChanged();        
         return 0;
     }
