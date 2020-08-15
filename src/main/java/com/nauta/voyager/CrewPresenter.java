@@ -19,6 +19,7 @@ import java.io.*;
 /*
 TODO:
 - Implement loadProperties correctly
+* - Change Edit Person to allow return values (?)
 - Update Table Model with all the appropriate columns
 - Add custom filter checkboxes below searchTextField
 - Regex Filter - Remove hardcoded ints
@@ -106,17 +107,10 @@ public class CrewPresenter implements StateListener {
             CardLayout cl = (CardLayout) view.mainPane.getLayout();        
         
             switch (e.getActionCommand()) {
-                case "status":
-                    cl.show(view.mainPane, "statusCard");
-                    break;
-                case "nav":
-                    break;
-                case "pob":
-                    cl.show(view.mainPane, "pobCard");
-                    break;
-                case "database":
-                    cl.show(view.mainPane, "databaseCard");
-                    break;                        
+                case "status" -> cl.show(view.mainPane, "statusCard");
+                case "nav" -> {                }
+                case "pob" -> cl.show(view.mainPane, "pobCard");
+                case "database" -> cl.show(view.mainPane, "databaseCard");                        
             }
         }
     }
@@ -140,7 +134,7 @@ public class CrewPresenter implements StateListener {
         
         // Adds new regex filter to table sorter
         private void newFilter() {
-            RowFilter<CrewTableModel, Object> rf = null;
+            RowFilter<CrewTableModel, Object> rf;
             try {
                 rf = RowFilter.regexFilter("(?i)" + view.searchTextField.getText(),
                         0, 1, 2, 3, 4, 5);
@@ -149,9 +143,7 @@ public class CrewPresenter implements StateListener {
                 return;
             }
             sorter.setRowFilter(rf);
-        }
-        
-        // 
+        }       
     }
     
     class CrewDBTableHandler implements MouseListener, ListSelectionListener {
@@ -202,30 +194,28 @@ public class CrewPresenter implements StateListener {
         @Override
         public void actionPerformed(ActionEvent e) {
             switch (e.getActionCommand()) {
-                case "edit":
+                case "edit" -> {
                     // Instantiates new EditDialog with data from table               
                     JTable table = view.crewDBTable;
                     TableModel tableModel = table.getModel();
                     //Integer id = (Integer) table.getValueAt(table.getSelectedRow(), 0);
                     Integer id = (Integer) tableModel.getValueAt(table.convertRowIndexToModel(0), 0);
                     new EditPersonDialog(model.getCrewMember(id), model, true, properties);
-                    break;
-                case "add":
-                    // Instantiates new EditDialog with an empty CrewMember
+                }
+                case "add" -> // Instantiates new EditDialog with an empty CrewMember
                     new EditPersonDialog(new CrewMember(), model, false, properties);
-                    break;
-                case "delete":
+                case "delete" -> {
                     int[] rows = view.crewDBTable.getSelectedRows();
                     int delete = JOptionPane.showConfirmDialog(
                             view,
-                            "Tem certeza que deseja excluir o(s)\n" + 
+                            "Tem certeza que deseja excluir o(s)\n" +
                                     rows.length + 
                                     " registro(s) selecionado(s)?",
                             "Excluir Registros",
                             JOptionPane.OK_CANCEL_OPTION,
                             JOptionPane.WARNING_MESSAGE,
-                            null                            
-                            );
+                            null
+                    );
                     if (delete == JOptionPane.OK_OPTION) {
                         int counter = 0;
                         for (int rowIndex : rows) {
@@ -245,7 +235,7 @@ public class CrewPresenter implements StateListener {
                         JOptionPane.showMessageDialog(view, "Deletado(s) "
                                 + counter + " registro(s)!");
                     }
-                    break;                  
+                }
             }       
             // Requests focus back on to searchTextField
             view.searchTextField.requestFocusInWindow();
