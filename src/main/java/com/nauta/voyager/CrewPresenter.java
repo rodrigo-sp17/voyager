@@ -249,21 +249,22 @@ public class CrewPresenter implements StateListener {
     private void setEditButtonState() {
         // Sets Edit button status
         switch (view.crewDBTable.getRowCount()) {
-            case 0:
+            case 0 -> {
                 view.editButton.setEnabled(true);
                 view.editButton.setText("Adicionar");
                 view.editButton.setActionCommand("add");
-                break;
-            case 1:
+            }
+            case 1 -> {
                 view.editButton.setEnabled(true);
                 view.editButton.setText("Editar");
                 view.editButton.setActionCommand("edit");
                 view.crewDBTable.setRowSelectionInterval(0, 0);
-                break;
-            default:
+            }
+            default -> {
                 view.editButton.setEnabled(false);
                 view.editButton.setText("Editar");
                 view.editButton.setActionCommand("edit");
+            }
         }
     }
     

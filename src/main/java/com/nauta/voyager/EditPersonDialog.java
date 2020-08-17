@@ -95,6 +95,7 @@ public class EditPersonDialog extends javax.swing.JDialog {
 
         dialogPanel.setBackground(new java.awt.Color(255, 255, 255));
 
+        nameField.setColumns(60);
         nameField.setFont(new java.awt.Font("Calibri", 0, 18)); // NOI18N
 
         jLabel1.setFont(new java.awt.Font("Calibri", 0, 18)); // NOI18N
@@ -109,6 +110,7 @@ public class EditPersonDialog extends javax.swing.JDialog {
         jLabel1.setVerifyInputWhenFocusTarget(false);
         jLabel1.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
 
+        companyField.setColumns(40);
         companyField.setFont(new java.awt.Font("Calibri", 0, 18)); // NOI18N
 
         jLabel2.setFont(new java.awt.Font("Calibri", 0, 18)); // NOI18N
@@ -163,6 +165,7 @@ public class EditPersonDialog extends javax.swing.JDialog {
         jLabel5.setVerifyInputWhenFocusTarget(false);
         jLabel5.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
 
+        nationalityField.setColumns(20);
         nationalityField.setFont(new java.awt.Font("Calibri", 0, 18)); // NOI18N
         nationalityField.setText("BRASILEIRA");
 
@@ -178,6 +181,7 @@ public class EditPersonDialog extends javax.swing.JDialog {
         jLabel6.setVerifyInputWhenFocusTarget(false);
         jLabel6.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
 
+        cirField.setColumns(14);
         cirField.setFont(new java.awt.Font("Calibri", 0, 18)); // NOI18N
 
         jLabel7.setFont(new java.awt.Font("Calibri", 0, 18)); // NOI18N
@@ -266,7 +270,7 @@ public class EditPersonDialog extends javax.swing.JDialog {
                         .addGroup(javax.swing.GroupLayout.Alignment.LEADING, dialogPanelLayout.createSequentialGroup()
                             .addGroup(dialogPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                 .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(cirField, javax.swing.GroupLayout.DEFAULT_SIZE, 182, Short.MAX_VALUE)
+                                .addComponent(cirField)
                                 .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(nationalityField))
                             .addGap(18, 18, 18)
@@ -300,16 +304,14 @@ public class EditPersonDialog extends javax.swing.JDialog {
                         .addComponent(sispatField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(dialogPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, dialogPanelLayout.createSequentialGroup()
-                        .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(29, 29, 29))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, dialogPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(nationalityField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(birthDateField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, dialogPanelLayout.createSequentialGroup()
-                        .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(dialogPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(29, 29, 29)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(dialogPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, dialogPanelLayout.createSequentialGroup()
                         .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -320,7 +322,7 @@ public class EditPersonDialog extends javax.swing.JDialog {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, dialogPanelLayout.createSequentialGroup()
                         .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(29, 29, 29)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 35, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 41, Short.MAX_VALUE)
                 .addGroup(dialogPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(cancelButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(saveButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -395,7 +397,7 @@ public class EditPersonDialog extends javax.swing.JDialog {
         @Override
         public void actionPerformed(ActionEvent e) {
             switch (e.getActionCommand()) {
-                case "save":
+                case "save" -> {
                     writeGUIState();
                     if (model != null) {
                         if (editMode) {
@@ -407,12 +409,12 @@ public class EditPersonDialog extends javax.swing.JDialog {
                         System.err.println("model in EditPerson is null");
                     }               
                     setVisible(false);
-                    break;
-                case "cancel":
+                }
+                case "cancel" -> {
                     person = null;
                     model = null;                    
                     setVisible(false);
-                    break;
+                }
             }  
         }
     }

@@ -6,9 +6,12 @@
 package com.nauta.voyager;
 
 import java.util.*;
+import java.sql.Connection;
+
 
 /*
 TODO:
+* - Transform to queries
 * Implement Update
 - Check if notifying listeners implementation is adequate
 - Implement updateModel method
@@ -21,15 +24,24 @@ TODO:
 public class CrewMemberModel extends StateNotifier {
     
     private List<CrewMember> crewMemberList;
+    
+    // Holds connection data to the db
+    private Connection db;
             
     public CrewMemberModel() {        
-        // Builds a mock crewlist for testing purposes
+        /* Builds a mock crewlist for testing purposes
         crewMemberList = new ArrayList<>();
         crewMemberList.add(0, new CrewMember("Alfafa", "WSUT", "Horse")); 
         crewMemberList.add(1, new CrewMember("Batata", "SISTAC", "Veggie")); 
         crewMemberList.add(2, new CrewMember("Foo", "WILSON", "Alien")); 
         crewMemberList.add(3, new CrewMember("Charlie", "ABG", "Person")); 
         crewMemberList.add(4, new CrewMember("Delta", "Delta2", "Bitch")); 
+        */
+        
+        // Connects to database
+        db = DatabaseUtil.getConnection();
+        
+        
     }
        
     

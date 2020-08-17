@@ -92,7 +92,7 @@
                           <Group type="102" alignment="0" attributes="0">
                               <Group type="103" groupAlignment="0" max="-2" attributes="0">
                                   <Component id="jLabel7" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="cirField" alignment="0" pref="182" max="32767" attributes="0"/>
+                                  <Component id="cirField" alignment="0" max="32767" attributes="0"/>
                                   <Component id="jLabel6" alignment="0" min="-2" max="-2" attributes="0"/>
                                   <Component id="nationalityField" alignment="0" max="32767" attributes="0"/>
                               </Group>
@@ -136,20 +136,18 @@
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" alignment="1" attributes="0">
-                          <Component id="jLabel6" min="-2" pref="29" max="-2" attributes="0"/>
-                          <EmptySpace min="-2" pref="29" max="-2" attributes="0"/>
-                      </Group>
                       <Group type="103" alignment="1" groupAlignment="3" attributes="0">
                           <Component id="nationalityField" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="birthDateField" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <Group type="102" alignment="1" attributes="0">
-                          <Component id="jLabel5" min="-2" pref="29" max="-2" attributes="0"/>
-                          <EmptySpace min="-2" pref="29" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="jLabel6" alignment="1" min="-2" pref="29" max="-2" attributes="0"/>
+                              <Component id="jLabel5" alignment="1" min="-2" pref="29" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace min="29" pref="29" max="-2" attributes="0"/>
                       </Group>
                   </Group>
-                  <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="1" attributes="0">
                           <Component id="jLabel7" min="-2" pref="29" max="-2" attributes="0"/>
@@ -164,7 +162,7 @@
                           <EmptySpace min="-2" pref="29" max="-2" attributes="0"/>
                       </Group>
                   </Group>
-                  <EmptySpace pref="35" max="32767" attributes="0"/>
+                  <EmptySpace pref="41" max="32767" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Component id="cancelButton" alignment="1" min="-2" pref="44" max="-2" attributes="0"/>
                       <Component id="saveButton" alignment="1" min="-2" pref="44" max="-2" attributes="0"/>
@@ -177,6 +175,7 @@
       <SubComponents>
         <Component class="javax.swing.JTextField" name="nameField">
           <Properties>
+            <Property name="columns" type="int" value="60"/>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
               <Font name="Calibri" size="18" style="0"/>
             </Property>
@@ -207,6 +206,7 @@
         </Component>
         <Component class="javax.swing.JTextField" name="companyField">
           <Properties>
+            <Property name="columns" type="int" value="40"/>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
               <Font name="Calibri" size="18" style="0"/>
             </Property>
@@ -319,6 +319,7 @@
         </Component>
         <Component class="javax.swing.JTextField" name="nationalityField">
           <Properties>
+            <Property name="columns" type="int" value="20"/>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
               <Font name="Calibri" size="18" style="0"/>
             </Property>
@@ -350,6 +351,7 @@
         </Component>
         <Component class="javax.swing.JTextField" name="cirField">
           <Properties>
+            <Property name="columns" type="int" value="14"/>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
               <Font name="Calibri" size="18" style="0"/>
             </Property>
