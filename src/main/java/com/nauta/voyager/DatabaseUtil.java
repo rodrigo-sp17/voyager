@@ -10,6 +10,11 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 
+/* TODO List
+ * - Implement proper exception handling
+ * 
+ */
+
 /**
  *
  * @author rodrigo
@@ -17,7 +22,7 @@ import java.sql.SQLException;
 public class DatabaseUtil {
     
     // TODO - REMOVE HARDCODED ADDRESS!
-    private static String url = "jdbc:derby:voyager";
+    private final static String URL = "jdbc:derby:voyager";
         
     
     public static Connection getConnection() {
@@ -25,7 +30,7 @@ public class DatabaseUtil {
         Connection conn = null;
         // TODO - insert connection Properties Retrieval        
         try {
-            conn = DriverManager.getConnection(url);
+            conn = DriverManager.getConnection(URL);
             //DatabaseMetaData meta = conn.getMetaData();
         } catch (SQLException e) {
             System.err.println(e.getMessage());

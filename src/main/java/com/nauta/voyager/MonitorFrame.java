@@ -80,6 +80,7 @@ class MonitorFrame extends javax.swing.JFrame {
         setBackground(new java.awt.Color(102, 102, 255));
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         setName("main_frame"); // NOI18N
+        setPreferredSize(new java.awt.Dimension(1600, 900));
 
         jToolBar1.setBackground(new java.awt.Color(0, 51, 102));
         jToolBar1.setBorder(null);

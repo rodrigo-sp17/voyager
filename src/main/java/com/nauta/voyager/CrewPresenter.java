@@ -63,7 +63,7 @@ public class CrewPresenter implements StateListener {
         // Sets crewDBTable Table Model and appearance
         CrewTableModel tModel = new CrewTableModel();
         view.crewDBTable.setModel(tModel);
-        sorter = new TableRowSorter<>(tModel);
+        this.sorter = new TableRowSorter<>(tModel);
         view.crewDBTable.setRowSorter(sorter);
         view.setCrewDBTableFormat();        
         
@@ -86,8 +86,7 @@ public class CrewPresenter implements StateListener {
         CrewTableModel tModel = (CrewTableModel) view.crewDBTable.getModel();
         tModel.loadData();
         sorter = new TableRowSorter<>(tModel);
-        view.crewDBTable.setRowSorter(sorter);
-        //        
+        view.crewDBTable.setRowSorter(sorter);                
     }
     
     private void writeGUIStateToDomain() {        
@@ -154,11 +153,10 @@ public class CrewPresenter implements StateListener {
             Point point = e.getPoint();
             int row = table.rowAtPoint(point);
             if (e.getClickCount() == 2) {
-                //Integer id = (Integer) table.getValueAt(table.getSelectedRow(), 0);
                 Integer id = (Integer) view.crewDBTable.getModel()
                     .getValueAt(view.crewDBTable.convertRowIndexToModel(row), 0);
                 new EditPersonDialog(model.getCrewMember(id), model, true, properties);                
-            }           
+            }            
         }
 
         @Override
@@ -198,7 +196,7 @@ public class CrewPresenter implements StateListener {
                     // Instantiates new EditDialog with data from table               
                     JTable table = view.crewDBTable;
                     TableModel tableModel = table.getModel();
-                    //Integer id = (Integer) table.getValueAt(table.getSelectedRow(), 0);
+                    
                     Integer id = (Integer) tableModel.getValueAt(table.convertRowIndexToModel(0), 0);
                     new EditPersonDialog(model.getCrewMember(id), model, true, properties);
                 }
@@ -276,8 +274,7 @@ public class CrewPresenter implements StateListener {
             view.deleteButton.setEnabled(true);
         }       
     }
-
-    
+        
     
     private Properties loadProperties() {
         // Loads properties from specified folder. If not, loads default.
@@ -305,8 +302,8 @@ public class CrewPresenter implements StateListener {
     
     /**
      * This inner class implements the crew table model that will be used by
-     * the POB Table. It will update the model whenever the Presenter notifies
-     * it.
+     * the POB Table. 
+     * It will update the model whenever the Presenter notifies it.
      */
     final class CrewTableModel extends AbstractTableModel {
         private final String[] columnNames = {
@@ -328,7 +325,7 @@ public class CrewPresenter implements StateListener {
     
         // Implements logic to retrieve the objects that will compose the rows of the table
         public void loadData() {
-            List<CrewMember> list = model.getList();
+            List<CrewMember> list = model.getAllCrewMembers();
             int listSize = list.size();
             this.data = new Object[listSize][getColumnCount()];
             for (int i = 0; i < listSize; i++) {
@@ -376,13 +373,7 @@ public class CrewPresenter implements StateListener {
         public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
             data[rowIndex][columnIndex] = aValue;
             fireTableCellUpdated(rowIndex, columnIndex);
-        }
-
-        @Override
-        public Class getColumnClass(int c) {
-            return getValueAt(0, c).getClass();
-        }
-    }     
-    
+        }       
+    }    
     
 }

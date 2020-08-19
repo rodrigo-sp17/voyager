@@ -1,141 +1,216 @@
 package com.nauta.voyager;
 
-import java.util.*;
 import java.time.*;
 
 
 public class CrewMember {
-    // Fixed crew member data
+    // Default values for CrewMembers
+    final LocalDate DEFAULT_EXP_DATE = LocalDate.of(2030,01,01);
+    final LocalDate DEFAULT_BIRTH_DATE = LocalDate.of(1980,01,01);
+    final String DEFAULT_NATIONALITY = "BRASILEIRA";
+    
+    // Counter to keep track of number of instances, used as default ID
     private static int numMembers = 0;
+    
+    // Fixed crew member data
     private int id;
     private String name;    
-    private String company;
     private String function;
-    private String sispat;
+    private String company;
+    private String nationality;
     private String cir;
     private LocalDate cirExpDate;
+    private String sispat;
     private LocalDate birthDate;
-    private String nationality;
     
     // Mutable crew member data
-    private String shift;
+    private String crew;
+    private boolean boarded;
     private LocalDate boardingDate;
+    private String boardingPlace;
+    private LocalDate arrivalDate;
+    private String arrivalPlace;
     private String cabin;
+    private String shift;    
     
     // Constructors
-    CrewMember(String name, String company, String function, String sispat, 
-        LocalDate birthDate, String shift, LocalDate boardingDate, String cabin) {
-            this.id = numMembers++;
-            this.name = name;
-            this.company = company;
-            this.function = function;
-            this.sispat = sispat;
-            this.birthDate = birthDate;
-            this.shift = shift;
-            this.boardingDate = boardingDate;
-            this.cabin = cabin;            
-    }
-    
-    // Shortened constructor for prototyping purposes
+    // Basic info constructor
     CrewMember(String name, String company, String function) {
-        this.id = numMembers++;
+        this.id = ++numMembers;
         this.name = name;
         this.company = company;
         this.function = function;
-        this.sispat = "11111111";
-        this.birthDate = LocalDate.parse("1995-05-15");
-        this.shift = "someshift";
-        this.boardingDate = LocalDate.parse("2020-05-15");
-        this.cabin = "cabine X";
-        this.nationality = "BRASILEIRA";
-        this.cir = "801P2222222";
-        this.cirExpDate = LocalDate.parse("2021-01-10");
+        this.nationality = DEFAULT_NATIONALITY;
+        this.cir = "";
+        this.cirExpDate = DEFAULT_EXP_DATE;
+        this.sispat = "";
+        this.birthDate = DEFAULT_BIRTH_DATE;
+        
+        this.crew = "";
+        this.boarded = false;
+        this.boardingDate = LocalDate.now();
+        this.boardingPlace = "";
+        this.arrivalDate = LocalDate.now();
+        this.arrivalPlace = "";
+        this.cabin = "";
+        this.shift = "";     
     }
     
-    // Instantiates an empty crewmember, just to hold values
+    // Instantiates a default Crew Member
     CrewMember() {
         this.id = numMembers++;
+        this.name = "";  
+        this.function = "";
+        this.company = "";
+        this.nationality = DEFAULT_NATIONALITY;
+        this.cir = "";
+        this.cirExpDate = DEFAULT_EXP_DATE;
+        this.sispat = "";
+        this.birthDate = DEFAULT_BIRTH_DATE;
+        
+        this.crew = "";
+        this.boarded = false;
+        this.boardingDate = LocalDate.now();
+        this.boardingPlace = "";
+        this.arrivalDate = LocalDate.now();
+        this.arrivalPlace = "";
+        this.cabin = "";
+        this.shift = "";        
     }    
-       
-    
-    
-    // Getters
+
     public int getId() {
         return id;
     }
-    public String getName() {
-        return name;
-    }    
-    public String getCompany() {
-         return company;
-    }
-    public String getFunction() {
-        return function;
-    }
-    public String getNationality() {
-        return nationality;
-    }
-    public String getCir() {
-        return cir;
-    }
-    public LocalDate getCirExpDate() {
-        return cirExpDate;
-    }
-    public String getSispat() {
-        return sispat;
-    }    
-    public LocalDate getBirthDate() {
-        return birthDate;
-    }    
-    public String getShift() {
-        return shift;
-    }
-    public LocalDate getBoardingDate() {
-        return boardingDate;
-    }
-    public String getCabin() {
-        return cabin;
-    }
-    public static int getNumMembers() {
-        return numMembers;
-    }
 
-    // Setters
     public void setId(int id) {
         this.id = id;
     }
+
+    public String getName() {
+        return name;
+    }
+
     public void setName(String name) {
         this.name = name;
     }
-    public void setCompany(String company) {
-        this.company = company;
+
+    public String getFunction() {
+        return function;
     }
+
     public void setFunction(String function) {
         this.function = function;
     }
-    public void setNationality(String nation) {
-        this.nationality = nation;
+
+    public String getCompany() {
+        return company;
     }
+
+    public void setCompany(String company) {
+        this.company = company;
+    }
+
+    public String getNationality() {
+        return nationality;
+    }
+
+    public void setNationality(String nationality) {
+        this.nationality = nationality;
+    }
+
+    public String getCir() {
+        return cir;
+    }
+
     public void setCir(String cir) {
         this.cir = cir;
     }
-    public void setCirExpDate(LocalDate date) {
-        this.cirExpDate = date;
+
+    public LocalDate getCirExpDate() {
+        return cirExpDate;
     }
+
+    public void setCirExpDate(LocalDate cirExpDate) {
+        this.cirExpDate = cirExpDate;
+    }
+
+    public String getSispat() {
+        return sispat;
+    }
+
     public void setSispat(String sispat) {
         this.sispat = sispat;
     }
+
+    public LocalDate getBirthDate() {
+        return birthDate;
+    }
+
     public void setBirthDate(LocalDate birthDate) {
         this.birthDate = birthDate;
     }
-    public void setShift(String shift) {
-        this.shift = shift;
+
+    public String getCrew() {
+        return crew;
     }
+
+    public void setCrew(String crew) {
+        this.crew = crew;
+    }
+
+    public boolean isBoarded() {
+        return boarded;
+    }
+
+    public void setBoarded(boolean boarded) {
+        this.boarded = boarded;
+    }
+
+    public LocalDate getBoardingDate() {
+        return boardingDate;
+    }
+
     public void setBoardingDate(LocalDate boardingDate) {
         this.boardingDate = boardingDate;
     }
+
+    public String getBoardingPlace() {
+        return boardingPlace;
+    }
+
+    public void setBoardingPlace(String boardingPlace) {
+        this.boardingPlace = boardingPlace;
+    }
+
+    public LocalDate getArrivalDate() {
+        return arrivalDate;
+    }
+
+    public void setArrivalDate(LocalDate arrivalDate) {
+        this.arrivalDate = arrivalDate;
+    }
+
+    public String getArrivalPlace() {
+        return arrivalPlace;
+    }
+
+    public void setArrivalPlace(String arrivalPlace) {
+        this.arrivalPlace = arrivalPlace;
+    }
+
+    public String getCabin() {
+        return cabin;
+    }
+
     public void setCabin(String cabin) {
         this.cabin = cabin;
     }
 
+    public String getShift() {
+        return shift;
+    }
+
+    public void setShift(String shift) {
+        this.shift = shift;
+    }
 }

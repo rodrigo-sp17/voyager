@@ -11,7 +11,7 @@ TODO
 - 
  *//**
  *
- * @author escritorio
+ * @author rodrigo
  */
 public class VoyagerRun {
     /**
