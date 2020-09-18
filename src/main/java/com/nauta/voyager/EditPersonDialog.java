@@ -5,11 +5,15 @@
  */
 package com.nauta.voyager;
 
+import java.awt.Component;
 import java.awt.event.*;
 import java.util.*;
 import javax.swing.text.MaskFormatter;
 import java.time.LocalDate;
 import java.time.format.*;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.ListCellRenderer;
 
 /*
  * TODO
@@ -24,11 +28,12 @@ import java.time.format.*;
  */
 public class EditPersonDialog extends javax.swing.JDialog {
     
-    // User-created variables declaration
     private CrewMember person;
     private CrewMemberModel model;
     private final Properties loadedProperties;
     private boolean editMode = false;
+        
+    private List<Function> functions;
     
     // Format of the dates used on the dialog
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
@@ -47,6 +52,7 @@ public class EditPersonDialog extends javax.swing.JDialog {
         this.model = model;
         this.loadedProperties = properties;
         this.editMode = isEditing;
+        
         initComponents();
         initPresentationLogic();
         loadGUIState();
@@ -139,7 +145,6 @@ public class EditPersonDialog extends javax.swing.JDialog {
 
         sispatField.setFont(new java.awt.Font("Calibri", 0, 18)); // NOI18N
         sispatField.setMaximumSize(new java.awt.Dimension(176, 176));
-        sispatField.setPreferredSize(new java.awt.Dimension(176, 29));
 
         jLabel4.setFont(new java.awt.Font("Calibri", 0, 18)); // NOI18N
         jLabel4.setForeground(new java.awt.Color(102, 102, 102));
@@ -329,6 +334,9 @@ public class EditPersonDialog extends javax.swing.JDialog {
                 .addGap(25, 25, 25))
         );
 
+        ComboBoxRenderer renderer = new ComboBoxRenderer();
+        functionField.setRenderer(renderer);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -347,13 +355,13 @@ public class EditPersonDialog extends javax.swing.JDialog {
         // Adds listener to buttons
         ButtonsHandler handler = new ButtonsHandler();
         saveButton.addActionListener(handler);
-        cancelButton.addActionListener(handler);
+        cancelButton.addActionListener(handler);        
         
-        // Loads functionField item list with loaded properties
-        String[] functionNames = loadedProperties.getProperty("functions", null).split(",");
-        for (String s : functionNames) {
-            functionField.addItem(s);
-        }     
+        // Loads functionField item list with model data
+        functions = model.getFunctions();
+        functions.forEach(f -> {
+            functionField.addItem(f);
+        });            
     }       
     
     private void loadGUIState() {        
@@ -361,7 +369,7 @@ public class EditPersonDialog extends javax.swing.JDialog {
         if (editMode) {
             // Fills fields with received value
             nameField.setText(person.getName());
-            functionField.setSelectedItem(person.getFunction());
+            functionField.setSelectedItem(person.getFunctionId());
             companyField.setText(person.getCompany());
             sispatField.setText(person.getSispat());
             nationalityField.setText(person.getNationality().toUpperCase());        
@@ -376,7 +384,8 @@ public class EditPersonDialog extends javax.swing.JDialog {
     private void writeGUIState() {
         // Writes fields values to person variable
         person.setName(nameField.getText());
-        person.setFunction(functionField.getSelectedItem().toString());
+        Function f = (Function) functionField.getSelectedItem();
+        person.setFunctionId(f.getFunctionId());
         person.setCompany(companyField.getText());        
         person.setSispat(sispatField.getText());
         person.setNationality(nationalityField.getText());
@@ -416,8 +425,30 @@ public class EditPersonDialog extends javax.swing.JDialog {
                     setVisible(false);
                 }
             }  
-        }
+        }       
     }
+    
+
+    class ComboBoxRenderer extends JLabel implements ListCellRenderer {
+    
+        public ComboBoxRenderer() {
+            setOpaque(true);
+            setHorizontalAlignment(CENTER);
+            setVerticalAlignment(CENTER);
+        }
+
+        @Override
+        public Component getListCellRendererComponent(JList list, Object value,
+                int index, boolean isSelected, boolean cellHasFocus) {
+            Function function = (Function) value;
+            
+            setText(function.getFunctionPrefix() 
+                    + " - " 
+                    + function.getFunctionDescription());
+            
+            return this;            
+        }   
+}
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JFormattedTextField birthDateField;
@@ -426,7 +457,7 @@ public class EditPersonDialog extends javax.swing.JDialog {
     private javax.swing.JTextField cirField;
     private javax.swing.JTextField companyField;
     private javax.swing.JPanel dialogPanel;
-    private javax.swing.JComboBox<String> functionField;
+    private javax.swing.JComboBox<Function> functionField;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;

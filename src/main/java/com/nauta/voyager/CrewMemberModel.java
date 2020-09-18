@@ -25,11 +25,13 @@ TODO:
  */
 public class CrewMemberModel extends StateNotifier {
     
+    private static final String TAG = CrewMemberModel.class.getSimpleName();
+    
     // Holds list of CrewMembers for manipulation
     private List<CrewMember> crewMemberList;
     
     // Holds connection data to the database
-    private Connection conn;
+    private final Connection conn;
          
     // Model Constructor
     public CrewMemberModel() {        
@@ -46,26 +48,43 @@ public class CrewMemberModel extends StateNotifier {
         String insertString = 
                 "INSERT INTO \"persons\" ("
                 + "NAME,"
+                + "\"FUNCTION\","
                 + "COMPANY,"
-                + "SISPAT,"
                 + "NATIONALITY,"
-                + "BIRTHDATE,"
                 + "CIR,"
-                + "CIREXPDATE"
-                + ") VALUES (?, ?, ?, ?, ?, ?, ?)";               
+                + "CIREXPDATE,"
+                + "SISPAT,"
+                + "BIRTHDATE,"
+                + "CREW,"
+                + "BOARDED,"
+                + "BOARDINGDATE,"
+                + "BOARDINGPLACE,"
+                + "ARRIVALDATE,"
+                + "ARRIVALPLACE,"
+                + "CABIN,"
+                + "SHIFT"
+                + ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";               
         
         try {
             conn.setAutoCommit(false);
             insertCM = conn.prepareStatement(insertString);
             
             insertCM.setString(1, member.getName());
-            //insertCM.setInt(2, 2); // TODO: ADD FUNCTION RECOVERY
-            insertCM.setString(2, member.getCompany());
-            insertCM.setString(3, member.getSispat());
+            insertCM.setInt(2, member.getFunctionId());
+            insertCM.setString(3, member.getCompany());
             insertCM.setString(4, member.getNationality());
-            insertCM.setDate(5, java.sql.Date.valueOf(member.getBirthDate()));
-            insertCM.setString(6, member.getCir());
-            insertCM.setDate(7, java.sql.Date.valueOf(member.getCirExpDate()));            
+            insertCM.setString(5, member.getCir());
+            insertCM.setDate(6, java.sql.Date.valueOf(member.getCirExpDate()));            
+            insertCM.setString(7, member.getSispat());
+            insertCM.setDate(8, java.sql.Date.valueOf(member.getBirthDate()));
+            insertCM.setString(9, member.getCrew());
+            insertCM.setBoolean(10, member.isBoarded());
+            insertCM.setDate(11, java.sql.Date.valueOf(member.getBoardingDate()));
+            insertCM.setString(12, member.getBoardingPlace());
+            insertCM.setDate(13, java.sql.Date.valueOf(member.getArrivalDate()));
+            insertCM.setString(14, member.getArrivalPlace());
+            insertCM.setString(15, member.getCabin());
+            insertCM.setString(16, member.getShift());
             
             insertCM.executeUpdate();
             
@@ -107,9 +126,7 @@ public class CrewMemberModel extends StateNotifier {
     public List<CrewMember> getAllCrewMembers() {
         List<CrewMember> list;
         try {
-            list = requestQuery("SELECT * FROM \"persons\" "
-                    + "JOIN \"FUNCTIONS\" "
-                    + "ON \"persons\".\"FUNCTION\" = \"FUNCTIONS\".FUNCTION_ID");            
+            list = requestQuery("SELECT * FROM \"persons\" JOIN \"FUNCTIONS\" ON \"persons\".\"FUNCTION\" = \"FUNCTIONS\".\"FUNCTION_ID\"");            
             return list;
         } catch (SQLException e) {
             System.err.println("Model - getAllCrewMembers() - SQL Error:");
@@ -126,13 +143,21 @@ public class CrewMemberModel extends StateNotifier {
         String updateString = 
                 "UPDATE \"persons\" SET "
                 + "NAME = ?,"
-                //+ "FUNCTION = ?,"
-                + "COMPANY = ?," 
-                + "SISPAT = ?,"
+                + "\"FUNCTION\" = ?,"
+                + "COMPANY = ?,"
                 + "NATIONALITY = ?,"
-                + "BIRTHDATE = ?,"
                 + "CIR = ?,"
-                + "CIREXPDATE = ?"                
+                + "CIREXPDATE = ?,"
+                + "SISPAT = ?,"
+                + "BIRTHDATE = ?,"
+                + "CREW = ?,"
+                + "BOARDED = ?,"
+                + "BOARDINGDATE = ?,"
+                + "BOARDINGPLACE = ?,"
+                + "ARRIVALDATE = ?,"
+                + "ARRIVALPLACE = ?,"
+                + "CABIN = ?,"
+                + "SHIFT = ?"       
                 + " WHERE PERSONID = ?";
         
         try {
@@ -140,18 +165,27 @@ public class CrewMemberModel extends StateNotifier {
             updateCM = conn.prepareStatement(updateString   );
             
             updateCM.setString(1, updatedMember.getName());
-            //insertCM.setInt(2, 2); // TODO: ADD FUNCTION RECOVERY
-            updateCM.setString(2, updatedMember.getCompany());
-            updateCM.setString(3, updatedMember.getSispat());
+            updateCM.setInt(2, updatedMember.getFunctionId());
+            updateCM.setString(3, updatedMember.getCompany());
             updateCM.setString(4, updatedMember.getNationality());
-            updateCM.setDate(5, java.sql.Date.valueOf(updatedMember.getBirthDate()));
-            updateCM.setString(6, updatedMember.getCir());
-            updateCM.setDate(7, java.sql.Date.valueOf(updatedMember.getCirExpDate()));
-            updateCM.setInt(8, updatedMember.getId());
+            updateCM.setString(5, updatedMember.getCir());
+            updateCM.setDate(6, java.sql.Date.valueOf(updatedMember.getCirExpDate()));
+            updateCM.setString(7, updatedMember.getSispat());
+            updateCM.setDate(8, java.sql.Date.valueOf(updatedMember.getBirthDate()));
+            updateCM.setString(9, updatedMember.getCrew());
+            updateCM.setBoolean(10, updatedMember.isBoarded());
+            updateCM.setDate(11, java.sql.Date.valueOf(updatedMember.getBoardingDate()));
+            updateCM.setString(12, updatedMember.getBoardingPlace());
+            updateCM.setDate(13, java.sql.Date.valueOf(updatedMember.getArrivalDate()));
+            updateCM.setString(14, updatedMember.getArrivalPlace());
+            updateCM.setString(15, updatedMember.getCabin());
+            updateCM.setString(16, updatedMember.getShift());            
+            updateCM.setInt(17, updatedMember.getId());
             
             updateCM.executeUpdate();
             
             conn.commit();
+            
             fireStateChanged();     
             
         } catch (SQLException e) {
@@ -208,15 +242,40 @@ public class CrewMemberModel extends StateNotifier {
             }            
         }       
         return result;
-    }   
+    }
+    
+    // Gets functions from database
+    public List<Function> getFunctions() {
+        String query = "SELECT * FROM \"FUNCTIONS\"";
+        List<Function> list = new ArrayList<>();
+        
+        try (Statement stmt = conn.createStatement()) {
+            ResultSet rs = stmt.executeQuery(query);
+            while (rs.next()) {
+                Function f = new Function(
+                        rs.getInt("FUNCTION_ID"),
+                        rs.getString("FUNCTION_PREFIX"),
+                        rs.getString("FUNCTION_DESCRIPTION")
+                );
+                list.add(f);
+            }
+            
+            stmt.close();
+        } catch (SQLException e) {
+            System.err.println(TAG + " Could not get functions from DB" + e);
+        }
+        
+        return list;
+    }
  
     
     // Sends querys to connected database and returns as list of crew members
     private List<CrewMember> requestQuery(String query) throws SQLException {
         List<CrewMember> list = null;
         try (Statement stmt = conn.createStatement()) {
-            ResultSet rs = stmt.executeQuery(query);
+            ResultSet rs = stmt.executeQuery(query);            
             list = parseResult(rs);
+            System.out.println("List size at CMM: " + list.size());
             stmt.close();
         } catch (SQLException e) {
             // TODO - proper error handling
@@ -256,9 +315,7 @@ public class CrewMemberModel extends StateNotifier {
                 c.setArrivalPlace(rs.getString("ARRIVALPLACE"));
                 c.setCabin(rs.getString("CABIN"));
                 c.setShift(rs.getString("SHIFT"));
-                c.setFunction(rs.getString("FUNCTION_PREFIX") 
-                        + " - " 
-                        + rs.getString("FUNCTION_DESCRIPTION"));
+                c.setFunctionId(rs.getInt("FUNCTION"));
                 list.add(c);                
             }
         } catch (SQLException e){

@@ -15,7 +15,7 @@ public class CrewMember {
     // Fixed crew member data
     private int id;
     private String name;    
-    private String function;
+    private int functionId;
     private String company;
     private String nationality;
     private String cir;
@@ -35,11 +35,11 @@ public class CrewMember {
     
     // Constructors
     // Basic info constructor
-    CrewMember(String name, String company, String function) {
+    CrewMember(String name, String company, int functionId) {
         this.id = ++numMembers;
         this.name = name;
+        this.functionId = functionId;
         this.company = company;
-        this.function = function;
         this.nationality = DEFAULT_NATIONALITY;
         this.cir = "";
         this.cirExpDate = DEFAULT_EXP_DATE;
@@ -60,7 +60,7 @@ public class CrewMember {
     CrewMember() {
         this.id = numMembers++;
         this.name = "";  
-        this.function = "";
+        this.functionId = 0;
         this.company = "";
         this.nationality = DEFAULT_NATIONALITY;
         this.cir = "";
@@ -94,12 +94,12 @@ public class CrewMember {
         this.name = name;
     }
 
-    public String getFunction() {
-        return function;
+    public int getFunctionId() {
+        return functionId;
     }
 
-    public void setFunction(String function) {
-        this.function = function;
+    public void setFunctionId(int id) {
+        this.functionId = id;
     }
 
     public String getCompany() {

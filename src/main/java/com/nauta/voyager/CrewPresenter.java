@@ -181,8 +181,7 @@ public class CrewPresenter implements StateListener {
         
         @Override
         public void valueChanged(ListSelectionEvent s) {
-            // When selection changes, sets state of delete button
-            System.out.println("Selection changed");
+            // When selection changes, sets state of delete button            
             setDeleteButtonState();
         }
     }
@@ -326,12 +325,12 @@ public class CrewPresenter implements StateListener {
         // Implements logic to retrieve the objects that will compose the rows of the table
         public void loadData() {
             List<CrewMember> list = model.getAllCrewMembers();
-            int listSize = list.size();
+            int listSize = list.size();            
             this.data = new Object[listSize][getColumnCount()];
             for (int i = 0; i < listSize; i++) {
                 this.data[i][0] = list.get(i).getId();
                 this.data[i][1] = list.get(i).getName();
-                this.data[i][2] = list.get(i).getFunction();
+                this.data[i][2] = list.get(i).getFunctionId();
                 this.data[i][3] = list.get(i).getCompany();
                 this.data[i][4] = list.get(i).getSispat();
                 this.data[i][5] = list.get(i).getNationality();
