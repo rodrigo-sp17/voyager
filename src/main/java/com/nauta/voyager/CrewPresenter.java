@@ -279,7 +279,7 @@ public class CrewPresenter implements StateListener {
         // Loads properties from specified folder. If not, loads default.
         Properties result = new Properties();
         InputStream in = null;
-        // Search FOLDER for properties
+        // Searches FOLDER for properties
         try {    
             try {    
                 in = this.getClass().getClassLoader().getResourceAsStream("default.properties");
@@ -325,12 +325,25 @@ public class CrewPresenter implements StateListener {
         // Implements logic to retrieve the objects that will compose the rows of the table
         public void loadData() {
             List<CrewMember> list = model.getAllCrewMembers();
+            List<Function> functions = model.getFunctions();
             int listSize = list.size();            
+            
             this.data = new Object[listSize][getColumnCount()];
             for (int i = 0; i < listSize; i++) {
                 this.data[i][0] = list.get(i).getId();
                 this.data[i][1] = list.get(i).getName();
-                this.data[i][2] = list.get(i).getFunctionId();
+                
+                int id = list.get(i).getFunctionId();
+                String function = "";
+                for (Function f : functions) {
+                    if (f.getFunctionId() == id) {
+                        function = f.getFunctionPrefix() 
+                                + " - " 
+                                + f.getFunctionDescription();
+                    }
+                }                
+                this.data[i][2] = function;
+                
                 this.data[i][3] = list.get(i).getCompany();
                 this.data[i][4] = list.get(i).getSispat();
                 this.data[i][5] = list.get(i).getNationality();
@@ -374,5 +387,4 @@ public class CrewPresenter implements StateListener {
             fireTableCellUpdated(rowIndex, columnIndex);
         }       
     }    
-    
 }
