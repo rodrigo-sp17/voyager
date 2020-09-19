@@ -11,15 +11,17 @@ import java.util.*;
 import javax.swing.text.MaskFormatter;
 import java.time.LocalDate;
 import java.time.format.*;
+import javax.swing.InputVerifier;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
+import javax.swing.JTextField;
 import javax.swing.ListCellRenderer;
 
 /*
  * TODO
  * - Input validation for all fields (Date, Names, etc) 
- * - Remove dependency on specific model by creating interface, maybe CRUDModel
- * - 
 */
 
 /**
@@ -28,9 +30,16 @@ import javax.swing.ListCellRenderer;
  */
 public class EditPersonDialog extends javax.swing.JDialog {
     
+    private static final int MAX_NAME_SIZE = 60;
+    private static final int MAX_COMPANY_SIZE = 40;
+    private static final int MAX_SISPAT_SIZE = 8;
+    private static final int MAX_NATIONALITY_SIZE = 20;
+    private static final int MAX_CIR_SIZE = 14;   
+    
+    
     private CrewMember person;
     private CrewMemberModel model;
-    private final Properties loadedProperties;
+    private final Properties loadedProperties;    
     private boolean editMode = false;
         
     private List<Function> functions;
@@ -361,7 +370,13 @@ public class EditPersonDialog extends javax.swing.JDialog {
         functions = model.getFunctions();
         functions.forEach(f -> {
             functionField.addItem(f);
-        });            
+        });
+        
+        nameField.setInputVerifier(new NameVerifier());
+        companyField.setInputVerifier(new CompanyVerifier());
+        sispatField.setInputVerifier(new SispatVerifier());
+        nationalityField.setInputVerifier(new NationalityVerifier());
+        cirField.setInputVerifier(new CirVerifier());                
     }       
     
     private void loadGUIState() {        
@@ -419,6 +434,7 @@ public class EditPersonDialog extends javax.swing.JDialog {
                     }               
                     setVisible(false);
                 }
+                
                 case "cancel" -> {
                     person = null;
                     model = null;                    
@@ -428,7 +444,177 @@ public class EditPersonDialog extends javax.swing.JDialog {
         }       
     }
     
-
+    // Input verifiers    
+    class NameVerifier extends InputVerifier {        
+        @Override
+        public boolean shouldYieldFocus(JComponent input) {
+            boolean inputOK = verify(input);
+            if (inputOK) {
+                return true;
+            } else {
+                JOptionPane.showMessageDialog(rootPane,
+                        "Campo deve ter no máximo " 
+                                + MAX_NAME_SIZE + " letras!\n" 
+                                + "Campo deve ter apenas letras.");
+                return false;
+            }
+        }
+        
+        @Override
+        public boolean verify(JComponent input) {
+            JTextField tf = (JTextField) input;
+            return isInputAlphabetic(tf.getText()) 
+                    && (tf.getText().length() <= MAX_NAME_SIZE);
+        }
+        
+    }
+        
+    
+    class CompanyVerifier extends InputVerifier {        
+        @Override
+        public boolean shouldYieldFocus(JComponent input) {
+            boolean inputOK = verify(input);
+            if (inputOK) {
+                return true;
+            } else {
+                JOptionPane.showMessageDialog(rootPane,
+                        "Campo deve ter no máximo " + 
+                                MAX_COMPANY_SIZE + " letras!\n" 
+                                + "Campo deve ter apenas letras!");
+                return false;
+            }
+        }        
+        
+        @Override
+        public boolean verify(JComponent input) {
+            JTextField tf = (JTextField) input;           
+            return isInputAlphabetic(tf.getText()) 
+                    && tf.getText().length() <= MAX_COMPANY_SIZE;
+        }       
+    }
+    
+    class SispatVerifier extends InputVerifier {        
+        @Override
+        public boolean shouldYieldFocus(JComponent input) {
+            boolean inputOK = verify(input);
+            if (inputOK) {
+                return true;
+            } else {
+                JOptionPane.showMessageDialog(rootPane,
+                        "Campo deve ter apenas " 
+                                + MAX_SISPAT_SIZE + " números!\n");
+                return false;
+            }
+        }        
+        
+        @Override
+        public boolean verify(JComponent input) {
+            JTextField tf = (JTextField) input;           
+            return isInputNumeric(tf.getText()) 
+                    && tf.getText().length() <= MAX_SISPAT_SIZE;
+        }       
+    }
+    
+    class NationalityVerifier extends InputVerifier {        
+        @Override
+        public boolean shouldYieldFocus(JComponent input) {
+            boolean inputOK = verify(input);
+            if (inputOK) {
+                return true;
+            } else {
+                JOptionPane.showMessageDialog(rootPane,
+                        "Campo deve ter no máximo " 
+                                + MAX_NATIONALITY_SIZE + " letras!\n");
+                return false;
+            }
+        }        
+        
+        @Override
+        public boolean verify(JComponent input) {
+            JTextField tf = (JTextField) input;           
+            return isInputAlphabetic(tf.getText()) 
+                    && tf.getText().length() <= MAX_NATIONALITY_SIZE;
+        }       
+    }
+    
+    class CirVerifier extends InputVerifier {        
+        @Override
+        public boolean shouldYieldFocus(JComponent input) {
+            boolean inputOK = verify(input);
+            if (inputOK) {
+                return true;
+            } else {
+                JOptionPane.showMessageDialog(rootPane,
+                        "Campo deve ter no máximo " 
+                                + MAX_CIR_SIZE + " letras!\n");
+                return false;
+            }
+        }        
+        
+        @Override
+        public boolean verify(JComponent input) {
+            JTextField tf = (JTextField) input;           
+            return isInputAlphanumeric(tf.getText()) 
+                    && tf.getText().length() <= MAX_CIR_SIZE;
+        }       
+    }
+    
+    class BirthDateVerifier extends InputVerifier {
+        @Override
+        public boolean shouldYieldFocus(JComponent input) {
+            boolean inputOK = verify(input);
+            if (inputOK) {
+                return true;
+            } else {
+                JOptionPane.showMessageDialog(rootPane,
+                        "Campo deve ter no máximo " 
+                                + MAX_CIR_SIZE + " letras!\n");
+                return false;
+            }
+        }        
+        
+        @Override
+        public boolean verify(JComponent input) {
+            JTextField tf = (JTextField) input;           
+            return isInputAlphanumeric(tf.getText()) 
+                    && tf.getText().length() <= MAX_CIR_SIZE;
+        }       
+    }
+    
+    private boolean isInputAlphabetic(String text) {
+        char[] word = text.toCharArray();
+        for (char c : word) {
+            if (!Character.isLetter(c) && c != ' ') {
+                return false;
+            }
+        }
+        return true;
+    }
+    
+    private boolean isInputAlphanumeric(String text) {
+        char[] word = text.toCharArray();
+        for (char c : word) {
+            if (!Character.isLetter(c) && !Character.isDigit(c)) {
+                return false;
+            }
+        }
+        return true;
+    }   
+    
+    private boolean isInputNumeric(String text) {
+        char [] word = text.toCharArray();
+        for (char c : word) {
+            if (!Character.isDigit(c)) {
+                return false;
+            }
+        }
+        return true;
+    }
+    
+    
+    
+    
+    // Implementes custom renderer for functionField combobox
     class ComboBoxRenderer extends JLabel implements ListCellRenderer {
     
         public ComboBoxRenderer() {

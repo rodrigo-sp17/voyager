@@ -15,6 +15,7 @@ TODO
 - Colors - build enums or constants for basic app color and inverted color
 - 
 */ 
+
 /**
  *
  * @author rodrigo
@@ -283,6 +284,7 @@ class MonitorFrame extends javax.swing.JFrame {
         crewDBTable.getColumnModel().getColumn(0).setMaxWidth(100);
         crewDBTable.getColumnModel().getColumn(1).setCellRenderer(midRenderer);
         crewDBTable.getColumnModel().getColumn(2).setCellRenderer(centerRenderer);
+        crewDBTable.getColumnModel().getColumn(2).setPreferredWidth(150);        
         crewDBTable.getColumnModel().getColumn(3).setCellRenderer(centerRenderer);
         crewDBTable.getColumnModel().getColumn(4).setCellRenderer(centerRenderer);
         crewDBTable.getColumnModel().getColumn(5).setCellRenderer(centerRenderer);

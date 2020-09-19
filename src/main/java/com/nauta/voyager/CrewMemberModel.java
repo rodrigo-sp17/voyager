@@ -267,7 +267,7 @@ public class CrewMemberModel extends StateNotifier {
         
         return list;
     }
- 
+     
     
     // Sends querys to connected database and returns as list of crew members
     private List<CrewMember> requestQuery(String query) throws SQLException {

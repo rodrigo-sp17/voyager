@@ -198,9 +198,12 @@ public class CrewPresenter implements StateListener {
                     
                     Integer id = (Integer) tableModel.getValueAt(table.convertRowIndexToModel(0), 0);
                     new EditPersonDialog(model.getCrewMember(id), model, true, properties);
+                    break;
                 }
+                
                 case "add" -> // Instantiates new EditDialog with an empty CrewMember
                     new EditPersonDialog(new CrewMember(), model, false, properties);
+                
                 case "delete" -> {
                     int[] rows = view.crewDBTable.getSelectedRows();
                     int delete = JOptionPane.showConfirmDialog(
@@ -233,10 +236,14 @@ public class CrewPresenter implements StateListener {
                                 + counter + " registro(s)!");
                     }
                 }
+                default -> {
+                    // Requests focus back on to searchTextField
+                    view.searchTextField.requestFocusInWindow();
+                    view.searchTextField.select(0, view.searchTextField
+                            .getText().length());
+                    
+                }                    
             }       
-            // Requests focus back on to searchTextField
-            view.searchTextField.requestFocusInWindow();
-            view.searchTextField.select(0, view.searchTextField.getText().length());
         }
     }
     
