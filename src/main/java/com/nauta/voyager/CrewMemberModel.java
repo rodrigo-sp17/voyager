@@ -7,6 +7,7 @@ package com.nauta.voyager;
 
 import java.util.*;
 import java.sql.*;
+import java.time.LocalDate;
 
 
 /*
@@ -30,6 +31,9 @@ public class CrewMemberModel extends StateNotifier {
     // Holds list of CrewMembers for manipulation
     private List<CrewMember> crewMemberList;
     
+    // Current loaded POB for manipulation
+    private Pob currentPob;
+    
     // Holds connection data to the database
     private final Connection conn;
          
@@ -38,7 +42,12 @@ public class CrewMemberModel extends StateNotifier {
         // Connects to database
         conn = DatabaseUtil.getConnection();              
     }
-       
+    
+    
+    public Pob getLastPob() {
+        currentPob = new Pob(1, getAllCrewMembers(), LocalDate.now());
+        return currentPob;
+    }       
     
     // Creates CrewMember with new ID
     public void insertCrewMember(CrewMember member) {        
@@ -130,6 +139,22 @@ public class CrewMemberModel extends StateNotifier {
             return list;
         } catch (SQLException e) {
             System.err.println("Model - getAllCrewMembers() - SQL Error:");
+            System.err.println(e.getMessage());
+        }
+        return null;
+    }
+    
+    // Returns List of all boarded CrewMembers
+    public List<CrewMember> getAllBoardedCrewMembers() {
+        List<CrewMember> list;
+        try {
+            list = requestQuery("SELECT * FROM \"persons\" "
+                    + "JOIN \"FUNCTIONS\" "
+                    + "ON \"persons\".\"FUNCTION\" = \"FUNCTIONS\".\"FUNCTION_ID\" "
+                    + "WHERE \"persons\".\"BOARDED\"=true");            
+            return list;
+        } catch (SQLException e) {
+            System.err.println("Model - getAllBoardedCrewMembers() - SQL Error:");
             System.err.println(e.getMessage());
         }
         return null;

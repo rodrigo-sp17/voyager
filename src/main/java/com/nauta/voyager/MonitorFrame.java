@@ -67,6 +67,10 @@ class MonitorFrame extends javax.swing.JFrame {
         databaseTab = new javax.swing.JToggleButton();
         mainPane = new javax.swing.JPanel();
         statusPane = new javax.swing.JPanel();
+        navPane = new javax.swing.JPanel();
+        pobPane = new javax.swing.JPanel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        pobTable = new javax.swing.JTable();
         databasePanel = new javax.swing.JPanel();
         searchTextField = new javax.swing.JTextField();
         editButton = new javax.swing.JButton();
@@ -81,7 +85,6 @@ class MonitorFrame extends javax.swing.JFrame {
         setBackground(new java.awt.Color(102, 102, 255));
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         setName("main_frame"); // NOI18N
-        setPreferredSize(new java.awt.Dimension(1600, 900));
 
         jToolBar1.setBackground(new java.awt.Color(0, 51, 102));
         jToolBar1.setBorder(null);
@@ -174,7 +177,7 @@ class MonitorFrame extends javax.swing.JFrame {
         statusPane.setLayout(statusPaneLayout);
         statusPaneLayout.setHorizontalGroup(
             statusPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1124, Short.MAX_VALUE)
+            .addGap(0, 1125, Short.MAX_VALUE)
         );
         statusPaneLayout.setVerticalGroup(
             statusPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -182,6 +185,65 @@ class MonitorFrame extends javax.swing.JFrame {
         );
 
         mainPane.add(statusPane, "statusCard");
+
+        navPane.setBackground(new java.awt.Color(255, 255, 255));
+
+        javax.swing.GroupLayout navPaneLayout = new javax.swing.GroupLayout(navPane);
+        navPane.setLayout(navPaneLayout);
+        navPaneLayout.setHorizontalGroup(
+            navPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 1125, Short.MAX_VALUE)
+        );
+        navPaneLayout.setVerticalGroup(
+            navPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 708, Short.MAX_VALUE)
+        );
+
+        mainPane.add(navPane, "navCard");
+
+        pobPane.setBackground(new java.awt.Color(255, 255, 255));
+
+        pobTable.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        pobTable.setFont(new java.awt.Font("Calibri", 0, 12)); // NOI18N
+        pobTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        pobTable.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        pobTable.setFillsViewportHeight(true);
+        pobTable.setRowHeight(20);
+        pobTable.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        jScrollPane2.setViewportView(pobTable);
+
+        javax.swing.GroupLayout pobPaneLayout = new javax.swing.GroupLayout(pobPane);
+        pobPane.setLayout(pobPaneLayout);
+        pobPaneLayout.setHorizontalGroup(
+            pobPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 1125, Short.MAX_VALUE)
+            .addGroup(pobPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pobPaneLayout.createSequentialGroup()
+                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 1105, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap()))
+        );
+        pobPaneLayout.setVerticalGroup(
+            pobPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 708, Short.MAX_VALUE)
+            .addGroup(pobPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pobPaneLayout.createSequentialGroup()
+                    .addContainerGap(205, Short.MAX_VALUE)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 492, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+        );
+
+        mainPane.add(pobPane, "pobCard");
 
         databasePanel.setBackground(new java.awt.Color(255, 255, 255));
         databasePanel.setName("databasePanel"); // NOI18N
@@ -226,7 +288,7 @@ class MonitorFrame extends javax.swing.JFrame {
                         .addComponent(editButton, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(deleteButton, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 123, Short.MAX_VALUE)))
+                        .addGap(0, 124, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         databasePanelLayout.setVerticalGroup(
@@ -324,10 +386,14 @@ class MonitorFrame extends javax.swing.JFrame {
     javax.swing.JButton jButton2;
     private javax.swing.JMenuItem jMenuItem1;
     javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     javax.swing.JToolBar jToolBar1;
     javax.swing.JPanel mainPane;
+    javax.swing.JPanel navPane;
     javax.swing.JToggleButton navTab;
+    javax.swing.JPanel pobPane;
     javax.swing.JToggleButton pobTab;
+    private javax.swing.JTable pobTable;
     javax.swing.JTextField searchTextField;
     javax.swing.JPanel statusPane;
     javax.swing.JToggleButton statusTab;

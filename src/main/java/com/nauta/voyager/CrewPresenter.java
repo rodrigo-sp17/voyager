@@ -46,7 +46,7 @@ public class CrewPresenter implements StateListener {
         initPresentationLogic();
     }   
     
-    /**
+    /*
      * This method initiates component models, view event handlers
      */    
     private void initPresentationLogic() {
@@ -107,7 +107,7 @@ public class CrewPresenter implements StateListener {
         
             switch (e.getActionCommand()) {
                 case "status" -> cl.show(view.mainPane, "statusCard");
-                case "nav" -> {                }
+                case "nav" -> cl.show(view.mainPane, "navPane");
                 case "pob" -> cl.show(view.mainPane, "pobCard");
                 case "database" -> cl.show(view.mainPane, "databaseCard");                        
             }
