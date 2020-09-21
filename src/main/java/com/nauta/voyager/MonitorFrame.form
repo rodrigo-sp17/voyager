@@ -117,14 +117,12 @@
             <Property name="text" type="java.lang.String" value="Estado Geral"/>
             <Property name="actionCommand" type="java.lang.String" value="status"/>
             <Property name="borderPainted" type="boolean" value="false"/>
-            <Property name="contentAreaFilled" type="boolean" value="false"/>
             <Property name="focusable" type="boolean" value="false"/>
             <Property name="horizontalTextPosition" type="int" value="0"/>
             <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
               <Dimension value="[200, 35]"/>
             </Property>
             <Property name="name" type="java.lang.String" value="statusTab" noResource="true"/>
-            <Property name="opaque" type="boolean" value="true"/>
             <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
               <Dimension value="[100, 25]"/>
             </Property>
@@ -148,14 +146,12 @@
             <Property name="text" type="java.lang.String" value="Navega&#xe7;&#xe3;o"/>
             <Property name="actionCommand" type="java.lang.String" value="nav"/>
             <Property name="borderPainted" type="boolean" value="false"/>
-            <Property name="contentAreaFilled" type="boolean" value="false"/>
             <Property name="focusable" type="boolean" value="false"/>
             <Property name="horizontalTextPosition" type="int" value="0"/>
             <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
               <Dimension value="[200, 35]"/>
             </Property>
             <Property name="name" type="java.lang.String" value="pobTab" noResource="true"/>
-            <Property name="opaque" type="boolean" value="true"/>
             <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
               <Dimension value="[100, 25]"/>
             </Property>
@@ -179,14 +175,12 @@
             <Property name="text" type="java.lang.String" value="POB"/>
             <Property name="actionCommand" type="java.lang.String" value="pob"/>
             <Property name="borderPainted" type="boolean" value="false"/>
-            <Property name="contentAreaFilled" type="boolean" value="false"/>
             <Property name="focusable" type="boolean" value="false"/>
             <Property name="horizontalTextPosition" type="int" value="0"/>
             <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
               <Dimension value="[200, 35]"/>
             </Property>
             <Property name="name" type="java.lang.String" value="pobTab" noResource="true"/>
-            <Property name="opaque" type="boolean" value="true"/>
             <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
               <Dimension value="[100, 25]"/>
             </Property>
@@ -210,14 +204,12 @@
             <Property name="text" type="java.lang.String" value="Banco de Dados"/>
             <Property name="actionCommand" type="java.lang.String" value="database"/>
             <Property name="borderPainted" type="boolean" value="false"/>
-            <Property name="contentAreaFilled" type="boolean" value="false"/>
             <Property name="focusable" type="boolean" value="false"/>
             <Property name="horizontalTextPosition" type="int" value="0"/>
             <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
               <Dimension value="[200, 35]"/>
             </Property>
             <Property name="name" type="java.lang.String" value="databaseTab" noResource="true"/>
-            <Property name="opaque" type="boolean" value="true"/>
             <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
               <Dimension value="[100, 25]"/>
             </Property>
@@ -335,10 +327,12 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="searchTextField" alignment="3" min="-2" pref="30" max="-2" attributes="0"/>
-                          <Component id="deleteButton" alignment="3" min="-2" pref="37" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="editButton" alignment="0" min="-2" pref="37" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="searchTextField" alignment="3" min="-2" pref="30" max="-2" attributes="0"/>
+                              <Component id="deleteButton" alignment="3" min="-2" pref="37" max="-2" attributes="0"/>
+                          </Group>
                       </Group>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
                       <Component id="jScrollPane1" pref="629" max="32767" attributes="0"/>
