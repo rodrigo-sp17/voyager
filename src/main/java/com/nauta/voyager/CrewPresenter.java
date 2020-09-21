@@ -306,7 +306,7 @@ public class CrewPresenter implements StateListener {
     }
     
     
-    /**
+    /*
      * This inner class implements the crew table model that will be used by
      * the POB Table. 
      * It will update the model whenever the Presenter notifies it.

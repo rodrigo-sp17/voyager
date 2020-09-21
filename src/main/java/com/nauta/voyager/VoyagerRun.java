@@ -23,8 +23,11 @@ public class VoyagerRun {
             public void run() {
                 MonitorFrame view = new MonitorFrame();
                 view.setVisible(true);
+                
                 CrewMemberModel model = new CrewMemberModel();
-                CrewPresenter presenter = new CrewPresenter(view, model);
+                
+                CrewPresenter crewPresenter = new CrewPresenter(view, model);
+                PobPresenter pobPresenter = new PobPresenter(view.pobPane, model);
             }
         });
     }

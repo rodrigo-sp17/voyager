@@ -31,23 +31,34 @@ public class CrewMemberModel extends StateNotifier {
     // Holds list of CrewMembers for manipulation
     private List<CrewMember> crewMemberList;
     
-    // Current loaded POB for manipulation
+    // Current loaded POB for manipulation    
     private Pob currentPob;
     
     // Holds connection data to the database
     private final Connection conn;
          
-    // Model Constructor
+    
+    // Constructor
     public CrewMemberModel() {        
         // Connects to database
-        conn = DatabaseUtil.getConnection();              
+        conn = DatabaseUtil.getConnection();
+        
+        // TODO - remove, its DUMMY
+        currentPob = new Pob(1, getAllCrewMembers(), LocalDate.now());
     }
     
     
     public Pob getLastPob() {
-        currentPob = new Pob(1, getAllCrewMembers(), LocalDate.now());
+        // TODO        
         return currentPob;
-    }       
+    }
+    
+    public void setLastPobDate(LocalDate date) {
+        // DUMMY
+        // TODO
+        currentPob.setDateIssued(date);        
+        fireStateChanged();
+    }
     
     // Creates CrewMember with new ID
     public void insertCrewMember(CrewMember member) {        
@@ -135,7 +146,10 @@ public class CrewMemberModel extends StateNotifier {
     public List<CrewMember> getAllCrewMembers() {
         List<CrewMember> list;
         try {
-            list = requestQuery("SELECT * FROM \"persons\" JOIN \"FUNCTIONS\" ON \"persons\".\"FUNCTION\" = \"FUNCTIONS\".\"FUNCTION_ID\"");            
+            list = requestQuery("SELECT * FROM \"persons\" "
+                    + "JOIN \"FUNCTIONS\" "
+                    + "ON \"persons\".\"FUNCTION\" "
+                    + "= \"FUNCTIONS\".\"FUNCTION_ID\"");            
             return list;
         } catch (SQLException e) {
             System.err.println("Model - getAllCrewMembers() - SQL Error:");
@@ -150,7 +164,8 @@ public class CrewMemberModel extends StateNotifier {
         try {
             list = requestQuery("SELECT * FROM \"persons\" "
                     + "JOIN \"FUNCTIONS\" "
-                    + "ON \"persons\".\"FUNCTION\" = \"FUNCTIONS\".\"FUNCTION_ID\" "
+                    + "ON \"persons\".\"FUNCTION\" "
+                    + "= \"FUNCTIONS\".\"FUNCTION_ID\" "
                     + "WHERE \"persons\".\"BOARDED\"=true");            
             return list;
         } catch (SQLException e) {
@@ -229,9 +244,9 @@ public class CrewMemberModel extends StateNotifier {
         return 0;
     }
     
-    /* 
+    /*
      * Deletes crew member with specified ID
-     * Returns 1 if successful, 0 if not    *   
+     * Returns 1 if successful, 0 if not 
     */
     public int deleteCrewMember(int id) {
         
@@ -292,6 +307,8 @@ public class CrewMemberModel extends StateNotifier {
         
         return list;
     }
+    
+    
      
     
     // Sends querys to connected database and returns as list of crew members
@@ -299,23 +316,13 @@ public class CrewMemberModel extends StateNotifier {
         List<CrewMember> list = null;
         try (Statement stmt = conn.createStatement()) {
             ResultSet rs = stmt.executeQuery(query);            
-            list = parseResult(rs);
-            System.out.println("List size at CMM: " + list.size());
+            list = parseResult(rs);            
             stmt.close();
         } catch (SQLException e) {
             // TODO - proper error handling
             System.err.println(e.getMessage());
         }
         return list;
-    }
-    
-    private void sendQuery(String query) {
-        try (Statement stmt = conn.createStatement()) {
-            stmt.executeUpdate(query);
-            stmt.close();
-        } catch (SQLException e) {
-        // TODO - error handling    
-        }    
     }
     
     // Parses a ResultSet to Crew Member objects, than adds them to a list

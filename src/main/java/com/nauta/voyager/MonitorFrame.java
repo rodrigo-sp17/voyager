@@ -21,9 +21,14 @@ TODO
  * @author rodrigo
  */
 class MonitorFrame extends javax.swing.JFrame {
+    
+    public PobView pobPane;
+    
+    
            
     public MonitorFrame() {
         initComponents();
+        initCustomComponents();
         initViewLogic();        
     }
     
@@ -68,9 +73,6 @@ class MonitorFrame extends javax.swing.JFrame {
         mainPane = new javax.swing.JPanel();
         statusPane = new javax.swing.JPanel();
         navPane = new javax.swing.JPanel();
-        pobPane = new javax.swing.JPanel();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        pobTable = new javax.swing.JTable();
         databasePanel = new javax.swing.JPanel();
         searchTextField = new javax.swing.JTextField();
         editButton = new javax.swing.JButton();
@@ -105,7 +107,7 @@ class MonitorFrame extends javax.swing.JFrame {
         jToolBar1.add(filler1);
 
         statusTab.setBackground(new java.awt.Color(255, 255, 255));
-        statusTab.setFont(new java.awt.Font("Calibri Light", 1, 18)); // NOI18N
+        statusTab.setFont(new java.awt.Font("Verdana", 0, 14)); // NOI18N
         statusTab.setSelected(true);
         statusTab.setText("Estado Geral");
         statusTab.setActionCommand("status");
@@ -121,7 +123,7 @@ class MonitorFrame extends javax.swing.JFrame {
         jToolBar1.add(statusTab);
 
         navTab.setBackground(new java.awt.Color(0, 51, 102));
-        navTab.setFont(new java.awt.Font("Calibri Light", 0, 18)); // NOI18N
+        navTab.setFont(new java.awt.Font("Verdana", 0, 14)); // NOI18N
         navTab.setForeground(new java.awt.Color(255, 255, 255));
         navTab.setText("Navegação");
         navTab.setActionCommand("nav");
@@ -137,7 +139,7 @@ class MonitorFrame extends javax.swing.JFrame {
         jToolBar1.add(navTab);
 
         pobTab.setBackground(new java.awt.Color(0, 51, 102));
-        pobTab.setFont(new java.awt.Font("Calibri Light", 0, 18)); // NOI18N
+        pobTab.setFont(new java.awt.Font("Verdana", 0, 14)); // NOI18N
         pobTab.setForeground(new java.awt.Color(255, 255, 255));
         pobTab.setText("POB");
         pobTab.setActionCommand("pob");
@@ -153,7 +155,7 @@ class MonitorFrame extends javax.swing.JFrame {
         jToolBar1.add(pobTab);
 
         databaseTab.setBackground(new java.awt.Color(0, 51, 102));
-        databaseTab.setFont(new java.awt.Font("Calibri Light", 0, 18)); // NOI18N
+        databaseTab.setFont(new java.awt.Font("Verdana", 0, 14)); // NOI18N
         databaseTab.setForeground(new java.awt.Color(255, 255, 255));
         databaseTab.setText("Banco de Dados");
         databaseTab.setActionCommand("database");
@@ -201,50 +203,6 @@ class MonitorFrame extends javax.swing.JFrame {
 
         mainPane.add(navPane, "navCard");
 
-        pobPane.setBackground(new java.awt.Color(255, 255, 255));
-
-        pobTable.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        pobTable.setFont(new java.awt.Font("Calibri", 0, 12)); // NOI18N
-        pobTable.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
-            }
-        ));
-        pobTable.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        pobTable.setFillsViewportHeight(true);
-        pobTable.setRowHeight(20);
-        pobTable.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        jScrollPane2.setViewportView(pobTable);
-
-        javax.swing.GroupLayout pobPaneLayout = new javax.swing.GroupLayout(pobPane);
-        pobPane.setLayout(pobPaneLayout);
-        pobPaneLayout.setHorizontalGroup(
-            pobPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1125, Short.MAX_VALUE)
-            .addGroup(pobPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pobPaneLayout.createSequentialGroup()
-                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 1105, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap()))
-        );
-        pobPaneLayout.setVerticalGroup(
-            pobPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 708, Short.MAX_VALUE)
-            .addGroup(pobPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pobPaneLayout.createSequentialGroup()
-                    .addContainerGap(205, Short.MAX_VALUE)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 492, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-        );
-
-        mainPane.add(pobPane, "pobCard");
-
         databasePanel.setBackground(new java.awt.Color(255, 255, 255));
         databasePanel.setName("databasePanel"); // NOI18N
 
@@ -252,13 +210,13 @@ class MonitorFrame extends javax.swing.JFrame {
         searchTextField.setToolTipText("Digite aqui para filtrar");
 
         editButton.setBackground(new java.awt.Color(0, 51, 102));
-        editButton.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        editButton.setFont(new java.awt.Font("Verdana", 1, 12)); // NOI18N
         editButton.setForeground(new java.awt.Color(255, 255, 255));
         editButton.setText("Editar");
         editButton.setActionCommand("edit");
 
         deleteButton.setBackground(new java.awt.Color(200, 0, 0));
-        deleteButton.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        deleteButton.setFont(new java.awt.Font("Verdana", 1, 12)); // NOI18N
         deleteButton.setForeground(new java.awt.Color(255, 255, 255));
         deleteButton.setText("Deletar");
         deleteButton.setActionCommand("delete");
@@ -269,7 +227,6 @@ class MonitorFrame extends javax.swing.JFrame {
         crewDBTable.setToolTipText("");
         crewDBTable.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         crewDBTable.setFillsViewportHeight(true);
-        crewDBTable.setRowHeight(20);
         crewDBTable.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         jScrollPane1.setViewportView(crewDBTable);
         crewDBTable.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_INTERVAL_SELECTION);
@@ -279,7 +236,7 @@ class MonitorFrame extends javax.swing.JFrame {
         databasePanelLayout.setHorizontalGroup(
             databasePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(databasePanelLayout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(12, 12, 12)
                 .addGroup(databasePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane1)
                     .addGroup(databasePanelLayout.createSequentialGroup()
@@ -288,20 +245,20 @@ class MonitorFrame extends javax.swing.JFrame {
                         .addComponent(editButton, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(deleteButton, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 124, Short.MAX_VALUE)))
-                .addContainerGap())
+                        .addGap(0, 120, Short.MAX_VALUE)))
+                .addGap(12, 12, 12))
         );
         databasePanelLayout.setVerticalGroup(
             databasePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(databasePanelLayout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(12, 12, 12)
                 .addGroup(databasePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(searchTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(editButton, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(deleteButton, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(deleteButton, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(editButton, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 631, Short.MAX_VALUE)
-                .addContainerGap())
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 629, Short.MAX_VALUE)
+                .addGap(12, 12, 12))
         );
 
         mainPane.add(databasePanel, "databaseCard");
@@ -324,6 +281,10 @@ class MonitorFrame extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
     
+    void initCustomComponents() {
+        pobPane = new PobView();        
+        mainPane.add(pobPane, "pobCard");
+    }
     
     /**
      * This method sets visual properties of the CrewDB JTable.
@@ -356,9 +317,6 @@ class MonitorFrame extends javax.swing.JFrame {
     }    
     
     
-    /**
-     * These classes establish event handlers for view appearance logic
-     */   
     // Changes color of buttons when selected
     class MainMenuViewHandler implements ItemListener {
         @Override
@@ -386,14 +344,11 @@ class MonitorFrame extends javax.swing.JFrame {
     javax.swing.JButton jButton2;
     private javax.swing.JMenuItem jMenuItem1;
     javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
     javax.swing.JToolBar jToolBar1;
     javax.swing.JPanel mainPane;
     javax.swing.JPanel navPane;
     javax.swing.JToggleButton navTab;
-    javax.swing.JPanel pobPane;
     javax.swing.JToggleButton pobTab;
-    private javax.swing.JTable pobTable;
     javax.swing.JTextField searchTextField;
     javax.swing.JPanel statusPane;
     javax.swing.JToggleButton statusTab;

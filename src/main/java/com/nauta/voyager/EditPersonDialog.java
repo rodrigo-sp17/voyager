@@ -45,7 +45,7 @@ public class EditPersonDialog extends javax.swing.JDialog {
     private List<Function> functions;
     
     // Format of the dates used on the dialog
-    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    private final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
     /**
      * Creates new form EditCrewMemberDialog
@@ -271,9 +271,9 @@ public class EditPersonDialog extends javax.swing.JDialog {
                             .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(companyField, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
-                        .addGroup(dialogPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(sispatField, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGroup(dialogPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(sispatField, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addGroup(dialogPanelLayout.createSequentialGroup()
                         .addGap(176, 176, 176)
                         .addComponent(saveButton, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -391,8 +391,8 @@ public class EditPersonDialog extends javax.swing.JDialog {
             cirField.setText(person.getCir());
 
             // Date Fields
-            birthDateField.setText(person.getBirthDate().format(formatter));
-            cirExpDateField.setText(person.getCirExpDate().format(formatter));
+            birthDateField.setText(person.getBirthDate().format(FORMATTER));
+            cirExpDateField.setText(person.getCirExpDate().format(FORMATTER));
         }        
     }
     
@@ -408,8 +408,8 @@ public class EditPersonDialog extends javax.swing.JDialog {
         
         // Parses date fields from string to LocalDates        
         try {    
-            person.setBirthDate(LocalDate.parse(birthDateField.getText(), formatter));
-            person.setCirExpDate(LocalDate.parse(cirExpDateField.getText(), formatter));
+            person.setBirthDate(LocalDate.parse(birthDateField.getText(), FORMATTER));
+            person.setCirExpDate(LocalDate.parse(cirExpDateField.getText(), FORMATTER));
         } catch (DateTimeParseException e) {
             System.err.println("Edit Person - Could not save date to Crew Member: " + e);
         }
@@ -447,8 +447,8 @@ public class EditPersonDialog extends javax.swing.JDialog {
     // Input verifiers    
     class NameVerifier extends InputVerifier {        
         @Override
-        public boolean shouldYieldFocus(JComponent input) {
-            boolean inputOK = verify(input);
+        public boolean shouldYieldFocus(JComponent source, JComponent target) {
+            boolean inputOK = verify(source);
             if (inputOK) {
                 return true;
             } else {
@@ -472,8 +472,8 @@ public class EditPersonDialog extends javax.swing.JDialog {
     
     class CompanyVerifier extends InputVerifier {        
         @Override
-        public boolean shouldYieldFocus(JComponent input) {
-            boolean inputOK = verify(input);
+        public boolean shouldYieldFocus(JComponent source, JComponent target) {
+            boolean inputOK = verify(source);
             if (inputOK) {
                 return true;
             } else {
@@ -495,8 +495,8 @@ public class EditPersonDialog extends javax.swing.JDialog {
     
     class SispatVerifier extends InputVerifier {        
         @Override
-        public boolean shouldYieldFocus(JComponent input) {
-            boolean inputOK = verify(input);
+        public boolean shouldYieldFocus(JComponent source, JComponent target) {
+            boolean inputOK = verify(source);
             if (inputOK) {
                 return true;
             } else {
@@ -517,8 +517,8 @@ public class EditPersonDialog extends javax.swing.JDialog {
     
     class NationalityVerifier extends InputVerifier {        
         @Override
-        public boolean shouldYieldFocus(JComponent input) {
-            boolean inputOK = verify(input);
+        public boolean shouldYieldFocus(JComponent source, JComponent target) {
+            boolean inputOK = verify(source);
             if (inputOK) {
                 return true;
             } else {
@@ -539,8 +539,8 @@ public class EditPersonDialog extends javax.swing.JDialog {
     
     class CirVerifier extends InputVerifier {        
         @Override
-        public boolean shouldYieldFocus(JComponent input) {
-            boolean inputOK = verify(input);
+        public boolean shouldYieldFocus(JComponent source, JComponent target) {
+            boolean inputOK = verify(source);
             if (inputOK) {
                 return true;
             } else {
@@ -561,8 +561,8 @@ public class EditPersonDialog extends javax.swing.JDialog {
     
     class BirthDateVerifier extends InputVerifier {
         @Override
-        public boolean shouldYieldFocus(JComponent input) {
-            boolean inputOK = verify(input);
+        public boolean shouldYieldFocus(JComponent source, JComponent target) {
+            boolean inputOK = verify(source);
             if (inputOK) {
                 return true;
             } else {

@@ -11,11 +11,10 @@ import java.util.List;
 /**
  * @author rodrigo
  * 
- * This class is an implementation of an observed class in an Observer Synchronization
- * application.
- * It is used by Models in an MVP/MVC architecture to notify interested observers which
- * implement the StateListener interface.
- * 
+ * This class is an implementation of an observed class in an Observer
+ * Synchronization application.
+ * It is used by Models in an MVP/MVC architecture to notify interested 
+ * observers which implement the StateListener interface. 
  */
 class StateNotifier {
     private List<StateListener> listeners;
@@ -41,7 +40,7 @@ class StateNotifier {
         });
         System.out.println("State changed returned");
     }
-    
+        
     /**
      * Returns the class the fires the change of state
      * @return 
