@@ -19,10 +19,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.ListCellRenderer;
 
-/*
- * TODO
- * - Input validation for all fields (Date, Names, etc) 
-*/
 
 /**
  *
@@ -97,6 +93,7 @@ public class EditPersonDialog extends javax.swing.JDialog {
         saveButton = new javax.swing.JButton();
         birthDateField = new javax.swing.JFormattedTextField();
         cirExpDateField = new javax.swing.JFormattedTextField();
+        boardingDataButton = new javax.swing.JButton();
 
         jButton1.setBackground(new java.awt.Color(0, 0, 102));
         jButton1.setFont(new java.awt.Font("Calibri", 0, 14)); // NOI18N
@@ -109,152 +106,180 @@ public class EditPersonDialog extends javax.swing.JDialog {
         setResizable(false);
 
         dialogPanel.setBackground(new java.awt.Color(255, 255, 255));
+        dialogPanel.setPreferredSize(new java.awt.Dimension(36, 16));
 
+        nameField.setBackground(new java.awt.Color(255, 255, 255));
         nameField.setColumns(60);
-        nameField.setFont(new java.awt.Font("Calibri", 0, 18)); // NOI18N
+        nameField.setFont(new java.awt.Font("Verdana", 0, 16)); // NOI18N
+        nameField.setForeground(new java.awt.Color(0, 0, 0));
+        nameField.setText("123456789012345678901234567890123456789012345678901234567890");
 
-        jLabel1.setFont(new java.awt.Font("Calibri", 0, 18)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(102, 102, 102));
+        jLabel1.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(0, 0, 0));
         jLabel1.setLabelFor(nameField);
         jLabel1.setText("Nome");
         jLabel1.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
         jLabel1.setFocusable(false);
         jLabel1.setInheritsPopupMenu(false);
-        jLabel1.setPreferredSize(new java.awt.Dimension(120, 20));
+        jLabel1.setPreferredSize(new java.awt.Dimension(36, 16));
         jLabel1.setRequestFocusEnabled(false);
         jLabel1.setVerifyInputWhenFocusTarget(false);
         jLabel1.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
 
+        companyField.setBackground(new java.awt.Color(255, 255, 255));
         companyField.setColumns(40);
-        companyField.setFont(new java.awt.Font("Calibri", 0, 18)); // NOI18N
+        companyField.setFont(new java.awt.Font("Verdana", 0, 16)); // NOI18N
+        companyField.setForeground(new java.awt.Color(0, 0, 0));
+        companyField.setText("1234567890123456789012345678901234567890");
 
-        jLabel2.setFont(new java.awt.Font("Calibri", 0, 18)); // NOI18N
-        jLabel2.setForeground(new java.awt.Color(102, 102, 102));
+        jLabel2.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
+        jLabel2.setForeground(new java.awt.Color(0, 0, 0));
         jLabel2.setLabelFor(nameField);
         jLabel2.setText("Empresa");
         jLabel2.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
         jLabel2.setFocusable(false);
         jLabel2.setInheritsPopupMenu(false);
-        jLabel2.setPreferredSize(new java.awt.Dimension(120, 20));
+        jLabel2.setPreferredSize(new java.awt.Dimension(36, 16));
         jLabel2.setRequestFocusEnabled(false);
         jLabel2.setVerifyInputWhenFocusTarget(false);
         jLabel2.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
 
-        jLabel3.setFont(new java.awt.Font("Calibri", 0, 18)); // NOI18N
-        jLabel3.setForeground(new java.awt.Color(102, 102, 102));
+        jLabel3.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
+        jLabel3.setForeground(new java.awt.Color(0, 0, 0));
         jLabel3.setLabelFor(nameField);
         jLabel3.setText("Função");
         jLabel3.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
         jLabel3.setFocusable(false);
         jLabel3.setInheritsPopupMenu(false);
-        jLabel3.setPreferredSize(new java.awt.Dimension(120, 20));
+        jLabel3.setPreferredSize(new java.awt.Dimension(36, 16));
         jLabel3.setRequestFocusEnabled(false);
         jLabel3.setVerifyInputWhenFocusTarget(false);
         jLabel3.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
 
-        sispatField.setFont(new java.awt.Font("Calibri", 0, 18)); // NOI18N
+        sispatField.setBackground(new java.awt.Color(255, 255, 255));
+        sispatField.setColumns(8);
+        sispatField.setFont(new java.awt.Font("Verdana", 0, 16)); // NOI18N
+        sispatField.setForeground(new java.awt.Color(0, 0, 0));
         sispatField.setMaximumSize(new java.awt.Dimension(176, 176));
 
-        jLabel4.setFont(new java.awt.Font("Calibri", 0, 18)); // NOI18N
-        jLabel4.setForeground(new java.awt.Color(102, 102, 102));
+        jLabel4.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
+        jLabel4.setForeground(new java.awt.Color(0, 0, 0));
         jLabel4.setLabelFor(nameField);
         jLabel4.setText("SISPAT");
         jLabel4.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
         jLabel4.setFocusable(false);
         jLabel4.setInheritsPopupMenu(false);
-        jLabel4.setPreferredSize(new java.awt.Dimension(120, 20));
+        jLabel4.setPreferredSize(new java.awt.Dimension(36, 16));
         jLabel4.setRequestFocusEnabled(false);
         jLabel4.setVerifyInputWhenFocusTarget(false);
         jLabel4.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
 
-        jLabel5.setFont(new java.awt.Font("Calibri", 0, 18)); // NOI18N
-        jLabel5.setForeground(new java.awt.Color(102, 102, 102));
+        jLabel5.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
+        jLabel5.setForeground(new java.awt.Color(0, 0, 0));
         jLabel5.setLabelFor(nameField);
         jLabel5.setText("Data de Nascimento");
         jLabel5.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
         jLabel5.setFocusable(false);
         jLabel5.setInheritsPopupMenu(false);
-        jLabel5.setPreferredSize(new java.awt.Dimension(120, 20));
+        jLabel5.setPreferredSize(new java.awt.Dimension(36, 16));
         jLabel5.setRequestFocusEnabled(false);
         jLabel5.setVerifyInputWhenFocusTarget(false);
         jLabel5.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
 
+        nationalityField.setBackground(new java.awt.Color(255, 255, 255));
         nationalityField.setColumns(20);
-        nationalityField.setFont(new java.awt.Font("Calibri", 0, 18)); // NOI18N
-        nationalityField.setText("BRASILEIRA");
+        nationalityField.setFont(new java.awt.Font("Verdana", 0, 16)); // NOI18N
+        nationalityField.setForeground(new java.awt.Color(0, 0, 0));
+        nationalityField.setText("12345678901234567890");
 
-        jLabel6.setFont(new java.awt.Font("Calibri", 0, 18)); // NOI18N
-        jLabel6.setForeground(new java.awt.Color(102, 102, 102));
+        jLabel6.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
+        jLabel6.setForeground(new java.awt.Color(0, 0, 0));
         jLabel6.setLabelFor(nameField);
         jLabel6.setText("Nacionalidade");
         jLabel6.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
         jLabel6.setFocusable(false);
         jLabel6.setInheritsPopupMenu(false);
-        jLabel6.setPreferredSize(new java.awt.Dimension(120, 20));
+        jLabel6.setPreferredSize(new java.awt.Dimension(36, 16));
         jLabel6.setRequestFocusEnabled(false);
         jLabel6.setVerifyInputWhenFocusTarget(false);
         jLabel6.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
 
+        cirField.setBackground(new java.awt.Color(255, 255, 255));
         cirField.setColumns(14);
-        cirField.setFont(new java.awt.Font("Calibri", 0, 18)); // NOI18N
+        cirField.setFont(new java.awt.Font("Verdana", 0, 16)); // NOI18N
+        cirField.setForeground(new java.awt.Color(0, 0, 0));
+        cirField.setText("12345678901234");
+        cirField.setToolTipText("");
 
-        jLabel7.setFont(new java.awt.Font("Calibri", 0, 18)); // NOI18N
-        jLabel7.setForeground(new java.awt.Color(102, 102, 102));
+        jLabel7.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
+        jLabel7.setForeground(new java.awt.Color(0, 0, 0));
         jLabel7.setLabelFor(nameField);
         jLabel7.setText("Nº CIR ou ID");
         jLabel7.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
         jLabel7.setFocusable(false);
         jLabel7.setInheritsPopupMenu(false);
-        jLabel7.setPreferredSize(new java.awt.Dimension(120, 20));
+        jLabel7.setPreferredSize(new java.awt.Dimension(36, 16));
         jLabel7.setRequestFocusEnabled(false);
         jLabel7.setVerifyInputWhenFocusTarget(false);
         jLabel7.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
 
-        jLabel8.setFont(new java.awt.Font("Calibri", 0, 18)); // NOI18N
-        jLabel8.setForeground(new java.awt.Color(102, 102, 102));
+        jLabel8.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
+        jLabel8.setForeground(new java.awt.Color(0, 0, 0));
         jLabel8.setLabelFor(nameField);
         jLabel8.setText("Validade CIR/ID");
         jLabel8.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
         jLabel8.setFocusable(false);
         jLabel8.setInheritsPopupMenu(false);
-        jLabel8.setPreferredSize(new java.awt.Dimension(120, 20));
+        jLabel8.setPreferredSize(new java.awt.Dimension(36, 16));
         jLabel8.setRequestFocusEnabled(false);
         jLabel8.setVerifyInputWhenFocusTarget(false);
         jLabel8.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
 
-        functionField.setFont(new java.awt.Font("Calibri", 0, 18)); // NOI18N
+        functionField.setBackground(new java.awt.Color(255, 255, 255));
+        functionField.setFont(new java.awt.Font("Verdana", 0, 16)); // NOI18N
+        functionField.setForeground(new java.awt.Color(0, 0, 0));
         functionField.setToolTipText("Escolha uma função pré-cadastrada");
         functionField.setActionCommand("functionChanged");
         functionField.setPreferredSize(new java.awt.Dimension(114, 29));
 
-        cancelButton.setBackground(new java.awt.Color(0, 51, 102));
-        cancelButton.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        cancelButton.setBackground(new java.awt.Color(153, 153, 0));
+        cancelButton.setFont(new java.awt.Font("Verdana", 1, 12)); // NOI18N
         cancelButton.setForeground(new java.awt.Color(255, 255, 255));
         cancelButton.setText("Cancelar");
         cancelButton.setActionCommand("cancel");
 
         saveButton.setBackground(new java.awt.Color(0, 51, 102));
-        saveButton.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        saveButton.setFont(new java.awt.Font("Verdana", 1, 12)); // NOI18N
         saveButton.setForeground(new java.awt.Color(255, 255, 255));
         saveButton.setText("Salvar");
         saveButton.setActionCommand("save");
 
+        birthDateField.setBackground(new java.awt.Color(255, 255, 255));
         birthDateField.setColumns(8);
+        birthDateField.setForeground(new java.awt.Color(0, 0, 0));
         try {
             birthDateField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("##/##/####")));
         } catch (java.text.ParseException ex) {
             ex.printStackTrace();
         }
         birthDateField.setToolTipText("Formato: dd/mm/yyyy");
-        birthDateField.setFont(new java.awt.Font("Calibri", 0, 18)); // NOI18N
+        birthDateField.setFont(new java.awt.Font("Verdana", 0, 16)); // NOI18N
 
+        cirExpDateField.setBackground(new java.awt.Color(255, 255, 255));
         cirExpDateField.setColumns(8);
+        cirExpDateField.setForeground(new java.awt.Color(0, 0, 0));
         try {
             cirExpDateField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("##/##/####")));
         } catch (java.text.ParseException ex) {
             ex.printStackTrace();
         }
-        cirExpDateField.setFont(new java.awt.Font("Calibri", 0, 18)); // NOI18N
+        cirExpDateField.setFont(new java.awt.Font("Verdana", 0, 16)); // NOI18N
+
+        boardingDataButton.setBackground(new java.awt.Color(204, 204, 204));
+        boardingDataButton.setFont(new java.awt.Font("Verdana", 1, 12)); // NOI18N
+        boardingDataButton.setForeground(new java.awt.Color(0, 0, 0));
+        boardingDataButton.setText("Dados de Embarque");
+        boardingDataButton.setActionCommand("save");
 
         javax.swing.GroupLayout dialogPanelLayout = new javax.swing.GroupLayout(dialogPanel);
         dialogPanel.setLayout(dialogPanelLayout);
@@ -263,84 +288,85 @@ public class EditPersonDialog extends javax.swing.JDialog {
             .addGroup(dialogPanelLayout.createSequentialGroup()
                 .addGap(20, 20, 20)
                 .addGroup(dialogPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(nameField, javax.swing.GroupLayout.PREFERRED_SIZE, 534, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(functionField, javax.swing.GroupLayout.PREFERRED_SIZE, 534, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(dialogPanelLayout.createSequentialGroup()
                         .addGroup(dialogPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(companyField, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(nationalityField, javax.swing.GroupLayout.PREFERRED_SIZE, 225, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
-                        .addGroup(dialogPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(sispatField, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addGroup(dialogPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(birthDateField, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(companyField, javax.swing.GroupLayout.PREFERRED_SIZE, 417, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(dialogPanelLayout.createSequentialGroup()
-                        .addGap(176, 176, 176)
-                        .addComponent(saveButton, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(cancelButton, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(dialogPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(sispatField, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(dialogPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(cirField, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(dialogPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(cirExpDateField, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(dialogPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addComponent(functionField, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(javax.swing.GroupLayout.Alignment.LEADING, dialogPanelLayout.createSequentialGroup()
-                            .addGroup(dialogPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(cirField)
-                                .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(nationalityField))
-                            .addGap(18, 18, 18)
-                            .addGroup(dialogPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, 176, Short.MAX_VALUE)
-                                .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(birthDateField)
-                                .addComponent(cirExpDateField)))))
-                .addContainerGap(53, Short.MAX_VALUE))
+                            .addComponent(boardingDataButton)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(saveButton, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(cancelButton, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(nameField, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 616, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(18, Short.MAX_VALUE))
         );
         dialogPanelLayout.setVerticalGroup(
             dialogPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(dialogPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, 0)
+                .addGap(20, 20, 20)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(1, 1, 1)
                 .addComponent(nameField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(1, 1, 1)
                 .addComponent(functionField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(18, 18, 18)
+                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(1, 1, 1)
                 .addGroup(dialogPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(dialogPanelLayout.createSequentialGroup()
-                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, 0)
-                        .addComponent(companyField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(companyField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(1, 1, 1)
+                        .addComponent(sispatField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(dialogPanelLayout.createSequentialGroup()
-                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, 0)
-                        .addComponent(sispatField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(dialogPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, dialogPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(nationalityField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(birthDateField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, dialogPanelLayout.createSequentialGroup()
                         .addGroup(dialogPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(29, 29, 29)))
-                .addGroup(dialogPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, dialogPanelLayout.createSequentialGroup()
-                        .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, 0)
+                            .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(1, 1, 1)
                         .addGroup(dialogPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(cirField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(cirExpDateField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, dialogPanelLayout.createSequentialGroup()
-                        .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(29, 29, 29)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 41, Short.MAX_VALUE)
+                            .addComponent(cirExpDateField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addGap(18, 18, 18)
+                .addGroup(dialogPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(1, 1, 1)
+                .addGroup(dialogPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(nationalityField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(birthDateField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(50, 50, 50)
                 .addGroup(dialogPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(cancelButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(saveButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(25, 25, 25))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, dialogPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(saveButton, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(boardingDataButton, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(20, 20, 20))
         );
 
         ComboBoxRenderer renderer = new ComboBoxRenderer();
@@ -350,11 +376,11 @@ public class EditPersonDialog extends javax.swing.JDialog {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(dialogPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(dialogPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 654, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(dialogPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(dialogPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 428, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         pack();
@@ -638,6 +664,7 @@ public class EditPersonDialog extends javax.swing.JDialog {
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JFormattedTextField birthDateField;
+    private javax.swing.JButton boardingDataButton;
     private javax.swing.JButton cancelButton;
     private javax.swing.JFormattedTextField cirExpDateField;
     private javax.swing.JTextField cirField;
