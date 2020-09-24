@@ -20,13 +20,17 @@ public class Pob {
     
     private int numMembers;
             
-    private LocalDate dateIssued;    
+    private LocalDate dateIssued;
+    
+    private String crew;
 
-    public Pob(int pobId, List<CrewMember> members, LocalDate dateIssued) {
+    public Pob(int pobId, List<CrewMember> members,
+            LocalDate dateIssued, String crew) {
         this.pobId = pobId;
         this.members = members;
         this.numMembers = members.size();
         this.dateIssued = dateIssued;
+        this.crew = crew;
     }
 
     public int getPobId() {
@@ -59,6 +63,14 @@ public class Pob {
 
     public void setDateIssued(LocalDate dateIssued) {
         this.dateIssued = dateIssued;
+    }
+
+    public String getCrew() {
+        return crew;
+    }
+
+    public void setCrew(String crew) {
+        this.crew = crew;
     }
     
     

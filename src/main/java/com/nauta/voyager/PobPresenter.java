@@ -5,12 +5,20 @@
  */
 package com.nauta.voyager;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 import javax.swing.table.*;
 
 /**
@@ -38,25 +46,45 @@ public class PobPresenter implements StateListener {
     }    
    
     private void initPresentationLogic() {
+        // Sets this class as a listener to CrewMemberModel
         model.addStateListener(this);
         
-        // Sets up pobTable
-        PobTableModel tableModel = new PobTableModel();
-        view.getPobTable().setModel(tableModel);
-        TableRowSorter sorter = new TableRowSorter<>(tableModel);
-        view.getPobTable().setRowSorter(sorter);
+        // Sets crewField with its possible data
+        model.getAllCrews().forEach(s -> view.getCrewField().addItem(s));
         
-        // Event handlers
-        view.getPobDateField().addFocusListener(new DateFieldHandler());        
+        // Sets up pobTable
+        JTable table = view.getPobTable();
+        PobTableModel tableModel = new PobTableModel();
+        tableModel.addTableModelListener(new TableSizeHandler());
+        table.setModel(tableModel);
+        TableRowSorter sorter = new TableRowSorter<>(tableModel);
+        table.setRowSorter(sorter);
+        PobTableHandler handler = new PobTableHandler();        
+        table.getSelectionModel().addListSelectionListener(handler);
+        table.addMouseListener(handler);
+        
+        
+        // Sets PobDateField
+        view.getPobDateField().addFocusListener(new DateFieldHandler());
+        
+        // Sets handlers for buttons
+        ButtonsHandler bHandler = new ButtonsHandler();
+        view.getAddMemberButton().addActionListener(bHandler);
+        view.getDeleteMemberButton().addActionListener(bHandler);
+        view.getPrintPobButton().addActionListener(bHandler);        
     }
     
     private void readGUIStateFromDomain() {
         LocalDate date = model.getLastPob().getDateIssued();
         view.getPobDateField().setText(date.format(view.DATE_FORMATTER));
+        
+        String currentCrew = model.getLastPob().getCrew();
+        view.getCrewField().setSelectedItem(currentCrew);       
     }
     
+    
     // Event handlers
-    class DateFieldHandler implements FocusListener {
+    private final class DateFieldHandler implements FocusListener {
 
         @Override
         public void focusGained(FocusEvent e) {
@@ -71,8 +99,83 @@ public class PobPresenter implements StateListener {
         }        
     }
     
+    private final class PobTableHandler implements MouseListener,
+            ListSelectionListener {
+
+        @Override
+        public void mouseClicked(MouseEvent e) {
+            return;
+        }
+
+        @Override
+        public void mousePressed(MouseEvent e) {
+            return;
+        }
+
+        @Override
+        public void mouseReleased(MouseEvent e) {
+            return;
+        }
+
+        @Override
+        public void mouseEntered(MouseEvent e) {
+            return;
+        }
+
+        @Override
+        public void mouseExited(MouseEvent e) {
+            return;
+        }
+
+        @Override
+        public void valueChanged(ListSelectionEvent e) {
+            setDeleteMemberButtonState();
+            return;
+        }
+        
+    }
     
-    final class PobTableModel extends AbstractTableModel {
+    // Updates pobSizeField whenever the PobTable model changes, not the view
+    private final class TableSizeHandler implements TableModelListener {
+
+        @Override
+        public void tableChanged(TableModelEvent e) {
+            int rows = ((TableModel) e.getSource()).getRowCount();
+            view.getPobSizeField().setText(Integer.toString(rows));
+        }        
+    }
+    
+    private final class ButtonsHandler implements ActionListener {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            switch (e.getActionCommand()) {
+                case "add" -> {
+                    // TODO
+                }
+                
+                case "delete" -> {
+                    // TODO
+                }
+                
+                case "print" -> {
+                    // TOOD
+                }
+                
+                default -> {                    
+                }
+            }            
+        }
+        
+    }
+    
+    private void setDeleteMemberButtonState() {
+        //TODO
+        return;
+    }
+    
+    
+    private final class PobTableModel extends AbstractTableModel {
         private final String[] columnNames = {
             "CABINE",
             "NOME",

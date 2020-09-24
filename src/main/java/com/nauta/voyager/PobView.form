@@ -38,7 +38,7 @@
                       <EmptySpace min="-2" pref="25" max="-2" attributes="0"/>
                       <Component id="jLabel3" min="-2" pref="56" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jComboBox1" min="-2" max="-2" attributes="0"/>
+                      <Component id="crewField" min="-2" max="-2" attributes="0"/>
                       <EmptySpace pref="324" max="32767" attributes="0"/>
                       <Component id="printPobButton" min="-2" max="-2" attributes="0"/>
                       <EmptySpace min="-2" pref="100" max="-2" attributes="0"/>
@@ -63,7 +63,7 @@
                   <Component id="deleteMemberButton" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="addMemberButton" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="printPobButton" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="jComboBox1" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="crewField" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="pobSizeField" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="pobDateField" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
@@ -194,7 +194,7 @@
         <Property name="text" type="java.lang.String" value="Turma:"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JComboBox" name="jComboBox1">
+    <Component class="javax.swing.JComboBox" name="crewField">
       <Properties>
         <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
           <Color blue="ff" green="ff" red="ff" type="rgb"/>
@@ -229,6 +229,7 @@
           <Color blue="ff" green="ff" red="ff" type="rgb"/>
         </Property>
         <Property name="text" type="java.lang.String" value="-"/>
+        <Property name="actionCommand" type="java.lang.String" value="delete"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JButton" name="addMemberButton">
@@ -243,6 +244,7 @@
           <Color blue="ff" green="ff" red="ff" type="rgb"/>
         </Property>
         <Property name="text" type="java.lang.String" value="+"/>
+        <Property name="actionCommand" type="java.lang.String" value="add"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JButton" name="printPobButton">
@@ -257,6 +259,7 @@
           <Color blue="0" green="0" red="0" type="rgb"/>
         </Property>
         <Property name="text" type="java.lang.String" value="Imprimir"/>
+        <Property name="actionCommand" type="java.lang.String" value="print"/>
       </Properties>
     </Component>
   </SubComponents>

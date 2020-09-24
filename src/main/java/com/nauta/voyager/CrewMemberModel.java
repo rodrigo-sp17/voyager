@@ -36,6 +36,7 @@ public class CrewMemberModel extends StateNotifier {
     
     // Holds connection data to the database
     private final Connection conn;
+    
          
     
     // Constructor
@@ -44,7 +45,7 @@ public class CrewMemberModel extends StateNotifier {
         conn = DatabaseUtil.getConnection();
         
         // TODO - remove, its DUMMY
-        currentPob = new Pob(1, getAllCrewMembers(), LocalDate.now());
+        currentPob = new Pob(1, getAllCrewMembers(), LocalDate.now(), "A");
     }
     
     
@@ -60,7 +61,69 @@ public class CrewMemberModel extends StateNotifier {
         fireStateChanged();
     }
     
-    // Creates CrewMember with new ID
+    
+    private final String[] CREWS = {"A", "B", "N/A"};
+    
+    public List<String> getAllCrews() {
+        return Arrays.asList(CREWS);      
+    }
+    
+    private final String[] CABINS = {"401", "402", "403"};
+    
+    public List<String> getAllCabins() {
+        return Arrays.asList(CABINS);
+    }
+    
+    private final String[] SHIFTS = {
+        "0600-1800",
+        "1800-0600",
+        "0000-1200",
+        "1200-2400",
+        "24h",
+        "N/A"
+    };
+    
+    public List<String> getAllShifts() {
+        return Arrays.asList(SHIFTS);
+    }
+    
+    /**
+     * Retrieves functions from database, which may be modified by the user.
+     * 
+     * @return List<Function>   list of Function objects available in database
+     */
+    public List<Function> getFunctions() {
+        String query = "SELECT * FROM \"FUNCTIONS\"";
+        List<Function> list = new ArrayList<>();
+        
+        try (Statement stmt = conn.createStatement()) {
+            ResultSet rs = stmt.executeQuery(query);
+            while (rs.next()) {
+                Function f = new Function(
+                        rs.getInt("FUNCTION_ID"),
+                        rs.getString("FUNCTION_PREFIX"),
+                        rs.getString("FUNCTION_DESCRIPTION")
+                );
+                list.add(f);
+            }
+            
+            stmt.close();
+        } catch (SQLException e) {
+            System.err.println(TAG + " Could not get functions from DB" + e);
+        }
+        
+        return list;
+    }
+    
+    
+    
+    /**
+     * Inserts a CrewMember in the database. The id field in CrewMember is
+     * ignored, since the database provided its own identification on INSERT
+     * operations.
+     * 
+     * @param member    the CrewMember instance to add to the database 
+     */
     public void insertCrewMember(CrewMember member) {        
         
         PreparedStatement insertCM = null;
@@ -129,6 +192,10 @@ public class CrewMemberModel extends StateNotifier {
 
     // Gets crewmember with specified ID (It is assumed the id is unique!)
     public CrewMember getCrewMember(int id) {
+        if (id < 0) {
+            throw new IllegalArgumentException();
+        }
+        
         try {
             List<CrewMember> list = requestQuery("SELECT * FROM \"persons\" "
                     + "JOIN \"FUNCTIONS\" "
@@ -177,6 +244,10 @@ public class CrewMemberModel extends StateNotifier {
     
     // Updates crew member with specified ID
     public int updateCrewMember(int id, CrewMember updatedMember) {
+        if (id < 0) {
+            throw new IllegalArgumentException();
+        }
+        
         
         PreparedStatement updateCM = null;
         
@@ -282,32 +353,7 @@ public class CrewMemberModel extends StateNotifier {
             }            
         }       
         return result;
-    }
-    
-    // Gets functions from database
-    public List<Function> getFunctions() {
-        String query = "SELECT * FROM \"FUNCTIONS\"";
-        List<Function> list = new ArrayList<>();
-        
-        try (Statement stmt = conn.createStatement()) {
-            ResultSet rs = stmt.executeQuery(query);
-            while (rs.next()) {
-                Function f = new Function(
-                        rs.getInt("FUNCTION_ID"),
-                        rs.getString("FUNCTION_PREFIX"),
-                        rs.getString("FUNCTION_DESCRIPTION")
-                );
-                list.add(f);
-            }
-            
-            stmt.close();
-        } catch (SQLException e) {
-            System.err.println(TAG + " Could not get functions from DB" + e);
-        }
-        
-        return list;
-    }
-    
+    }    
     
      
     

@@ -50,7 +50,7 @@ class MonitorFrame extends javax.swing.JFrame {
         statusTab.addItemListener(handler);
         pobTab.addItemListener(handler);
         databaseTab.addItemListener(handler);
-        navTab.addItemListener(handler);                            
+        navTab.addItemListener(handler);                   
     }        
     
     /**
@@ -276,7 +276,7 @@ class MonitorFrame extends javax.swing.JFrame {
     
     void initCustomComponents() {
         pobPane = new PobView();        
-        mainPane.add(pobPane, "pobCard");
+        mainPane.add(pobPane, "pobCard");               
     }
     
     /**

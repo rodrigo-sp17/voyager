@@ -135,7 +135,8 @@ public class CrewPresenter implements StateListener {
         private void newFilter() {
             RowFilter<CrewTableModel, Object> rf;
             try {
-                rf = RowFilter.regexFilter("(?i)" + view.searchTextField.getText(),
+                rf = RowFilter.regexFilter("(?i)" 
+                        + view.searchTextField.getText(),
                         0, 1, 2, 3, 4, 5);
             } catch (java.util.regex.PatternSyntaxException e) {
                 // TODO - catch filter exception
@@ -154,8 +155,9 @@ public class CrewPresenter implements StateListener {
             int row = table.rowAtPoint(point);
             if (e.getClickCount() == 2) {
                 Integer id = (Integer) view.crewDBTable.getModel()
-                    .getValueAt(view.crewDBTable.convertRowIndexToModel(row), 0);
-                new EditPersonDialog(model.getCrewMember(id), model, true, properties);                
+                    .getValueAt(view.crewDBTable.convertRowIndexToModel(row),
+                            0);
+                new EditPersonDialog(view, true, model, model.getCrewMember(id));
             }            
         }
 
@@ -196,13 +198,16 @@ public class CrewPresenter implements StateListener {
                     JTable table = view.crewDBTable;
                     TableModel tableModel = table.getModel();
                     
-                    Integer id = (Integer) tableModel.getValueAt(table.convertRowIndexToModel(0), 0);
-                    new EditPersonDialog(model.getCrewMember(id), model, true, properties);
-                    break;
+                    Integer id = (Integer) tableModel
+                            .getValueAt(table.convertRowIndexToModel(0), 0);
+                    new EditPersonDialog(view, true, model, 
+                            model.getCrewMember(id));                    
                 }
                 
-                case "add" -> // Instantiates new EditDialog with an empty CrewMember
-                    new EditPersonDialog(new CrewMember(), model, false, properties);
+                case "add" -> {
+                    // Instantiates new EditPersonDialog for creation
+                    new EditPersonDialog(view, true, model);                    
+                }
                 
                 case "delete" -> {
                     int[] rows = view.crewDBTable.getSelectedRows();
@@ -216,12 +221,15 @@ public class CrewPresenter implements StateListener {
                             JOptionPane.WARNING_MESSAGE,
                             null
                     );
+                    
                     if (delete == JOptionPane.OK_OPTION) {
                         int counter = 0;
                         for (int rowIndex : rows) {
                             Integer personId = (Integer) view.crewDBTable
                                     .getModel()
-                                    .getValueAt(view.crewDBTable.convertRowIndexToModel(rowIndex), 0);
+                                    .getValueAt(view.crewDBTable
+                                            .convertRowIndexToModel(rowIndex),
+                                            0);
                             if (model.deleteCrewMember(personId) < 0) {
                                 JOptionPane.showMessageDialog(view,
                                         "Ops...Não foi possível deletar!",
@@ -234,14 +242,14 @@ public class CrewPresenter implements StateListener {
                         }                       
                         JOptionPane.showMessageDialog(view, "Deletado(s) "
                                 + counter + " registro(s)!");
-                    }
+                    }                   
                 }
+                
                 default -> {
                     // Requests focus back on to searchTextField
                     view.searchTextField.requestFocusInWindow();
                     view.searchTextField.select(0, view.searchTextField
-                            .getText().length());
-                    
+                            .getText().length());                    
                 }                    
             }       
         }
@@ -250,8 +258,10 @@ public class CrewPresenter implements StateListener {
     
     
     // General purpose methods
+    
+    // Sets Edit button status
     private void setEditButtonState() {
-        // Sets Edit button status
+    
         switch (view.crewDBTable.getRowCount()) {
             case 0 -> {
                 view.editButton.setEnabled(true);
@@ -272,8 +282,8 @@ public class CrewPresenter implements StateListener {
         }
     }
     
-    private void setDeleteButtonState() {
-        // Sets Delete button status. If something is selected, Delete is enabled.
+    // Sets Delete button status. If something is selected, Delete is enabled.
+    private void setDeleteButtonState() {        
         if (view.crewDBTable.getSelectedRow() < 0) {
             view.deleteButton.setEnabled(false);
         } else {
@@ -281,9 +291,9 @@ public class CrewPresenter implements StateListener {
         }       
     }
         
-    
+     // Loads properties from specified folder. If not, loads default.
     private Properties loadProperties() {
-        // Loads properties from specified folder. If not, loads default.
+       
         Properties result = new Properties();
         InputStream in = null;
         // Searches FOLDER for properties
@@ -311,7 +321,7 @@ public class CrewPresenter implements StateListener {
      * the POB Table. 
      * It will update the model whenever the Presenter notifies it.
      */
-    final class CrewTableModel extends AbstractTableModel {
+    private final class CrewTableModel extends AbstractTableModel {
         private final String[] columnNames = {
         "ID",
         "NOME",

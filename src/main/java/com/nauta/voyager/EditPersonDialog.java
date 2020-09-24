@@ -6,11 +6,14 @@
 package com.nauta.voyager;
 
 import java.awt.Component;
+import java.awt.Dialog;
+import java.awt.Frame;
 import java.awt.event.*;
 import java.util.*;
 import javax.swing.text.MaskFormatter;
 import java.time.LocalDate;
 import java.time.format.*;
+import javax.swing.AbstractListModel;
 import javax.swing.InputVerifier;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
@@ -18,6 +21,7 @@ import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.ListCellRenderer;
+import javax.swing.MutableComboBoxModel;
 
 
 /**
@@ -26,43 +30,187 @@ import javax.swing.ListCellRenderer;
  */
 public class EditPersonDialog extends javax.swing.JDialog {
     
+    private static final String TAG = EditPersonDialog.class.getSimpleName();
+    
     private static final int MAX_NAME_SIZE = 60;
     private static final int MAX_COMPANY_SIZE = 40;
     private static final int MAX_SISPAT_SIZE = 8;
     private static final int MAX_NATIONALITY_SIZE = 20;
-    private static final int MAX_CIR_SIZE = 14;   
-    
+    private static final int MAX_CIR_SIZE = 14;       
     
     private CrewMember person;
-    private CrewMemberModel model;
-    private final Properties loadedProperties;    
+    private final CrewMemberModel model;     
     private boolean editMode = false;
-        
+
     private List<Function> functions;
     
     // Format of the dates used on the dialog
-    private final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    private final DateTimeFormatter FORMATTER = DateTimeFormatter
+            .ofPattern("dd/MM/yyyy");
 
     /**
-     * Creates new form EditCrewMemberDialog
-     * @param person
-     * @param model
-     * @param isEditing
-     * @param properties
+     * Use this constructor to <b>add</b> a previously inexistent CrewMember to
+     * the model.
+     * <p>
+     * WARNING: providing an empty CrewMember with the intention to insert a new
+     * one into the model will trigger model UPDATE function instead of INSERT,
+     * causing unexpected behavior.
+     * 
+     * @param frame the owner frame, which the dialog will attempt to return
+     *              to on completion
+     * @param modal if true, creates JDialog as a modal form 
+     * @param model the CrewMemberModel instance the dialog uses to persist
+     *              its addition/changes  
+     * 
      */
-    public EditPersonDialog(CrewMember person, CrewMemberModel model,
-            boolean isEditing, Properties properties){
-        super();
-        this.person = person;
-        this.model = model;
-        this.loadedProperties = properties;
-        this.editMode = isEditing;
+    public EditPersonDialog(Frame frame, boolean modal, CrewMemberModel model){
+        super(frame, modal);
+        
+        this.person = new CrewMember();
+        this.editMode = false;
+        
+        // If model is null, exits application - saving would be impossible
+        if (model != null) {
+            this.model = model;
+        } else {                        
+            throw new IllegalArgumentException(TAG 
+                    + " - Model is null. Exiting dialog");
+        }        
         
         initComponents();
         initPresentationLogic();
-        loadGUIState();
+        readGUIState();
         setVisible(true);
-    }    
+    }
+    
+    /**
+     * Use this constructor to <b>edit</b> an existent CrewMember in the model.
+     * <p>
+     * WARNING: providing a non-existent CrewMember will trigger model UPDATE
+     * instead of INSERT function. The modifications will NOT be persisted.
+     * 
+     * @param frame     the owner frame, which the dialog will attempt to return
+     *                  to on completion
+     * @param modal     if true, creates JDialog as a modal form     *   
+     * @param model     the CrewMemberModel instance the dialog uses to persist
+     *                  its changes
+     * @param person    the CrewMember instance to be edited. Must be a 
+     *                  previously existent one  
+     */
+    public EditPersonDialog(
+            Frame frame,
+            boolean modal,
+            CrewMemberModel model,
+            CrewMember person) {
+        super(frame, modal);
+        
+        /*
+         * person should not be assumed to be null. Having a null person means
+         * probable wrong usage or bug, so the dialog should return.
+         */
+        if (person == null) {            
+            throw new IllegalArgumentException(TAG 
+                    + " - Person is null. Exiting dialog" );
+        } else {
+            this.person = person;
+            editMode = true;
+        }
+        
+        // If model is null, exits application - saving would be impossible
+        if (model == null) {            
+            throw new IllegalArgumentException(TAG 
+                    + " - Model is null. Exiting dialog");
+        } else {
+            this.model = model;
+        }       
+        
+        initComponents();
+        initPresentationLogic();
+        readGUIState();
+        setVisible(true);
+    }
+    
+    /**
+     * Use this constructor to <b>add</b> a previously inexistent CrewMember to
+     * the model.
+     * <p>
+     * WARNING: providing an empty CrewMember with the intention to insert a new
+     * one into the model will trigger model UPDATE function instead of INSERT,
+     * causing unexpected behavior.
+     * 
+     * @param dialog the owner Dialog, which the dialog will attempt to return
+     *              to on completion
+     * @param modal if true, creates JDialog as a modal form 
+     * @param model the CrewMemberModel instance the dialog uses to persist
+     *              its addition/changes  
+     * 
+     */
+    public EditPersonDialog(Dialog dialog, boolean modal, CrewMemberModel model){
+        super(dialog, modal);
+        
+        this.person = new CrewMember();
+        this.editMode = false;
+        
+        // If model is null, exits application - saving would be impossible
+        if (model != null) {
+            this.model = model;
+        } else {                        
+            throw new IllegalArgumentException(TAG 
+                    + " - Model is null. Exiting dialog");
+        }        
+        
+        initComponents();
+        initPresentationLogic();
+        readGUIState();
+        setVisible(true);
+    }
+    
+    /**
+     * Use this constructor to <b>edit</b> an existent CrewMember in the model.
+     * <p>
+     * WARNING: providing a non-existent CrewMember will trigger model UPDATE
+     * instead of INSERT function. The modifications will NOT be persisted.
+     * 
+     * @param dialog     the owner Dialog, which the dialog will attempt to return
+     *                  to on completion
+     * @param modal     if true, creates JDialog as a modal form     *   
+     * @param model     the CrewMemberModel instance the dialog uses to persist
+     *                  its changes
+     * @param person    the CrewMember instance to be edited. Must be a 
+     *                  previously existent one  
+     */
+    public EditPersonDialog(
+            Dialog dialog,
+            boolean modal,
+            CrewMemberModel model,
+            CrewMember person) {
+        super(dialog, modal);
+        
+        /*
+         * person should not be assumed to be null. Having a null person means
+         * probable wrong usage or bug, so the dialog should return.
+         */
+        if (person == null) {            
+            throw new IllegalArgumentException(TAG 
+                    + " - Person is null. Exiting dialog" );
+        } else {
+            this.person = person;
+            editMode = true;
+        }
+        
+        // If model is null, exits application - saving would be impossible
+        if (model == null) {            
+            throw new IllegalArgumentException(TAG 
+                    + " - Model is null. Exiting dialog");
+        } else {
+            this.model = model;
+        }       
+        
+        initComponents();
+        initPresentationLogic();
+        readGUIState();
+        setVisible(true);
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -112,7 +260,6 @@ public class EditPersonDialog extends javax.swing.JDialog {
         nameField.setColumns(60);
         nameField.setFont(new java.awt.Font("Verdana", 0, 16)); // NOI18N
         nameField.setForeground(new java.awt.Color(0, 0, 0));
-        nameField.setText("123456789012345678901234567890123456789012345678901234567890");
 
         jLabel1.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(0, 0, 0));
@@ -121,7 +268,6 @@ public class EditPersonDialog extends javax.swing.JDialog {
         jLabel1.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
         jLabel1.setFocusable(false);
         jLabel1.setInheritsPopupMenu(false);
-        jLabel1.setPreferredSize(new java.awt.Dimension(36, 16));
         jLabel1.setRequestFocusEnabled(false);
         jLabel1.setVerifyInputWhenFocusTarget(false);
         jLabel1.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -130,7 +276,6 @@ public class EditPersonDialog extends javax.swing.JDialog {
         companyField.setColumns(40);
         companyField.setFont(new java.awt.Font("Verdana", 0, 16)); // NOI18N
         companyField.setForeground(new java.awt.Color(0, 0, 0));
-        companyField.setText("1234567890123456789012345678901234567890");
 
         jLabel2.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(0, 0, 0));
@@ -190,7 +335,11 @@ public class EditPersonDialog extends javax.swing.JDialog {
         nationalityField.setColumns(20);
         nationalityField.setFont(new java.awt.Font("Verdana", 0, 16)); // NOI18N
         nationalityField.setForeground(new java.awt.Color(0, 0, 0));
-        nationalityField.setText("12345678901234567890");
+        nationalityField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                nationalityFieldActionPerformed(evt);
+            }
+        });
 
         jLabel6.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
         jLabel6.setForeground(new java.awt.Color(0, 0, 0));
@@ -208,7 +357,6 @@ public class EditPersonDialog extends javax.swing.JDialog {
         cirField.setColumns(14);
         cirField.setFont(new java.awt.Font("Verdana", 0, 16)); // NOI18N
         cirField.setForeground(new java.awt.Color(0, 0, 0));
-        cirField.setText("12345678901234");
         cirField.setToolTipText("");
 
         jLabel7.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
@@ -279,7 +427,7 @@ public class EditPersonDialog extends javax.swing.JDialog {
         boardingDataButton.setFont(new java.awt.Font("Verdana", 1, 12)); // NOI18N
         boardingDataButton.setForeground(new java.awt.Color(0, 0, 0));
         boardingDataButton.setText("Dados de Embarque");
-        boardingDataButton.setActionCommand("save");
+        boardingDataButton.setActionCommand("boardingData");
 
         javax.swing.GroupLayout dialogPanelLayout = new javax.swing.GroupLayout(dialogPanel);
         dialogPanel.setLayout(dialogPanelLayout);
@@ -327,7 +475,7 @@ public class EditPersonDialog extends javax.swing.JDialog {
             dialogPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(dialogPanelLayout.createSequentialGroup()
                 .addGap(20, 20, 20)
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jLabel1)
                 .addGap(1, 1, 1)
                 .addComponent(nameField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
@@ -385,15 +533,20 @@ public class EditPersonDialog extends javax.swing.JDialog {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void nationalityFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nationalityFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_nationalityFieldActionPerformed
     
     private void initPresentationLogic() {
         // Adds listener to buttons
         ButtonsHandler handler = new ButtonsHandler();
         saveButton.addActionListener(handler);
-        cancelButton.addActionListener(handler);        
+        cancelButton.addActionListener(handler);
+        boardingDataButton.addActionListener(handler);
         
         // Loads functionField item list with model data
-        functions = model.getFunctions();
+        functions = model.getFunctions();        
         functions.forEach(f -> {
             functionField.addItem(f);
         });
@@ -405,12 +558,17 @@ public class EditPersonDialog extends javax.swing.JDialog {
         cirField.setInputVerifier(new CirVerifier());                
     }       
     
-    private void loadGUIState() {        
+    private void readGUIState() {        
         // Loads GUI State if in Edit Mode
         if (editMode) {
             // Fills fields with received value
             nameField.setText(person.getName());
-            functionField.setSelectedItem(person.getFunctionId());
+            
+            Function function = functions.stream()
+                    .filter(f -> f.getFunctionId() == person.getFunctionId())
+                    .findFirst()
+                    .orElse(null);
+            functionField.setSelectedItem(function);
             companyField.setText(person.getCompany());
             sispatField.setText(person.getSispat());
             nationalityField.setText(person.getNationality().toUpperCase());        
@@ -434,41 +592,51 @@ public class EditPersonDialog extends javax.swing.JDialog {
         
         // Parses date fields from string to LocalDates        
         try {    
-            person.setBirthDate(LocalDate.parse(birthDateField.getText(), FORMATTER));
-            person.setCirExpDate(LocalDate.parse(cirExpDateField.getText(), FORMATTER));
+            person.setBirthDate(LocalDate.parse(birthDateField.getText(),
+                    FORMATTER));
+            person.setCirExpDate(LocalDate.parse(cirExpDateField.getText(),
+                    FORMATTER));
         } catch (DateTimeParseException e) {
-            System.err.println("Edit Person - Could not save date to Crew Member: " + e);
+            System.err.println(TAG + "Could not save date to Crew Member" + e);
         }
     }    
     
     // Handlers
     class ButtonsHandler implements ActionListener {
-        // When SAVE button is clicked, calls changes in model
+        
         @Override
         public void actionPerformed(ActionEvent e) {
             switch (e.getActionCommand()) {
                 case "save" -> {
                     writeGUIState();
-                    if (model != null) {
-                        if (editMode) {
-                            model.updateCrewMember(person.getId(), person);                        
-                        } else {
-                            model.insertCrewMember(person);
-                        }
+                    if (editMode) {
+                        model.updateCrewMember(person.getId(), person);                        
                     } else {
-                        System.err.println("model in EditPerson is null");
-                    }               
-                    setVisible(false);
+                        model.insertCrewMember(person);
+                    }                    
+                    dispose();
                 }
                 
                 case "cancel" -> {
-                    person = null;
-                    model = null;                    
-                    setVisible(false);
+                    // TODO - add dialog to confirm intention
+                    dispose();                    
+                }
+                
+                case "boardingData" -> {
+                    // TODO
+                    new EditBoardedDialog(
+                            EditPersonDialog.this,
+                            true,
+                            model,
+                            person);
+                }
+                
+                default -> {
+                    EditPersonDialog.this.getParent().requestFocus();
                 }
             }  
         }       
-    }
+    }   
     
     // Input verifiers    
     class NameVerifier extends InputVerifier {        
@@ -480,7 +648,7 @@ public class EditPersonDialog extends javax.swing.JDialog {
             } else {
                 JOptionPane.showMessageDialog(rootPane,
                         "Campo deve ter no máximo " 
-                                + MAX_NAME_SIZE + " letras!\n" 
+                                + MAX_NAME_SIZE + " letras!%n" 
                                 + "Campo deve ter apenas letras.");
                 return false;
             }
@@ -505,7 +673,7 @@ public class EditPersonDialog extends javax.swing.JDialog {
             } else {
                 JOptionPane.showMessageDialog(rootPane,
                         "Campo deve ter no máximo " + 
-                                MAX_COMPANY_SIZE + " letras!\n" 
+                                MAX_COMPANY_SIZE + " letras!%n" 
                                 + "Campo deve ter apenas letras!");
                 return false;
             }
@@ -528,7 +696,7 @@ public class EditPersonDialog extends javax.swing.JDialog {
             } else {
                 JOptionPane.showMessageDialog(rootPane,
                         "Campo deve ter apenas " 
-                                + MAX_SISPAT_SIZE + " números!\n");
+                                + MAX_SISPAT_SIZE + " números!%n");
                 return false;
             }
         }        
@@ -550,7 +718,7 @@ public class EditPersonDialog extends javax.swing.JDialog {
             } else {
                 JOptionPane.showMessageDialog(rootPane,
                         "Campo deve ter no máximo " 
-                                + MAX_NATIONALITY_SIZE + " letras!\n");
+                                + MAX_NATIONALITY_SIZE + " letras!%n");
                 return false;
             }
         }        
@@ -572,7 +740,7 @@ public class EditPersonDialog extends javax.swing.JDialog {
             } else {
                 JOptionPane.showMessageDialog(rootPane,
                         "Campo deve ter no máximo " 
-                                + MAX_CIR_SIZE + " letras!\n");
+                                + MAX_CIR_SIZE + " letras!%n");
                 return false;
             }
         }        
@@ -594,7 +762,7 @@ public class EditPersonDialog extends javax.swing.JDialog {
             } else {
                 JOptionPane.showMessageDialog(rootPane,
                         "Campo deve ter no máximo " 
-                                + MAX_CIR_SIZE + " letras!\n");
+                                + MAX_CIR_SIZE + " letras!%n");
                 return false;
             }
         }        
@@ -656,11 +824,11 @@ public class EditPersonDialog extends javax.swing.JDialog {
             
             setText(function.getFunctionPrefix() 
                     + " - " 
-                    + function.getFunctionDescription());
+                    + function.getFunctionDescription());           
             
             return this;            
         }   
-}
+    }   
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JFormattedTextField birthDateField;

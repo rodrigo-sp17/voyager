@@ -5,27 +5,110 @@
  */
 package com.nauta.voyager;
 
+import java.awt.Dialog;
+import java.awt.Frame;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import javax.swing.InputVerifier;
+import javax.swing.JComponent;
+import javax.swing.JOptionPane;
+import javax.swing.JTextField;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.PlainDocument;
+
 /**
  *
- * @author escritorio
+ * @author rodrigo
  */
 public class EditBoardedDialog extends javax.swing.JDialog {
     
+    private static final String TAG = EditBoardedDialog.class.getSimpleName();
+    
     private final CrewMemberModel model;
-    private CrewMember person;    
-    private boolean isEditing;
+    private CrewMember person;
+    
+    // Format of the dates used on the dialog
+    private final DateTimeFormatter FORMATTER = DateTimeFormatter
+            .ofPattern("dd/MM/yyyy");
+    
+    private final int MAX_PLACE_SIZE = 30;
+    
 
     /**
-     * Creates new form EditBoardedDialog
+     * Creates new form EditBoardedDialog. It is assumed there is an already
+     * existent CrewMember.
+     * 
+     * @param frame    the parent Frame view of this dialog
+     * @param modal     if true, the dialog is instantiated as modal
+     * @param model     the model used by the dialog to retrieve and persist
+     *                  its data
+     * @param person    the CrewMember instance which is having its boarding
+     *                  data edited
      */
-    public EditBoardedDialog(java.awt.Frame parent, boolean modal,
-            CrewMember person, CrewMemberModel model, boolean isEditing) {
-        super(parent, modal);
-        this.person = person;
-        this.model = model;
-        this.isEditing = isEditing;
+    public EditBoardedDialog(Frame frame, boolean modal,
+            CrewMemberModel model, CrewMember person) {
+        super(frame, modal);
+        
+        // A null person is result of improper usage by programmer
+        if (person == null) {            
+            throw new IllegalArgumentException(TAG 
+                    + " - Person is null. Exiting dialog" );
+        } else {
+            this.person = person;            
+        }
+        
+        // If model is null, exits application - saving would be impossible
+        if (model == null) {            
+            throw new IllegalArgumentException(TAG 
+                    + " - Model is null. Exiting dialog");
+        } else {
+            this.model = model;
+        }            
         
         initComponents();
+        initPresentationLogic();
+        readGUIState();
+        setVisible(true);
+    }
+    
+    /**
+     * Creates new form EditBoardedDialog. It is assumed there is an already
+     * existent CrewMember.
+     * 
+     * @param dialog    the parent Dialog view of this dialog
+     * @param modal     if true, the dialog is instantiated as modal
+     * @param model     the model used by the dialog to retrieve and persist
+     *                  its data
+     * @param person    the CrewMember instance which is having its boarding
+     *                  data edited
+     */
+    public EditBoardedDialog(Dialog dialog, boolean modal,
+            CrewMemberModel model, CrewMember person) {
+        super(dialog, modal);
+        
+        // A null person is result of improper usage by programmer
+        if (person == null) {            
+            throw new IllegalArgumentException(TAG 
+                    + " - Person is null. Exiting dialog" );
+        } else {
+            this.person = person;            
+        }
+        
+        // If model is null, exits application - saving would be impossible
+        if (model == null) {            
+            throw new IllegalArgumentException(TAG 
+                    + " - Model is null. Exiting dialog");
+        } else {
+            this.model = model;
+        }            
+        
+        initComponents();
+        initPresentationLogic();
+        readGUIState();
+        setVisible(true);
     }
 
     /**
@@ -76,11 +159,6 @@ public class EditBoardedDialog extends javax.swing.JDialog {
         nameField.setText("123456789012345678901234567890123456789012345678901234567890");
         nameField.setEnabled(false);
         nameField.setPreferredSize(new java.awt.Dimension(855, 27));
-        nameField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                nameFieldActionPerformed(evt);
-            }
-        });
 
         jLabel2.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(0, 0, 0));
@@ -188,7 +266,7 @@ public class EditBoardedDialog extends javax.swing.JDialog {
         staticDataButton.setFont(new java.awt.Font("Verdana", 1, 12)); // NOI18N
         staticDataButton.setForeground(new java.awt.Color(0, 0, 0));
         staticDataButton.setText("Dados Estáticos");
-        staticDataButton.setActionCommand("save");
+        staticDataButton.setActionCommand("staticData");
 
         javax.swing.GroupLayout boardedPanelLayout = new javax.swing.GroupLayout(boardedPanel);
         boardedPanel.setLayout(boardedPanelLayout);
@@ -214,12 +292,9 @@ public class EditBoardedDialog extends javax.swing.JDialog {
                                         .addGroup(boardedPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                             .addComponent(jLabel7)
                                             .addComponent(jLabel6))
-                                        .addGap(0, 304, Short.MAX_VALUE))
-                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, boardedPanelLayout.createSequentialGroup()
-                                        .addGroup(boardedPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                            .addComponent(arrivalPlaceField, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 318, Short.MAX_VALUE)
-                                            .addComponent(boardingPlaceField, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                                        .addGap(0, 174, Short.MAX_VALUE))
+                                    .addComponent(arrivalPlaceField, javax.swing.GroupLayout.DEFAULT_SIZE, 318, Short.MAX_VALUE)
+                                    .addComponent(boardingPlaceField, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, boardedPanelLayout.createSequentialGroup()
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(saveButton, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -311,22 +386,153 @@ public class EditBoardedDialog extends javax.swing.JDialog {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void nameFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nameFieldActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_nameFieldActionPerformed
     
     private void initPresentationLogic() {
+        // Adds handling to buttons
+        ButtonsHandler handler = new ButtonsHandler();
+        saveButton.addActionListener(handler);
+        cancelButton.addActionListener(handler);
+        staticDataButton.addActionListener(handler);
+        
+        // Initializes crewField list with fixed crew data from model
+        for (String s : model.getAllCrews()) {
+            crewField.addItem(s);            
+        }
+        
+        // Initializes cabinField list with mutable cabin data from model
+        for (String s : model.getAllCabins()) {
+            cabinField.addItem(s);
+        }
+        
+        // Initializes shiftField with fixed shift values from model
+        for (String s : model.getAllShifts()) {
+            shiftField.addItem(s);
+        }
+        
+        /* 
+         * Sets place fields with input verifiers and PlainDocuments for size
+         * restriction
+         */
+        boardingPlaceField.setDocument(
+                new LengthRestrictedDocument(MAX_PLACE_SIZE));
+        boardingPlaceField.setInputVerifier(new PlaceVerifier());
+        
+        arrivalPlaceField.setDocument(
+                new LengthRestrictedDocument(MAX_PLACE_SIZE));
+        arrivalPlaceField.setInputVerifier(new PlaceVerifier());
         
     }
     
     private void readGUIState() {
-        
+        nameField.setText(person.getName());
+        crewField.setSelectedItem(person.getCrew());
+        isBoardedField.setSelected(person.isBoarded());
+        cabinField.setSelectedItem(person.getCabin());
+        shiftField.setSelectedItem(person.getShift());        
+        boardingDateField.setText(person.getBoardingDate().format(FORMATTER));
+        boardingPlaceField.setText(person.getBoardingPlace());
+        arrivalDateField.setText(person.getArrivalDate().format(FORMATTER));
+        arrivalPlaceField.setText(person.getArrivalPlace());        
     }
     
     private void writeGUIState() {
+        person.setCrew(crewField.getSelectedItem().toString());
+        person.setBoarded(isBoardedField.isSelected());
+        person.setCabin(cabinField.getSelectedItem().toString());
+        person.setShift(shiftField.getSelectedItem().toString());
+        person.setBoardingDate(LocalDate.parse(boardingDateField.getText(),
+                FORMATTER));
+        person.setBoardingPlace(boardingPlaceField.getText());
+        person.setArrivalDate(LocalDate.parse(arrivalPlaceField.getText(),
+                FORMATTER));
+        person.setArrivalPlace(arrivalPlaceField.getText());
+    }
+    
+    
+    // Event handlers
+    private class ButtonsHandler implements ActionListener {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            switch(e.getActionCommand()) {
+                case "save" -> {                    
+                    writeGUIState();
+                    model.updateCrewMember(person.getId(), person);
+                    dispose();
+                }
+                
+                case "cancel" -> {
+                    // TODO - add dialog to ensure intention
+                    dispose();
+                }
+                
+                case "staticData" -> {                    
+                    new EditPersonDialog(EditBoardedDialog.this, true,
+                            model, person);
+                    break;
+                }
+                
+                default -> {               
+                    // TODO - return focus to parent
+                    EditBoardedDialog.this.getParent().requestFocus();
+                }
+            }
+        }
         
     }
+    
+    
+    // TODO - Input verifiers
+    private class PlaceVerifier extends InputVerifier {
+        @Override
+        public boolean shouldYieldFocus(JComponent source, JComponent target) {
+            boolean inputOK = verify(source);
+            if (inputOK) {
+                return true;
+            } else {
+                JOptionPane.showMessageDialog(rootPane,
+                       "Local deve ser no formato Cidade-Estado!%n"
+                        + "Exemplo: Rio de Janeiro - RJ");
+                return false;
+            }
+        }
+        
+        @Override
+        public boolean verify(JComponent input) {
+            JTextField tf = (JTextField) input;
+            
+            boolean answer = tf.getText().chars().allMatch(c -> 
+                    Character.isLetter(c) || (c == '-'));           
+            
+            return answer;            
+        }
+    }
+    
+    /*
+     * Extracted from 
+     * https://stackoverflow.com/questions/13075564/limiting-length-of-input-in-jtextfield-is-not-working
+     * 
+     * Sets maximum limit of field
+     */
+    private final class LengthRestrictedDocument extends PlainDocument {
+
+        private final int limit;
+
+        public LengthRestrictedDocument(int limit) {
+          this.limit = limit;
+        }
+
+        @Override
+        public void insertString(int offs, String str, AttributeSet a)
+            throws BadLocationException {
+          if (str == null)
+            return;
+          if ((getLength() + str.length()) <= limit) {
+            super.insertString(offs, str, a);
+          }
+        }
+    }
+    
     
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
