@@ -110,6 +110,32 @@ public class EditBoardedDialog extends javax.swing.JDialog {
         readGUIState();
         setVisible(true);
     }
+    
+    // TODO - documentation
+    public EditBoardedDialog(CrewMemberModel model, CrewMember person) {
+        super();
+
+        // A null person is result of improper usage by programmer
+        if (person == null) {            
+            throw new IllegalArgumentException(TAG 
+                    + " - Person is null. Exiting dialog" );
+        } else {
+            this.person = person;            
+        }
+        
+        // If model is null, exits application - saving would be impossible
+        if (model == null) {            
+            throw new IllegalArgumentException(TAG 
+                    + " - Model is null. Exiting dialog");
+        } else {
+            this.model = model;
+        }            
+        
+        initComponents();
+        initPresentationLogic();
+        readGUIState();
+        setVisible(true);
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -258,7 +284,7 @@ public class EditBoardedDialog extends javax.swing.JDialog {
 
         cancelButton.setBackground(new java.awt.Color(153, 153, 0));
         cancelButton.setFont(new java.awt.Font("Verdana", 1, 12)); // NOI18N
-        cancelButton.setForeground(new java.awt.Color(255, 255, 255));
+        cancelButton.setForeground(new java.awt.Color(0, 0, 0));
         cancelButton.setText("Cancelar");
         cancelButton.setActionCommand("cancel");
 
@@ -443,7 +469,7 @@ public class EditBoardedDialog extends javax.swing.JDialog {
         person.setBoardingDate(LocalDate.parse(boardingDateField.getText(),
                 FORMATTER));
         person.setBoardingPlace(boardingPlaceField.getText());
-        person.setArrivalDate(LocalDate.parse(arrivalPlaceField.getText(),
+        person.setArrivalDate(LocalDate.parse(arrivalDateField.getText(),
                 FORMATTER));
         person.setArrivalPlace(arrivalPlaceField.getText());
     }
@@ -491,7 +517,7 @@ public class EditBoardedDialog extends javax.swing.JDialog {
                 return true;
             } else {
                 JOptionPane.showMessageDialog(rootPane,
-                       "Local deve ser no formato Cidade-Estado!%n"
+                       "Local deve ser no formato Cidade-Estado!\n"
                         + "Exemplo: Rio de Janeiro - RJ");
                 return false;
             }
@@ -502,7 +528,7 @@ public class EditBoardedDialog extends javax.swing.JDialog {
             JTextField tf = (JTextField) input;
             
             boolean answer = tf.getText().chars().allMatch(c -> 
-                    Character.isLetter(c) || (c == '-'));           
+                    Character.isLetter(c) || (c == '-') || (c == ' '));           
             
             return answer;            
         }

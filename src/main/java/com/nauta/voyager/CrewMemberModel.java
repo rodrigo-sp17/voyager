@@ -236,8 +236,22 @@ public class CrewMemberModel extends StateNotifier {
                     + "WHERE \"persons\".\"BOARDED\"=true");            
             return list;
         } catch (SQLException e) {
-            System.err.println("Model - getAllBoardedCrewMembers() - SQL Error:");
-            System.err.println(e.getMessage());
+            System.err.println(TAG + e.getMessage());            
+        }
+        return null;
+    }
+    
+    public List<CrewMember> getAllNonBoardedCrewMembers() {
+        List<CrewMember> list;
+        try {
+            list = requestQuery("SELECT * FROM \"persons\" "
+                    + "JOIN \"FUNCTIONS\" "
+                    + "ON \"persons\".\"FUNCTION\" "
+                    + "= \"FUNCTIONS\".\"FUNCTION_ID\" "
+                    + "WHERE \"persons\".\"BOARDED\"=false");            
+            return list;
+        } catch (SQLException e) {
+            System.err.println(TAG + e.getMessage());  
         }
         return null;
     }
@@ -314,7 +328,7 @@ public class CrewMemberModel extends StateNotifier {
         }             
         return 0;
     }
-    
+       
     /*
      * Deletes crew member with specified ID
      * Returns 1 if successful, 0 if not 

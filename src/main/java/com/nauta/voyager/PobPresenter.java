@@ -5,6 +5,8 @@
  */
 package com.nauta.voyager;
 
+import java.awt.Frame;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
@@ -15,6 +17,7 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import javax.swing.*;
+import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.TableModelEvent;
@@ -78,6 +81,9 @@ public class PobPresenter implements StateListener {
         LocalDate date = model.getLastPob().getDateIssued();
         view.getPobDateField().setText(date.format(view.DATE_FORMATTER));
         
+        view.getPobSizeField().setText(
+                Integer.toString(view.getPobTable().getModel().getRowCount()));
+        
         String currentCrew = model.getLastPob().getCrew();
         view.getCrewField().setSelectedItem(currentCrew);       
     }
@@ -104,6 +110,16 @@ public class PobPresenter implements StateListener {
 
         @Override
         public void mouseClicked(MouseEvent e) {
+            // Opens EditPersonDialog when item clicked twice on the table
+            JTable table =(JTable) e.getSource();
+            Point point = e.getPoint();
+            int row = table.rowAtPoint(point);
+            if (e.getClickCount() == 2) {
+                Integer id = (Integer) table.getModel()
+                    .getValueAt(table.convertRowIndexToModel(row),
+                            0);
+                new EditBoardedDialog(model, model.getCrewMember(id));
+            }   
             return;
         }
 
@@ -133,7 +149,7 @@ public class PobPresenter implements StateListener {
             return;
         }
         
-    }
+    }    
     
     // Updates pobSizeField whenever the PobTable model changes, not the view
     private final class TableSizeHandler implements TableModelListener {
@@ -151,11 +167,43 @@ public class PobPresenter implements StateListener {
         public void actionPerformed(ActionEvent e) {
             switch (e.getActionCommand()) {
                 case "add" -> {
-                    // TODO
+                    // Assumed the parant of POB View is MonitorFrame
+                    new BoardingDialog(model);
                 }
                 
                 case "delete" -> {
-                    // TODO
+                    
+                    JTable table = view.getPobTable();
+                    int[] rows = table.getSelectedRows();
+                    
+                    // Promps for confirmation
+                    int delete = JOptionPane.showConfirmDialog(
+                            view,
+                            "Tem certeza que deseja desembarcar o(s)\n" +
+                                    rows.length + 
+                                    " registro(s) selecionado(s)?",
+                            "Desembarcar pessoal",
+                            JOptionPane.OK_CANCEL_OPTION,
+                            JOptionPane.WARNING_MESSAGE,
+                            null
+                    );
+                    
+                    // If confirmed, unboards personnel
+                    if (delete == JOptionPane.OK_OPTION) {
+                        for (int row : rows) {
+                            // TODO - reduce number of reloading table
+                            int cRow = table.convertRowIndexToModel(row);
+                            Integer id = (Integer) table.getModel()
+                                    .getValueAt(cRow, 0);
+                            CrewMember person = model.getCrewMember(id);
+
+                            // Sets the CrewMember instances' boarded as false
+                            person.setBoarded(false);
+
+                            // Sends changes for model to update
+                            model.updateCrewMember(person.getId(), person);
+                        }                        
+                    }
                 }
                 
                 case "print" -> {
@@ -169,14 +217,20 @@ public class PobPresenter implements StateListener {
         
     }
     
+    // Sets deleteMemberButton status according to existance of selected rows
     private void setDeleteMemberButtonState() {
-        //TODO
-        return;
+        
+        if (view.getPobTable().getSelectedRow() == -1) {            
+            view.getDeleteMemberButton().setEnabled(false);            
+        } else {
+            view.getDeleteMemberButton().setEnabled(true);
+        }        
     }
     
     
     private final class PobTableModel extends AbstractTableModel {
         private final String[] columnNames = {
+            "ID",
             "CABINE",
             "NOME",
             "EMPRESA",
@@ -201,9 +255,10 @@ public class PobPresenter implements StateListener {
             int size = list.size();            
             data = new Object[size][getColumnCount()];
             for (int i = 0; i < size; i++) {
-                data[i][0] = list.get(i).getCabin();
-                data[i][1] = list.get(i).getName();
-                data[i][2] = list.get(i).getCompany();
+                data[i][0] = list.get(i).getId();
+                data[i][1] = list.get(i).getCabin();
+                data[i][2] = list.get(i).getName();
+                data[i][3] = list.get(i).getCompany();
                 
                 int id = list.get(i).getFunctionId();
                 String function = "";
@@ -214,12 +269,12 @@ public class PobPresenter implements StateListener {
                                 + f.getFunctionDescription();
                     }
                 }               
-                data[i][3] = function;
-                data[i][4] = list.get(i).getShift();
-                data[i][5] = list.get(i).getBoardingDate();
-                data[i][6] = calculateRaft((String) data[i][0]); // TODO
-                data[i][7] = calculateDaysOnBoard(list.get(i).getBoardingDate());
-                data[i][8] = list.get(i).getSispat();
+                data[i][4] = function;
+                data[i][5] = list.get(i).getShift();
+                data[i][6] = list.get(i).getBoardingDate();
+                data[i][7] = calculateRaft((String) data[i][1]); // TODO
+                data[i][8] = calculateDaysOnBoard(list.get(i).getBoardingDate());
+                data[i][9] = list.get(i).getSispat();
             }
             
             fireTableDataChanged();

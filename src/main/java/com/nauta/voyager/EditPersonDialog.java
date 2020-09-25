@@ -335,11 +335,6 @@ public class EditPersonDialog extends javax.swing.JDialog {
         nationalityField.setColumns(20);
         nationalityField.setFont(new java.awt.Font("Verdana", 0, 16)); // NOI18N
         nationalityField.setForeground(new java.awt.Color(0, 0, 0));
-        nationalityField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                nationalityFieldActionPerformed(evt);
-            }
-        });
 
         jLabel6.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
         jLabel6.setForeground(new java.awt.Color(0, 0, 0));
@@ -392,7 +387,7 @@ public class EditPersonDialog extends javax.swing.JDialog {
 
         cancelButton.setBackground(new java.awt.Color(153, 153, 0));
         cancelButton.setFont(new java.awt.Font("Verdana", 1, 12)); // NOI18N
-        cancelButton.setForeground(new java.awt.Color(255, 255, 255));
+        cancelButton.setForeground(new java.awt.Color(0, 0, 0));
         cancelButton.setText("Cancelar");
         cancelButton.setActionCommand("cancel");
 
@@ -533,10 +528,6 @@ public class EditPersonDialog extends javax.swing.JDialog {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void nationalityFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nationalityFieldActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_nationalityFieldActionPerformed
     
     private void initPresentationLogic() {
         // Adds listener to buttons

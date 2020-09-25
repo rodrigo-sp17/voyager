@@ -149,7 +149,7 @@ public class CrewPresenter implements StateListener {
     class CrewDBTableHandler implements MouseListener, ListSelectionListener {
         @Override
         public void mouseClicked(MouseEvent e) {
-            // Opens EditDialog when item clicked twice on the table
+            // Opens EditPersonDialog when item clicked twice on the table
             JTable table =(JTable) e.getSource();
             Point point = e.getPoint();
             int row = table.rowAtPoint(point);
@@ -248,8 +248,7 @@ public class CrewPresenter implements StateListener {
                 default -> {
                     // Requests focus back on to searchTextField
                     view.searchTextField.requestFocusInWindow();
-                    view.searchTextField.select(0, view.searchTextField
-                            .getText().length());                    
+                    view.searchTextField.selectAll();                   
                 }                    
             }       
         }

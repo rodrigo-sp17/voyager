@@ -113,7 +113,6 @@ public class PobView extends javax.swing.JPanel {
         crewField.setBackground(new java.awt.Color(255, 255, 255));
         crewField.setFont(new java.awt.Font("Verdana", 0, 18)); // NOI18N
         crewField.setForeground(new java.awt.Color(0, 0, 0));
-        crewField.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "A", "B", "?" }));
 
         deleteMemberButton.setBackground(new java.awt.Color(255, 51, 51));
         deleteMemberButton.setFont(new java.awt.Font("Verdana", 1, 18)); // NOI18N
@@ -152,7 +151,7 @@ public class PobView extends javax.swing.JPanel {
                         .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(crewField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 324, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 339, Short.MAX_VALUE)
                         .addComponent(printPobButton)
                         .addGap(100, 100, 100)
                         .addComponent(addMemberButton)
