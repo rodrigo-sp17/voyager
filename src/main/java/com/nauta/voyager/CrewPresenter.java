@@ -5,6 +5,9 @@
  */
 package com.nauta.voyager;
 
+import com.nauta.voyager.people.CrewMember;
+import com.nauta.voyager.dialog.EditPersonDialog;
+import com.nauta.voyager.util.StateListener;
 import java.awt.CardLayout;
 import java.awt.event.*;
 import java.awt.Point;
@@ -31,15 +34,15 @@ TODO:
  * @author rodrigo
  */
 public class CrewPresenter implements StateListener {
-    final private MonitorFrame view;
-    final private CrewMemberModel model;
+    final private MainView view;
+    final private VoyagerModel model;
     final Properties properties;
     
     // JTable variables
     private TableRowSorter<CrewTableModel> sorter;
     
     
-    CrewPresenter(MonitorFrame view, CrewMemberModel model) {
+    CrewPresenter(MainView view, VoyagerModel model) {
         this.view = view;
         this.model = model;
         this.properties = loadProperties();
@@ -99,7 +102,7 @@ public class CrewPresenter implements StateListener {
     }
     
     // Event Handlers
-    class MainMenuHandler implements ActionListener {
+    private class MainMenuHandler implements ActionListener {
         // Listens for main menu buttons, handles their initial GUI State
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -114,7 +117,7 @@ public class CrewPresenter implements StateListener {
         }
     }
     
-    class SearchCrewTableHandler implements DocumentListener {
+    private class SearchCrewTableHandler implements DocumentListener {
         @Override
         public void changedUpdate(DocumentEvent e) {
             newFilter();
@@ -146,7 +149,7 @@ public class CrewPresenter implements StateListener {
         }       
     }
     
-    class CrewDBTableHandler implements MouseListener, ListSelectionListener {
+    private class CrewDBTableHandler implements MouseListener, ListSelectionListener {
         @Override
         public void mouseClicked(MouseEvent e) {
             // Opens EditPersonDialog when item clicked twice on the table
@@ -188,7 +191,7 @@ public class CrewPresenter implements StateListener {
         }
     }
     
-    class CrewViewButtonsHandler implements ActionListener {
+    private class CrewViewButtonsHandler implements ActionListener {
         // Listens for changes in POB View components, implements action
         @Override
         public void actionPerformed(ActionEvent e) {

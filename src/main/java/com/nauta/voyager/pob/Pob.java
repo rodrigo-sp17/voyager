@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.nauta.voyager;
+package com.nauta.voyager.pob;
 
+import com.nauta.voyager.people.CrewMember;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;

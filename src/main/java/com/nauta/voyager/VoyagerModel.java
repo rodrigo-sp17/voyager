@@ -5,6 +5,10 @@
  */
 package com.nauta.voyager;
 
+import com.nauta.voyager.people.CrewMember;
+import com.nauta.voyager.util.StateNotifier;
+import com.nauta.voyager.util.DatabaseUtil;
+import com.nauta.voyager.pob.Pob;
 import java.util.*;
 import java.sql.*;
 import java.time.LocalDate;
@@ -24,9 +28,9 @@ TODO:
  *
  * @author rodrigo
  */
-public class CrewMemberModel extends StateNotifier {
+public class VoyagerModel extends StateNotifier {
     
-    private static final String TAG = CrewMemberModel.class.getSimpleName();
+    private static final String TAG = VoyagerModel.class.getSimpleName();
     
     // Holds list of CrewMembers for manipulation
     private List<CrewMember> crewMemberList;
@@ -40,7 +44,7 @@ public class CrewMemberModel extends StateNotifier {
          
     
     // Constructor
-    public CrewMemberModel() {        
+    public VoyagerModel() {        
         // Connects to database
         conn = DatabaseUtil.getConnection();
         

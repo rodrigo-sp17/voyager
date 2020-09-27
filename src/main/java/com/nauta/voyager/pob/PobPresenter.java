@@ -3,8 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.nauta.voyager;
+package com.nauta.voyager.pob;
 
+import com.nauta.voyager.dialog.BoardingDialog;
+import com.nauta.voyager.people.CrewMember;
+import com.nauta.voyager.dialog.EditBoardedDialog;
+import com.nauta.voyager.Function;
+import com.nauta.voyager.util.StateListener;
+import com.nauta.voyager.VoyagerModel;
 import java.awt.Frame;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
@@ -31,10 +37,10 @@ import javax.swing.table.*;
 public class PobPresenter implements StateListener {
     
     final private PobView view;
-    final private CrewMemberModel model;    
+    final private VoyagerModel model;    
     
     // Constructor
-    PobPresenter(PobView view, CrewMemberModel model) {
+    public PobPresenter(PobView view, VoyagerModel model) {
         this.view = view;
         this.model = model;        
         initPresentationLogic();
@@ -49,7 +55,7 @@ public class PobPresenter implements StateListener {
     }    
    
     private void initPresentationLogic() {
-        // Sets this class as a listener to CrewMemberModel
+        // Sets this class as a listener to VoyagerModel
         model.addStateListener(this);
         
         // Sets crewField with its possible data
@@ -94,7 +100,6 @@ public class PobPresenter implements StateListener {
 
         @Override
         public void focusGained(FocusEvent e) {
-            return;
         }
 
         @Override
@@ -119,34 +124,28 @@ public class PobPresenter implements StateListener {
                     .getValueAt(table.convertRowIndexToModel(row),
                             0);
                 new EditBoardedDialog(model, model.getCrewMember(id));
-            }   
-            return;
+            }           
         }
 
         @Override
-        public void mousePressed(MouseEvent e) {
-            return;
+        public void mousePressed(MouseEvent e) {            
         }
 
         @Override
-        public void mouseReleased(MouseEvent e) {
-            return;
+        public void mouseReleased(MouseEvent e) {            
         }
 
         @Override
-        public void mouseEntered(MouseEvent e) {
-            return;
+        public void mouseEntered(MouseEvent e) {            
         }
 
         @Override
-        public void mouseExited(MouseEvent e) {
-            return;
+        public void mouseExited(MouseEvent e) {            
         }
 
         @Override
         public void valueChanged(ListSelectionEvent e) {
-            setDeleteMemberButtonState();
-            return;
+            setDeleteMemberButtonState();            
         }
         
     }    

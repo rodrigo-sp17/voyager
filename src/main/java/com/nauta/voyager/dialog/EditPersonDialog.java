@@ -3,8 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.nauta.voyager;
+package com.nauta.voyager.dialog;
 
+import com.nauta.voyager.people.CrewMember;
+import com.nauta.voyager.Function;
+import com.nauta.voyager.VoyagerModel;
 import java.awt.Component;
 import java.awt.Dialog;
 import java.awt.Frame;
@@ -39,7 +42,7 @@ public class EditPersonDialog extends javax.swing.JDialog {
     private static final int MAX_CIR_SIZE = 14;       
     
     private CrewMember person;
-    private final CrewMemberModel model;     
+    private final VoyagerModel model;     
     private boolean editMode = false;
 
     private List<Function> functions;
@@ -59,11 +62,11 @@ public class EditPersonDialog extends javax.swing.JDialog {
      * @param frame the owner frame, which the dialog will attempt to return
      *              to on completion
      * @param modal if true, creates JDialog as a modal form 
-     * @param model the CrewMemberModel instance the dialog uses to persist
-     *              its addition/changes  
+     * @param model the VoyagerModel instance the dialog uses to persist
+              its addition/changes  
      * 
      */
-    public EditPersonDialog(Frame frame, boolean modal, CrewMemberModel model){
+    public EditPersonDialog(Frame frame, boolean modal, VoyagerModel model){
         super(frame, modal);
         
         this.person = new CrewMember();
@@ -92,15 +95,15 @@ public class EditPersonDialog extends javax.swing.JDialog {
      * @param frame     the owner frame, which the dialog will attempt to return
      *                  to on completion
      * @param modal     if true, creates JDialog as a modal form     *   
-     * @param model     the CrewMemberModel instance the dialog uses to persist
-     *                  its changes
+     * @param model     the VoyagerModel instance the dialog uses to persist
+                  its changes
      * @param person    the CrewMember instance to be edited. Must be a 
      *                  previously existent one  
      */
     public EditPersonDialog(
             Frame frame,
             boolean modal,
-            CrewMemberModel model,
+            VoyagerModel model,
             CrewMember person) {
         super(frame, modal);
         
@@ -141,11 +144,11 @@ public class EditPersonDialog extends javax.swing.JDialog {
      * @param dialog the owner Dialog, which the dialog will attempt to return
      *              to on completion
      * @param modal if true, creates JDialog as a modal form 
-     * @param model the CrewMemberModel instance the dialog uses to persist
-     *              its addition/changes  
+     * @param model the VoyagerModel instance the dialog uses to persist
+              its addition/changes  
      * 
      */
-    public EditPersonDialog(Dialog dialog, boolean modal, CrewMemberModel model){
+    public EditPersonDialog(Dialog dialog, boolean modal, VoyagerModel model){
         super(dialog, modal);
         
         this.person = new CrewMember();
@@ -174,15 +177,15 @@ public class EditPersonDialog extends javax.swing.JDialog {
      * @param dialog     the owner Dialog, which the dialog will attempt to return
      *                  to on completion
      * @param modal     if true, creates JDialog as a modal form     *   
-     * @param model     the CrewMemberModel instance the dialog uses to persist
-     *                  its changes
+     * @param model     the VoyagerModel instance the dialog uses to persist
+                  its changes
      * @param person    the CrewMember instance to be edited. Must be a 
      *                  previously existent one  
      */
     public EditPersonDialog(
             Dialog dialog,
             boolean modal,
-            CrewMemberModel model,
+            VoyagerModel model,
             CrewMember person) {
         super(dialog, modal);
         

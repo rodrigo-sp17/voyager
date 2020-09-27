@@ -3,8 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.nauta.voyager;
+package com.nauta.voyager.dialog;
 
+import com.nauta.voyager.people.CrewMember;
+import com.nauta.voyager.VoyagerModel;
 import java.awt.Dialog;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
@@ -27,7 +29,7 @@ public class EditBoardedDialog extends javax.swing.JDialog {
     
     private static final String TAG = EditBoardedDialog.class.getSimpleName();
     
-    private final CrewMemberModel model;
+    private final VoyagerModel model;
     private CrewMember person;
     
     // Format of the dates used on the dialog
@@ -49,7 +51,7 @@ public class EditBoardedDialog extends javax.swing.JDialog {
      *                  data edited
      */
     public EditBoardedDialog(Frame frame, boolean modal,
-            CrewMemberModel model, CrewMember person) {
+            VoyagerModel model, CrewMember person) {
         super(frame, modal);
         
         // A null person is result of improper usage by programmer
@@ -86,7 +88,7 @@ public class EditBoardedDialog extends javax.swing.JDialog {
      *                  data edited
      */
     public EditBoardedDialog(Dialog dialog, boolean modal,
-            CrewMemberModel model, CrewMember person) {
+            VoyagerModel model, CrewMember person) {
         super(dialog, modal);
         
         // A null person is result of improper usage by programmer
@@ -112,7 +114,7 @@ public class EditBoardedDialog extends javax.swing.JDialog {
     }
     
     // TODO - documentation
-    public EditBoardedDialog(CrewMemberModel model, CrewMember person) {
+    public EditBoardedDialog(VoyagerModel model, CrewMember person) {
         super();
 
         // A null person is result of improper usage by programmer

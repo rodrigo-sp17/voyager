@@ -3,13 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.nauta.voyager;
+package com.nauta.voyager.util;
 
 /**
  *
  * @author rodrigo
  */
-interface StateListener {
+public interface StateListener {
     
     public void onListenedStateChanged();
     

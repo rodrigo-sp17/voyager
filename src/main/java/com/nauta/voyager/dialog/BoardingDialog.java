@@ -3,8 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.nauta.voyager;
+package com.nauta.voyager.dialog;
 
+import com.nauta.voyager.people.CrewMember;
+import com.nauta.voyager.dialog.EditBoardedDialog;
+import com.nauta.voyager.dialog.EditPersonDialog;
+import com.nauta.voyager.VoyagerModel;
+import com.nauta.voyager.util.StateListener;
 import java.awt.Component;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
@@ -33,7 +38,7 @@ public class BoardingDialog extends javax.swing.JDialog implements
     
     private static final String TAG = BoardingDialog.class.getSimpleName();
     
-    private final CrewMemberModel model;
+    private final VoyagerModel model;
     
     private TableRowSorter<PeopleTableModel> sorter;
 
@@ -43,7 +48,7 @@ public class BoardingDialog extends javax.swing.JDialog implements
     public BoardingDialog(
             Frame frame,
             boolean modal,
-            CrewMemberModel model) {
+            VoyagerModel model) {
         super(frame, modal);
         
         // Ensures model is not null
@@ -60,7 +65,7 @@ public class BoardingDialog extends javax.swing.JDialog implements
     }
     
     // Constructor when the parent can't be found
-    public BoardingDialog(CrewMemberModel model) {
+    public BoardingDialog(VoyagerModel model) {
         super();
         
         // Ensures model is not null

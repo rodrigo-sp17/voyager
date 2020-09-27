@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.nauta.voyager;
+package com.nauta.voyager.util;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,12 +16,13 @@ import java.util.List;
  * It is used by Models in an MVP/MVC architecture to notify interested 
  * observers which implement the StateListener interface. 
  */
-class StateNotifier {
+public class StateNotifier {
     private List<StateListener> listeners;
     
     /**
      * Adds a StateListener object to the list of listeners of this class
-     * @param sl 
+     * 
+     * @param sl object that implements the StateListener interface
      */
     public void addStateListener(StateListener sl) {
         if (listeners == null) {
@@ -43,7 +44,8 @@ class StateNotifier {
         
     /**
      * Returns the class the fires the change of state
-     * @return 
+     * 
+     * @return class that originated
      */
     public Class<?> getSource() {
         return this.getClass();

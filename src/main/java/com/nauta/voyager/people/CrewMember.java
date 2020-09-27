@@ -1,4 +1,4 @@
-package com.nauta.voyager;
+package com.nauta.voyager.people;
 
 import java.time.*;
 
@@ -35,7 +35,7 @@ public class CrewMember {
     
     // Constructors
     // Basic info constructor
-    CrewMember(String name, String company, int functionId) {
+    public CrewMember(String name, String company, int functionId) {
         this.id = ++numMembers;
         this.name = name;
         this.functionId = functionId;
@@ -57,7 +57,7 @@ public class CrewMember {
     }
     
     // Instantiates a default Crew Member
-    CrewMember() {
+    public CrewMember() {
         this.id = numMembers++;
         this.name = "";  
         this.functionId = 0;

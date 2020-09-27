@@ -5,6 +5,7 @@
  */
 package com.nauta.voyager;
 
+import com.nauta.voyager.pob.PobView;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.*;
 import java.awt.*;
@@ -20,13 +21,13 @@ TODO
  *
  * @author rodrigo
  */
-class MonitorFrame extends javax.swing.JFrame {
+public class MainView extends javax.swing.JFrame {
     
     public PobView pobPane;
     
     
            
-    public MonitorFrame() {
+    public MainView() {
         initComponents();
         initCustomComponents();
         initViewLogic();        
@@ -274,7 +275,7 @@ class MonitorFrame extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
     
-    void initCustomComponents() {
+    private void initCustomComponents() {
         pobPane = new PobView();        
         mainPane.add(pobPane, "pobCard");               
     }
@@ -283,7 +284,7 @@ class MonitorFrame extends javax.swing.JFrame {
      * This method sets visual properties of the CrewDB JTable.
      * It is NOT dynamic - manual update when JTable changes data is required.
      */    
-    void setCrewDBTableFormat() {
+    public void setCrewDBTableFormat() {
         // Sets Center Alighment render for columns
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(DefaultTableCellRenderer.CENTER);
@@ -311,7 +312,7 @@ class MonitorFrame extends javax.swing.JFrame {
     
     
     // Changes color of buttons when selected
-    class MainMenuViewHandler implements ItemListener {
+    private class MainMenuViewHandler implements ItemListener {
         @Override
         public void itemStateChanged(ItemEvent e) {
             JToggleButton source = (JToggleButton) e.getSource();
@@ -331,9 +332,9 @@ class MonitorFrame extends javax.swing.JFrame {
     javax.swing.JToggleButton databaseTab;
     javax.swing.JButton deleteButton;
     javax.swing.JButton editButton;
-    private javax.swing.Box.Filler filler1;
+    public javax.swing.Box.Filler filler1;
     javax.swing.JButton jButton2;
-    private javax.swing.JMenuItem jMenuItem1;
+    public javax.swing.JMenuItem jMenuItem1;
     javax.swing.JScrollPane jScrollPane1;
     javax.swing.JToolBar jToolBar1;
     javax.swing.JPanel mainPane;

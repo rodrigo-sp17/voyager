@@ -5,9 +5,10 @@
  */
 package com.nauta.voyager;
 
+import com.nauta.voyager.pob.PobPresenter;
 import com.formdev.flatlaf.FlatLightLaf;
 import javax.swing.UIManager;
-
+        
 /*
 TODO
 - Config loading
@@ -33,10 +34,10 @@ public class VoyagerRun {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {            
             public void run() {
-                MonitorFrame view = new MonitorFrame();
+                MainView view = new MainView();
                 view.setVisible(true);
                 
-                CrewMemberModel model = new CrewMemberModel();
+                VoyagerModel model = new VoyagerModel();
                 
                 CrewPresenter crewPresenter = new CrewPresenter(view, model);
                 PobPresenter pobPresenter = new PobPresenter(view.pobPane, model);
