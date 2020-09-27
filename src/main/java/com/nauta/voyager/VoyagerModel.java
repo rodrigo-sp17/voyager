@@ -65,6 +65,9 @@ public class VoyagerModel extends StateNotifier {
         fireStateChanged();
     }
     
+    public void savePob(final Pob pob) {
+        currentPob = pob;
+    }    
     
     private final String[] CREWS = {"A", "B", "N/A"};
     
@@ -78,6 +81,7 @@ public class VoyagerModel extends StateNotifier {
         return Arrays.asList(CABINS);
     }
     
+    // TODO - remove hardcoded
     private final String[] SHIFTS = {
         "0600-1800",
         "1800-0600",
@@ -92,9 +96,9 @@ public class VoyagerModel extends StateNotifier {
     }
     
     /**
-     * Retrieves functions from database, which may be modified by the user.
+     * Retrieves Functions from database, which may be modified by the user.
      * 
-     * @return List<Function>   list of Function objects available in database
+     * @return List{@code <Function>}    list of Function objects available in database
      */
     public List<Function> getFunctions() {
         String query = "SELECT * FROM \"FUNCTIONS\"";
@@ -245,6 +249,7 @@ public class VoyagerModel extends StateNotifier {
         return null;
     }
     
+    // Returns List of all non-boarded CrewMembers
     public List<CrewMember> getAllNonBoardedCrewMembers() {
         List<CrewMember> list;
         try {
@@ -261,12 +266,8 @@ public class VoyagerModel extends StateNotifier {
     }
     
     // Updates crew member with specified ID
-    public int updateCrewMember(int id, CrewMember updatedMember) {
-        if (id < 0) {
-            throw new IllegalArgumentException();
-        }
-        
-        
+    public int updateCrewMember(CrewMember updatedMember) {
+                
         PreparedStatement updateCM = null;
         
         String updateString = 
