@@ -17,6 +17,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
@@ -74,8 +76,9 @@ public class PobPresenter implements StateListener {
         // Sets this class as a listener to VoyagerModel
         model.addStateListener(this);
         
-        // Sets crewField with its possible data
+        // Sets CrewField
         model.getAllCrews().forEach(s -> view.getCrewField().addItem(s));
+        view.getCrewField().addItemListener(new CrewFieldHandler());
         
         // Sets up pobTable
         JTable table = view.getPobTable();
@@ -134,12 +137,35 @@ public class PobPresenter implements StateListener {
         }        
     }
     
+    private final class CrewFieldHandler implements ItemListener {
+        
+        @Override
+        public void itemStateChanged(ItemEvent e) {
+            
+            if (e.getStateChange() == ItemEvent.SELECTED) {
+                // Prompts if action is intentional
+                int option = JOptionPane.showConfirmDialog(view,
+                        "Deseja desembarcar os membros atuais e embarcar a turma"
+                                + " selecionada?",
+                        "Embarcar Nova Turma",
+                        JOptionPane.OK_CANCEL_OPTION,
+                        JOptionPane.QUESTION_MESSAGE);
+                     
+                // If yes, boards the crew members
+                if (option == JOptionPane.OK_OPTION) {
+                    model.boardCrew(e.getItem().toString());
+                }
+            }
+        }
+        
+    }
+    
     private final class PobTableHandler implements MouseListener,
             ListSelectionListener {
 
         @Override
         public void mouseClicked(MouseEvent e) {
-            // Opens EditPersonDialog when item clicked twice on the table
+            // Opens EditBoardedDialog when item clicked twice on the table
             JTable table =(JTable) e.getSource();
             Point point = e.getPoint();
             int row = table.rowAtPoint(point);

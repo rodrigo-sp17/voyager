@@ -265,6 +265,58 @@ public class VoyagerModel extends StateNotifier {
         return null;
     }
     
+    // Sets all CrewMember of the provided crew as Boarded, and the others as 
+    // not boarded
+    public void boardCrew(String crew) {
+        // Checks if crew parameter exists
+        if (!getAllCrews().contains(crew)) {
+            throw new IllegalArgumentException("Provided crew does not exist!");
+        }        
+
+        // Unboard boarded
+        String unboardQuery = "UPDATE \"persons\" "
+                + "SET \"BOARDED\"=false "
+                + "WHERE \"BOARDED\"=true";
+        
+        try (Statement stmt = conn.createStatement()) {            
+            stmt.executeUpdate(unboardQuery);                    
+            stmt.close();
+        } catch (SQLException e) {
+            System.err.println(TAG + " - Error unboarding - " + e.getMessage());
+        }
+        
+        // Board crew
+        PreparedStatement boardStatement = null;
+                
+        String boardString = "UPDATE \"persons\" "
+                + "SET \"BOARDED\"=true "
+                + "WHERE \"CREW\" = ?";
+                
+        
+        try {            
+            conn.setAutoCommit(false);
+            boardStatement = conn.prepareStatement(boardString);
+            boardStatement.setString(1, crew);
+            boardStatement.executeUpdate();
+            conn.commit();
+            conn.setAutoCommit(true);
+        } catch (SQLException e) {
+            System.err.println(TAG + " - Error boarding - " + e.getMessage());
+        } finally {
+            try {
+                if (boardStatement != null) {
+                    boardStatement.close();
+                    conn.setAutoCommit(true);                
+            }
+            } catch (SQLException e) {
+                System.err.println(TAG + "Error closing statement" 
+                        + e.getMessage());
+            }
+        }       
+        
+        fireStateChanged();        
+    }
+    
     // Updates crew member with specified ID
     public int updateCrewMember(CrewMember updatedMember) {
                 
@@ -324,8 +376,8 @@ public class VoyagerModel extends StateNotifier {
         } finally {
             try {
                 if (updateCM != null) {
-                updateCM.close();
-                conn.setAutoCommit(true);
+                    updateCM.close();
+                    conn.setAutoCommit(true);
                 }
             } catch (SQLException e) {
                 // TODO - error handling

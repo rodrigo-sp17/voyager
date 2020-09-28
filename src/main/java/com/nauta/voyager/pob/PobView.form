@@ -226,6 +226,7 @@
         </Property>
         <Property name="text" type="java.lang.String" value="-"/>
         <Property name="actionCommand" type="java.lang.String" value="delete"/>
+        <Property name="enabled" type="boolean" value="false"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JButton" name="addMemberButton">

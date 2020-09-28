@@ -119,6 +119,7 @@ public class PobView extends javax.swing.JPanel {
         deleteMemberButton.setForeground(new java.awt.Color(255, 255, 255));
         deleteMemberButton.setText("-");
         deleteMemberButton.setActionCommand("delete");
+        deleteMemberButton.setEnabled(false);
 
         addMemberButton.setBackground(new java.awt.Color(51, 204, 0));
         addMemberButton.setFont(new java.awt.Font("Verdana", 1, 18)); // NOI18N
