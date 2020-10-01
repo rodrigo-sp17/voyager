@@ -28,12 +28,15 @@ TODO:
  *
  * @author rodrigo
  */
-public class VoyagerModel extends StateNotifier {
+public final class VoyagerModel extends StateNotifier {
     
     private static final String TAG = VoyagerModel.class.getSimpleName();
     
     // Holds list of CrewMembers for manipulation
     private List<CrewMember> crewMemberList;
+    
+    // Holds raft rules used to define the raft of boarded people
+    private final Map<Object, Raft> raftRules;
     
     // Current loaded POB for manipulation    
     private Pob currentPob;
@@ -50,6 +53,8 @@ public class VoyagerModel extends StateNotifier {
         
         // TODO - remove, its DUMMY
         currentPob = new Pob(1, getAllCrewMembers(), LocalDate.now(), "A");
+        
+        raftRules = new HashMap<>();
     }
     
     
@@ -72,13 +77,13 @@ public class VoyagerModel extends StateNotifier {
     private final String[] CREWS = {"A", "B", "N/A"};
     
     public List<String> getAllCrews() {
-        return Arrays.asList(CREWS);      
+        return new ArrayList<>(Arrays.asList(CREWS));      
     }
     
     private final String[] CABINS = {"401", "402", "403"};
     
     public List<String> getAllCabins() {
-        return Arrays.asList(CABINS);
+        return new ArrayList<>(Arrays.asList(CABINS));
     }
     
     // TODO - remove hardcoded
@@ -92,13 +97,14 @@ public class VoyagerModel extends StateNotifier {
     };
     
     public List<String> getAllShifts() {
-        return Arrays.asList(SHIFTS);
+        return new ArrayList<>(Arrays.asList(SHIFTS));        
     }
     
     /**
      * Retrieves Functions from database, which may be modified by the user.
      * 
-     * @return List{@code <Function>}    list of Function objects available in database
+     * @return List{@code <Function>} list of Function objects available 
+     *                                in database
      */
     public List<Function> getFunctions() {
         String query = "SELECT * FROM \"FUNCTIONS\"";
@@ -110,7 +116,7 @@ public class VoyagerModel extends StateNotifier {
                 Function f = new Function(
                         rs.getInt("FUNCTION_ID"),
                         rs.getString("FUNCTION_PREFIX"),
-                        rs.getString("FUNCTION_DESCRIPTION")
+                        rs.getString("FUNCTION_DESCRIPTION"), 0
                 );
                 list.add(f);
             }
@@ -123,6 +129,37 @@ public class VoyagerModel extends StateNotifier {
         return list;
     }
     
+    /**
+     * Adds a raft rule. Key is either a Function object or a String cabin.
+     * 
+     * @param key A string, either a Function object or a String cabin
+     * @param raft A Raft type, defining the raft side the member should go to
+     *  
+     */
+    public void addRaftRule(Object key, Raft raft) {
+        raftRules.put(key, raft);
+    }
+    
+    public void removeRaftRule(Object key) {
+        raftRules.remove(key);
+    }
+    
+    public String getRaft(final CrewMember person) {
+        Function functionKey = person.getFunction();
+        String cabinKey = person.getCabin();
+        
+        Raft result = raftRules.get(functionKey);
+        if (result != null) {
+            return result.textPT();
+        } 
+        
+        result = raftRules.get(cabinKey);
+        if (result != null) {
+            return result.textPT();
+        } else {
+            return "N/A";
+        }       
+    }    
     
     
     /**
@@ -161,7 +198,7 @@ public class VoyagerModel extends StateNotifier {
             insertCM = conn.prepareStatement(insertString);
             
             insertCM.setString(1, member.getName());
-            insertCM.setInt(2, member.getFunctionId());
+            insertCM.setInt(2, member.getFunction().getFunctionId());
             insertCM.setString(3, member.getCompany());
             insertCM.setString(4, member.getNationality());
             insertCM.setString(5, member.getCir());
@@ -347,7 +384,7 @@ public class VoyagerModel extends StateNotifier {
             updateCM = conn.prepareStatement(updateString   );
             
             updateCM.setString(1, updatedMember.getName());
-            updateCM.setInt(2, updatedMember.getFunctionId());
+            updateCM.setInt(2, updatedMember.getFunction().getFunctionId());
             updateCM.setString(3, updatedMember.getCompany());
             updateCM.setString(4, updatedMember.getNationality());
             updateCM.setString(5, updatedMember.getCir());
@@ -464,11 +501,20 @@ public class VoyagerModel extends StateNotifier {
                 c.setArrivalPlace(rs.getString("ARRIVALPLACE"));
                 c.setCabin(rs.getString("CABIN"));
                 c.setShift(rs.getString("SHIFT"));
-                c.setFunctionId(rs.getInt("FUNCTION"));
+                
+                int id = rs.getInt("FUNCTION");
+                Function f = getFunctions()
+                        .stream()
+                        .filter(i -> i.getFunctionId() == id)
+                        .findFirst()
+                        .orElse(null);
+                c.setFunction(f);
+                
                 list.add(c);                
             }
         } catch (SQLException e){
-            // TODO - do smth
+            System.err.println(TAG + " - Could not parse result" 
+                    + e.getMessage());
         }
         return list;
     }

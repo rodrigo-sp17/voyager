@@ -13,18 +13,16 @@ import java.awt.Dialog;
 import java.awt.Frame;
 import java.awt.event.*;
 import java.util.*;
-import javax.swing.text.MaskFormatter;
 import java.time.LocalDate;
 import java.time.format.*;
-import javax.swing.AbstractListModel;
 import javax.swing.InputVerifier;
 import javax.swing.JComponent;
+import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.ListCellRenderer;
-import javax.swing.MutableComboBoxModel;
 
 
 /**
@@ -559,7 +557,8 @@ public class EditPersonDialog extends javax.swing.JDialog {
             nameField.setText(person.getName());
             
             Function function = functions.stream()
-                    .filter(f -> f.getFunctionId() == person.getFunctionId())
+                    .filter(f -> f.getFunctionId() == person
+                            .getFunction().getFunctionId())
                     .findFirst()
                     .orElse(null);
             functionField.setSelectedItem(function);
@@ -576,9 +575,8 @@ public class EditPersonDialog extends javax.swing.JDialog {
     
     private void writeGUIState() {
         // Writes fields values to person variable
-        person.setName(nameField.getText());
-        Function f = (Function) functionField.getSelectedItem();
-        person.setFunctionId(f.getFunctionId());
+        person.setName(nameField.getText());        
+        person.setFunction((Function) functionField.getSelectedItem());
         person.setCompany(companyField.getText());        
         person.setSispat(sispatField.getText());
         person.setNationality(nationalityField.getText());
@@ -604,7 +602,7 @@ public class EditPersonDialog extends javax.swing.JDialog {
                 case "save" -> {
                     writeGUIState();
                     if (editMode) {
-                        model.updateCrewMember(person.getId(), person);                        
+                        model.updateCrewMember(person);                        
                     } else {
                         model.insertCrewMember(person);
                     }                    
@@ -618,7 +616,7 @@ public class EditPersonDialog extends javax.swing.JDialog {
                 
                 case "boardingData" -> {
                     // TODO
-                    new EditBoardedDialog(
+                    JDialog d = new EditBoardedDialog(
                             EditPersonDialog.this,
                             true,
                             model,
@@ -816,9 +814,7 @@ public class EditPersonDialog extends javax.swing.JDialog {
                 int index, boolean isSelected, boolean cellHasFocus) {
             Function function = (Function) value;
             
-            setText(function.getFunctionPrefix() 
-                    + " - " 
-                    + function.getFunctionDescription());           
+            setText(function.getFormalDescription());
             
             return this;            
         }   

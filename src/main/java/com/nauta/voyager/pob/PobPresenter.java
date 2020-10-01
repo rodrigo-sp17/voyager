@@ -11,7 +11,6 @@ import com.nauta.voyager.dialog.EditBoardedDialog;
 import com.nauta.voyager.Function;
 import com.nauta.voyager.util.StateListener;
 import com.nauta.voyager.VoyagerModel;
-import java.awt.Frame;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -27,14 +26,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.nio.file.Files;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
-import java.util.Iterator;
 import java.util.List;
 import javax.swing.*;
-import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.TableModelEvent;
@@ -173,7 +169,8 @@ public class PobPresenter implements StateListener {
                 Integer id = (Integer) table.getModel()
                     .getValueAt(table.convertRowIndexToModel(row),
                             0);
-                new EditBoardedDialog(model, model.getCrewMember(id));
+                JDialog d = new EditBoardedDialog(model,
+                        model.getCrewMember(id));
             }           
         }
 
@@ -217,7 +214,7 @@ public class PobPresenter implements StateListener {
             switch (e.getActionCommand()) {
                 case "add" -> {
                     // Assumed the parant of POB View is MonitorFrame
-                    new BoardingDialog(model);
+                    JDialog d = new BoardingDialog(model);
                 }
                 
                 case "delete" -> {
@@ -318,17 +315,20 @@ public class PobPresenter implements StateListener {
                 currentRow.getCell(0).setCellValue(member.getCabin());
                 currentRow.getCell(1).setCellValue(member.getName());
                 currentRow.getCell(2).setCellValue(member.getCompany());
-                currentRow.getCell(3).setCellValue(member.getFunctionId());
+                currentRow.getCell(3).setCellValue(member.getFunction()
+                        .getFormalDescription());
                 currentRow.getCell(4).setCellValue(member.getShift());                
                 currentRow.getCell(5).setCellValue(member.getBoardingDate());
+                
+                // TODO - set the life raft
+                currentRow.getCell(6).setCellValue(model.getRaft(member));
                 
                 // Ensures the formula is correct
                 Cell daysOnBoardCell = currentRow.getCell(7);
                 daysOnBoardCell.setCellFormula("D3-F"+ (currentRowIndex + 1));
                 
-                // TODO - set the life raft
-                
                 currentRow.getCell(8).setCellValue(member.getSispat());                
+                
                 
                 // Inserts new row if it is not the last item
                 if (i != members.size() - 1) {
@@ -338,6 +338,7 @@ public class PobPresenter implements StateListener {
                 ++currentRowIndex;
             }
             
+            // Forces calculation of days on board
             wb.setForceFormulaRecalculation(true);
             
             try (OutputStream out = new FileOutputStream(outputFile)) {
@@ -348,8 +349,7 @@ public class PobPresenter implements StateListener {
             System.err.println(TAG 
                     + "Could not write to Excel" 
                     + e.getMessage());
-        }      
-        
+        }       
     }
     
     // Helper method - inserts new formatted row for adding new data to table
@@ -403,24 +403,15 @@ public class PobPresenter implements StateListener {
             int size = list.size();            
             data = new Object[size][getColumnCount()];
             for (int i = 0; i < size; i++) {
-                data[i][0] = list.get(i).getId();
-                data[i][1] = list.get(i).getCabin();
-                data[i][2] = list.get(i).getName();
-                data[i][3] = list.get(i).getCompany();
-                
-                int id = list.get(i).getFunctionId();
-                String function = "";
-                for (Function f : functions) {
-                    if (f.getFunctionId() == id) {
-                        function = f.getFunctionPrefix() 
-                                + " - " 
-                                + f.getFunctionDescription();
-                    }
-                }               
-                data[i][4] = function;
-                data[i][5] = list.get(i).getShift();
-                data[i][6] = list.get(i).getBoardingDate();
-                data[i][7] = calculateRaft((String) data[i][1]); // TODO
+                CrewMember m = list.get(i);
+                data[i][0] = m.getId();
+                data[i][1] = m.getCabin();
+                data[i][2] = m.getName();
+                data[i][3] = m.getCompany();                              
+                data[i][4] = m.getFunction().getFormalDescription();
+                data[i][5] = m.getShift();
+                data[i][6] = m.getBoardingDate();
+                data[i][7] = model.getRaft(m);
                 data[i][8] = calculateDaysOnBoard(list.get(i).getBoardingDate());
                 data[i][9] = list.get(i).getSispat();
             }
@@ -428,16 +419,10 @@ public class PobPresenter implements StateListener {
             fireTableDataChanged();
         }
         
-        private long calculateDaysOnBoard(LocalDate date) {
-            LocalDate pobDate = model.getLastPob().getDateIssued();
-            LocalDate dateBoarded = date;
+        private long calculateDaysOnBoard(LocalDate dateBoarded) {
+            LocalDate pobDate = model.getLastPob().getDateIssued();            
             return ChronoUnit.DAYS.between(dateBoarded, pobDate);
-        }
-        
-        private String calculateRaft(String cabin) {
-            // TODO - Dummy
-            return "101";
-        }        
+        }    
         
 
         @Override

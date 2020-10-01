@@ -1,5 +1,6 @@
 package com.nauta.voyager.people;
 
+import com.nauta.voyager.Function;
 import java.time.*;
 
 
@@ -15,7 +16,7 @@ public class CrewMember {
     // Fixed crew member data
     private int id;
     private String name;    
-    private int functionId;
+    private Function function;
     private String company;
     private String nationality;
     private String cir;
@@ -35,10 +36,10 @@ public class CrewMember {
     
     // Constructors
     // Basic info constructor
-    public CrewMember(String name, String company, int functionId) {
+    public CrewMember(String name, String company, Function function) {
         this.id = ++numMembers;
         this.name = name;
-        this.functionId = functionId;
+        this.function = function;
         this.company = company;
         this.nationality = DEFAULT_NATIONALITY;
         this.cir = "";
@@ -60,7 +61,7 @@ public class CrewMember {
     public CrewMember() {
         this.id = numMembers++;
         this.name = "";  
-        this.functionId = 0;
+        this.function = null;
         this.company = "";
         this.nationality = DEFAULT_NATIONALITY;
         this.cir = "";
@@ -94,12 +95,12 @@ public class CrewMember {
         this.name = name;
     }
 
-    public int getFunctionId() {
-        return functionId;
+    public Function getFunction() {
+        return function;
     }
 
-    public void setFunctionId(int id) {
-        this.functionId = id;
+    public void setFunction(Function function) {
+        this.function = function;
     }
 
     public String getCompany() {

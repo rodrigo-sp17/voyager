@@ -73,7 +73,8 @@ public class CrewPresenter implements StateListener {
         // Sets searchCrewDBTable for event handling
         CrewDBTableHandler tableHandler = new CrewDBTableHandler();
         view.crewDBTable.addMouseListener(tableHandler);
-        view.crewDBTable.getSelectionModel().addListSelectionListener(tableHandler);
+        view.crewDBTable.getSelectionModel()
+                .addListSelectionListener(tableHandler);
         view.searchTextField.getDocument().addDocumentListener(
                 new SearchCrewTableHandler());
         CrewViewButtonsHandler buttonsHandler = new CrewViewButtonsHandler();
@@ -149,7 +150,8 @@ public class CrewPresenter implements StateListener {
         }       
     }
     
-    private class CrewDBTableHandler implements MouseListener, ListSelectionListener {
+    private class CrewDBTableHandler implements MouseListener,
+            ListSelectionListener {
         @Override
         public void mouseClicked(MouseEvent e) {
             // Opens EditPersonDialog when item clicked twice on the table
@@ -160,28 +162,25 @@ public class CrewPresenter implements StateListener {
                 Integer id = (Integer) view.crewDBTable.getModel()
                     .getValueAt(view.crewDBTable.convertRowIndexToModel(row),
                             0);
-                new EditPersonDialog(view, true, model, model.getCrewMember(id));
+                JDialog d = new EditPersonDialog(view, true,
+                        model, model.getCrewMember(id));
             }            
         }
 
         @Override
         public void mousePressed(MouseEvent e) {
-            return;
         }
 
         @Override
         public void mouseReleased(MouseEvent e) {
-            return;
         }
 
         @Override
         public void mouseEntered(MouseEvent e) {
-            return;
         }
 
         @Override
         public void mouseExited(MouseEvent e) {
-            return;
         }
         
         @Override
@@ -203,13 +202,13 @@ public class CrewPresenter implements StateListener {
                     
                     Integer id = (Integer) tableModel
                             .getValueAt(table.convertRowIndexToModel(0), 0);
-                    new EditPersonDialog(view, true, model, 
+                    JDialog d = new EditPersonDialog(view, true, model, 
                             model.getCrewMember(id));                    
                 }
                 
                 case "add" -> {
                     // Instantiates new EditPersonDialog for creation
-                    new EditPersonDialog(view, true, model);                    
+                    JDialog d = new EditPersonDialog(view, true, model);                    
                 }
                 
                 case "delete" -> {
@@ -301,7 +300,8 @@ public class CrewPresenter implements StateListener {
         // Searches FOLDER for properties
         try {    
             try {    
-                in = this.getClass().getClassLoader().getResourceAsStream("default.properties");
+                in = this.getClass().getClassLoader()
+                        .getResourceAsStream("default.properties");
                 result.load(in);
                 System.out.println("Properties loaded successfully");
             } catch (NullPointerException e) {
@@ -341,28 +341,18 @@ public class CrewPresenter implements StateListener {
             loadData();
         }
     
-        // Implements logic to retrieve the objects that will compose the rows of the table
+        // Implements logic to retrieve the objects that will compose the rows 
+        // of the table
         public void loadData() {
-            List<CrewMember> list = model.getAllCrewMembers();
-            List<Function> functions = model.getFunctions();
+            List<CrewMember> list = model.getAllCrewMembers();            
             int listSize = list.size();            
             
             this.data = new Object[listSize][getColumnCount()];
             for (int i = 0; i < listSize; i++) {
                 this.data[i][0] = list.get(i).getId();
-                this.data[i][1] = list.get(i).getName();
-                
-                int id = list.get(i).getFunctionId();
-                String function = "";
-                for (Function f : functions) {
-                    if (f.getFunctionId() == id) {
-                        function = f.getFunctionPrefix() 
-                                + " - " 
-                                + f.getFunctionDescription();
-                    }
-                }                
-                this.data[i][2] = function;
-                
+                this.data[i][1] = list.get(i).getName();                               
+                this.data[i][2] = list.get(i).getFunction()
+                        .getFormalDescription();                
                 this.data[i][3] = list.get(i).getCompany();
                 this.data[i][4] = list.get(i).getSispat();
                 this.data[i][5] = list.get(i).getNationality();

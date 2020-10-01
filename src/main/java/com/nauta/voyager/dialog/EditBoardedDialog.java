@@ -423,19 +423,19 @@ public class EditBoardedDialog extends javax.swing.JDialog {
         staticDataButton.addActionListener(handler);
         
         // Initializes crewField list with fixed crew data from model
-        for (String s : model.getAllCrews()) {
-            crewField.addItem(s);            
-        }
+        model.getAllCrews().forEach(s -> {
+            crewField.addItem(s);
+        });
         
         // Initializes cabinField list with mutable cabin data from model
-        for (String s : model.getAllCabins()) {
+        model.getAllCabins().forEach(s -> {
             cabinField.addItem(s);
-        }
+        });
         
         // Initializes shiftField with fixed shift values from model
-        for (String s : model.getAllShifts()) {
+        model.getAllShifts().forEach(s -> {
             shiftField.addItem(s);
-        }
+        });
         
         /* 
          * Sets place fields with input verifiers and PlainDocuments for size
@@ -485,7 +485,7 @@ public class EditBoardedDialog extends javax.swing.JDialog {
             switch(e.getActionCommand()) {
                 case "save" -> {                    
                     writeGUIState();
-                    model.updateCrewMember(person.getId(), person);
+                    model.updateCrewMember(person);
                     dispose();
                 }
                 
@@ -519,7 +519,7 @@ public class EditBoardedDialog extends javax.swing.JDialog {
                 return true;
             } else {
                 JOptionPane.showMessageDialog(rootPane,
-                       "Local deve ser no formato Cidade-Estado!\n"
+                       "Local deve ser no formato Cidade - Estado!\n"
                         + "Exemplo: Rio de Janeiro - RJ");
                 return false;
             }
