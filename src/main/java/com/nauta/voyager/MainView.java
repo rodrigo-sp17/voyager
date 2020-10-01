@@ -10,6 +10,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import javax.swing.table.TableColumnModel;
 
 /* 
 TODO
@@ -80,6 +81,8 @@ public class MainView extends javax.swing.JFrame {
         deleteButton = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         crewDBTable = new javax.swing.JTable();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
 
         jMenuItem1.setText("jMenuItem1");
 
@@ -199,19 +202,22 @@ public class MainView extends javax.swing.JFrame {
         databasePanel.setBackground(new java.awt.Color(255, 255, 255));
         databasePanel.setName("databasePanel"); // NOI18N
 
-        searchTextField.setFont(new java.awt.Font("Calibri", 0, 14)); // NOI18N
-        searchTextField.setToolTipText("Digite aqui para filtrar");
+        searchTextField.setFont(new java.awt.Font("Verdana", 0, 16)); // NOI18N
+        searchTextField.setToolTipText("Digite aqui para filtrar cadastros");
+        searchTextField.setMinimumSize(new java.awt.Dimension(15, 27));
 
         editButton.setBackground(new java.awt.Color(0, 51, 102));
         editButton.setFont(new java.awt.Font("Verdana", 1, 12)); // NOI18N
         editButton.setForeground(new java.awt.Color(255, 255, 255));
         editButton.setText("Editar");
+        editButton.setToolTipText("Edita a pessoa selecionada");
         editButton.setActionCommand("edit");
 
         deleteButton.setBackground(new java.awt.Color(200, 0, 0));
         deleteButton.setFont(new java.awt.Font("Verdana", 1, 12)); // NOI18N
         deleteButton.setForeground(new java.awt.Color(255, 255, 255));
         deleteButton.setText("Deletar");
+        deleteButton.setToolTipText("Deleta a pessoa selecionada do cadastro");
         deleteButton.setActionCommand("delete");
         deleteButton.setEnabled(false);
 
@@ -224,35 +230,56 @@ public class MainView extends javax.swing.JFrame {
         jScrollPane1.setViewportView(crewDBTable);
         crewDBTable.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_INTERVAL_SELECTION);
 
+        jLabel2.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
+        jLabel2.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel2.setText("Buscar");
+
+        jLabel3.setFont(new java.awt.Font("Verdana", 0, 18)); // NOI18N
+        jLabel3.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel3.setText("Banco de Dados de Pessoal");
+
         javax.swing.GroupLayout databasePanelLayout = new javax.swing.GroupLayout(databasePanel);
         databasePanel.setLayout(databasePanelLayout);
         databasePanelLayout.setHorizontalGroup(
             databasePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(databasePanelLayout.createSequentialGroup()
-                .addGap(12, 12, 12)
+                .addGap(20, 20, 20)
                 .addGroup(databasePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1)
                     .addGroup(databasePanelLayout.createSequentialGroup()
-                        .addComponent(searchTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 759, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(editButton, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(deleteButton, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 120, Short.MAX_VALUE)))
-                .addGap(12, 12, 12))
+                        .addComponent(jLabel2)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(databasePanelLayout.createSequentialGroup()
+                        .addGroup(databasePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane1)
+                            .addGroup(databasePanelLayout.createSequentialGroup()
+                                .addComponent(searchTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 759, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(editButton, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(deleteButton, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 104, Short.MAX_VALUE)))
+                        .addGap(20, 20, 20))))
+            .addGroup(databasePanelLayout.createSequentialGroup()
+                .addGap(20, 20, 20)
+                .addComponent(jLabel3)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         databasePanelLayout.setVerticalGroup(
             databasePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(databasePanelLayout.createSequentialGroup()
-                .addGap(12, 12, 12)
+                .addContainerGap()
+                .addComponent(jLabel3)
+                .addGap(18, 18, 18)
+                .addComponent(jLabel2)
+                .addGap(1, 1, 1)
                 .addGroup(databasePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(editButton, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(databasePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(searchTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(deleteButton, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 629, Short.MAX_VALUE)
-                .addGap(12, 12, 12))
+                .addGap(20, 20, 20)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 567, Short.MAX_VALUE)
+                .addGap(20, 20, 20))
         );
 
         mainPane.add(databasePanel, "databaseCard");
@@ -294,20 +321,22 @@ public class MainView extends javax.swing.JFrame {
         DefaultTableCellRenderer midRenderer = new DefaultTableCellRenderer();
         midRenderer.setVerticalAlignment(DefaultTableCellRenderer.CENTER);
         
+        TableColumnModel m = crewDBTable.getColumnModel();
+        
         // Defines columns visual properties
-        crewDBTable.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
-        crewDBTable.getColumnModel().getColumn(0).setPreferredWidth(40);
-        crewDBTable.getColumnModel().getColumn(0).setMinWidth(4);
-        crewDBTable.getColumnModel().getColumn(0).setMaxWidth(100);
-        crewDBTable.getColumnModel().getColumn(1).setCellRenderer(midRenderer);
-        crewDBTable.getColumnModel().getColumn(2).setCellRenderer(centerRenderer);
-        crewDBTable.getColumnModel().getColumn(2).setPreferredWidth(150);        
-        crewDBTable.getColumnModel().getColumn(3).setCellRenderer(centerRenderer);
-        crewDBTable.getColumnModel().getColumn(4).setCellRenderer(centerRenderer);
-        crewDBTable.getColumnModel().getColumn(5).setCellRenderer(centerRenderer);
-        crewDBTable.getColumnModel().getColumn(6).setCellRenderer(centerRenderer);        
-        crewDBTable.getColumnModel().getColumn(7).setCellRenderer(centerRenderer);
-        crewDBTable.getColumnModel().getColumn(8).setCellRenderer(centerRenderer);        
+        m.getColumn(0).setCellRenderer(centerRenderer);
+        m.getColumn(0).setPreferredWidth(40);
+        m.getColumn(0).setMinWidth(4);
+        m.getColumn(0).setMaxWidth(100);
+        m.getColumn(1).setCellRenderer(midRenderer);
+        m.getColumn(1).setPreferredWidth(250);        
+        m.getColumn(2).setPreferredWidth(200);        
+        
+        m.getColumn(4).setCellRenderer(centerRenderer);
+        m.getColumn(5).setCellRenderer(centerRenderer);
+        m.getColumn(6).setCellRenderer(centerRenderer);        
+        m.getColumn(7).setCellRenderer(centerRenderer);
+        m.getColumn(8).setCellRenderer(centerRenderer);        
     }    
     
     
@@ -334,6 +363,8 @@ public class MainView extends javax.swing.JFrame {
     javax.swing.JButton editButton;
     public javax.swing.Box.Filler filler1;
     javax.swing.JButton jButton2;
+    public javax.swing.JLabel jLabel2;
+    public javax.swing.JLabel jLabel3;
     public javax.swing.JMenuItem jMenuItem1;
     javax.swing.JScrollPane jScrollPane1;
     javax.swing.JToolBar jToolBar1;

@@ -5,7 +5,7 @@
  */
 package com.nauta.voyager.dialog;
 
-import com.nauta.voyager.people.CrewMember;
+import com.nauta.voyager.people.Person;
 import com.nauta.voyager.dialog.EditBoardedDialog;
 import com.nauta.voyager.dialog.EditPersonDialog;
 import com.nauta.voyager.VoyagerModel;
@@ -94,7 +94,7 @@ public class BoardingDialog extends javax.swing.JDialog implements
         // Sets people table up
         PeopleTableModel model = new PeopleTableModel();
         peopleTable.setModel(model);
-        peopleTable.setDefaultRenderer(CrewMember.class, new CrewMemberRenderer());
+        peopleTable.setDefaultRenderer(Person.class, new CrewMemberRenderer());
         peopleTable.getSelectionModel().addListSelectionListener(new TableHandler());
                 
         this.sorter = new TableRowSorter<>(model);
@@ -170,14 +170,14 @@ public class BoardingDialog extends javax.swing.JDialog implements
         public void actionPerformed(ActionEvent e) {
             switch (e.getActionCommand()) {
                 case "board" -> {
-                    // Gets selected row, sets the CrewMember as boarded,
-                    // Passes the CrewMember to a EditBoardedDialog for 
+                    // Gets selected row, sets the Person as boarded,
+                    // Passes the Person to a EditBoardedDialog for 
                     // fine-tuning
                     int correctedRow = peopleTable.convertRowIndexToModel(
                             peopleTable.getSelectedRow());
                     
                     // 1 is the ID row
-                    CrewMember member = model
+                    Person member = model
                             .getCrewMember((Integer) peopleTable
                             .getModel()
                             .getValueAt(correctedRow, 1));
@@ -189,7 +189,7 @@ public class BoardingDialog extends javax.swing.JDialog implements
                 }
                 
                 case "add" -> {
-                    // Calls new dialog to build a CrewMember
+                    // Calls new dialog to build a Person
                     new EditPersonDialog(BoardingDialog.this, true, model);
                 }
                 
@@ -249,7 +249,7 @@ public class BoardingDialog extends javax.swing.JDialog implements
         
         private void loadData() {
             
-            List<CrewMember> list = model.getAllNonBoardedCrewMembers();
+            List<Person> list = model.getAllNonBoardedCrewMembers();
             
             int size = list.size();
             data = new Object[size][getColumnCount() + 1];
@@ -278,14 +278,14 @@ public class BoardingDialog extends javax.swing.JDialog implements
 
         //@Override
         //public Class<?> getColumnClass(int columnIndex) {
-        //    return CrewMember.class;
+        //    return Person.class;
         //}
         
         
     }
     
     /* 
-     * Defines a renderer for the list, keeping reference to CrewMember while
+     * Defines a renderer for the list, keeping reference to Person while
      * showing only the name.
      */
     public final class CrewMemberRenderer extends JLabel 
@@ -300,7 +300,7 @@ public class BoardingDialog extends javax.swing.JDialog implements
         public Component getTableCellRendererComponent(JTable table,
                 Object value, boolean isSelected, boolean hasFocus,
                 int row, int column) {
-            CrewMember member = (CrewMember) value;
+            Person member = (Person) value;
             
             String name = member.getName();
             setText(name);

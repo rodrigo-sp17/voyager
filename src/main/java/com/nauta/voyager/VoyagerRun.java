@@ -39,7 +39,7 @@ public class VoyagerRun {
                 
                 VoyagerModel model = new VoyagerModel();
                 
-                CrewPresenter crewPresenter = new CrewPresenter(view, model);
+                PeoplePresenter crewPresenter = new PeoplePresenter(view, model);
                 PobPresenter pobPresenter = new PobPresenter(view.pobPane, model);
             }
         });

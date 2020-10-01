@@ -5,7 +5,7 @@
  */
 package com.nauta.voyager.pob;
 
-import com.nauta.voyager.people.CrewMember;
+import com.nauta.voyager.people.Person;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +17,7 @@ import java.util.List;
 public class Pob {
     private int pobId;
     
-    private List<CrewMember> members;
+    private List<Person> members;
     
     private int numMembers;
             
@@ -25,7 +25,7 @@ public class Pob {
     
     private String crew;
 
-    public Pob(int pobId, List<CrewMember> members,
+    public Pob(int pobId, List<Person> members,
             LocalDate dateIssued, String crew) {
         this.pobId = pobId;
         this.members = members;
@@ -42,11 +42,11 @@ public class Pob {
         this.pobId = pobId;
     }
 
-    public List<CrewMember> getMembers() {
+    public List<Person> getMembers() {
         return members;
     }
 
-    public void setMembers(List<CrewMember> members) {
+    public void setMembers(List<Person> members) {
         this.members = members;
     }
 

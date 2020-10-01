@@ -5,7 +5,7 @@
  */
 package com.nauta.voyager.dialog;
 
-import com.nauta.voyager.people.CrewMember;
+import com.nauta.voyager.people.Person;
 import com.nauta.voyager.VoyagerModel;
 import java.awt.Dialog;
 import java.awt.Frame;
@@ -30,7 +30,7 @@ public class EditBoardedDialog extends javax.swing.JDialog {
     private static final String TAG = EditBoardedDialog.class.getSimpleName();
     
     private final VoyagerModel model;
-    private CrewMember person;
+    private Person person;
     
     // Format of the dates used on the dialog
     private final DateTimeFormatter FORMATTER = DateTimeFormatter
@@ -47,11 +47,11 @@ public class EditBoardedDialog extends javax.swing.JDialog {
      * @param modal     if true, the dialog is instantiated as modal
      * @param model     the model used by the dialog to retrieve and persist
      *                  its data
-     * @param person    the CrewMember instance which is having its boarding
-     *                  data edited
+     * @param person    the Person instance which is having its boarding
+                  data edited
      */
     public EditBoardedDialog(Frame frame, boolean modal,
-            VoyagerModel model, CrewMember person) {
+            VoyagerModel model, Person person) {
         super(frame, modal);
         
         // A null person is result of improper usage by programmer
@@ -84,11 +84,11 @@ public class EditBoardedDialog extends javax.swing.JDialog {
      * @param modal     if true, the dialog is instantiated as modal
      * @param model     the model used by the dialog to retrieve and persist
      *                  its data
-     * @param person    the CrewMember instance which is having its boarding
-     *                  data edited
+     * @param person    the Person instance which is having its boarding
+                  data edited
      */
     public EditBoardedDialog(Dialog dialog, boolean modal,
-            VoyagerModel model, CrewMember person) {
+            VoyagerModel model, Person person) {
         super(dialog, modal);
         
         // A null person is result of improper usage by programmer
@@ -114,7 +114,7 @@ public class EditBoardedDialog extends javax.swing.JDialog {
     }
     
     // TODO - documentation
-    public EditBoardedDialog(VoyagerModel model, CrewMember person) {
+    public EditBoardedDialog(VoyagerModel model, Person person) {
         super();
 
         // A null person is result of improper usage by programmer
@@ -195,7 +195,6 @@ public class EditBoardedDialog extends javax.swing.JDialog {
         crewField.setBackground(new java.awt.Color(255, 255, 255));
         crewField.setFont(new java.awt.Font("Verdana", 0, 16)); // NOI18N
         crewField.setForeground(new java.awt.Color(0, 0, 0));
-        crewField.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "A", "B", "?" }));
 
         jLabel3.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(0, 0, 0));
@@ -267,7 +266,6 @@ public class EditBoardedDialog extends javax.swing.JDialog {
         cabinField.setBackground(new java.awt.Color(255, 255, 255));
         cabinField.setFont(new java.awt.Font("Verdana", 0, 16)); // NOI18N
         cabinField.setForeground(new java.awt.Color(0, 0, 0));
-        cabinField.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "401", "402", "403", "..." }));
 
         jLabel9.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
         jLabel9.setForeground(new java.awt.Color(0, 0, 0));
@@ -276,7 +274,6 @@ public class EditBoardedDialog extends javax.swing.JDialog {
         shiftField.setBackground(new java.awt.Color(255, 255, 255));
         shiftField.setFont(new java.awt.Font("Verdana", 0, 16)); // NOI18N
         shiftField.setForeground(new java.awt.Color(0, 0, 0));
-        shiftField.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "1200-2400", "24h", "0600-1800" }));
 
         saveButton.setBackground(new java.awt.Color(0, 51, 102));
         saveButton.setFont(new java.awt.Font("Verdana", 1, 12)); // NOI18N

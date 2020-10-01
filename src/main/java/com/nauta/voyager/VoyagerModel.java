@@ -4,7 +4,7 @@
  */
 package com.nauta.voyager;
 
-import com.nauta.voyager.people.CrewMember;
+import com.nauta.voyager.people.Person;
 import com.nauta.voyager.util.StateNotifier;
 import com.nauta.voyager.util.DatabaseUtil;
 import com.nauta.voyager.pob.Pob;
@@ -32,7 +32,7 @@ public final class VoyagerModel extends StateNotifier {
     private static final String TAG = VoyagerModel.class.getSimpleName();
     
     // Holds list of CrewMembers for manipulation
-    private List<CrewMember> crewMemberList;
+    private List<Person> crewMemberList;
     
     // Holds raft rules used to define the raft of boarded people
     private final Map<Object, Raft> raftRules;
@@ -168,7 +168,7 @@ public final class VoyagerModel extends StateNotifier {
         fireStateChanged();
     }
     
-    public String getRaft(final CrewMember person) {
+    public String getRaft(final Person person) {
         String functionKey = person.getFunction().getIdentifier();
         String cabinKey = person.getCabin();
                    
@@ -193,9 +193,9 @@ public final class VoyagerModel extends StateNotifier {
      * ignored, since the database provided its own identification on INSERT
      * operations.
      * 
-     * @param member    the CrewMember instance to add to the database 
+     * @param member    the Person instance to add to the database 
      */
-    public void insertCrewMember(CrewMember member) {        
+    public void insertCrewMember(Person member) {        
         
         PreparedStatement insertCM = null;
         
@@ -262,13 +262,13 @@ public final class VoyagerModel extends StateNotifier {
     }
 
     // Gets crewmember with specified ID (It is assumed the id is unique!)
-    public CrewMember getCrewMember(int id) {
+    public Person getCrewMember(int id) {
         if (id < 0) {
             throw new IllegalArgumentException();
         }
         
         try {
-            List<CrewMember> list = requestQuery("SELECT * FROM \"persons\" "
+            List<Person> list = requestQuery("SELECT * FROM \"persons\" "
                     + "JOIN \"FUNCTIONS\" "
                     + "ON \"persons\".\"FUNCTION\" = \"FUNCTIONS\".FUNCTION_ID WHERE PERSONID="
                     + id);
@@ -281,8 +281,8 @@ public final class VoyagerModel extends StateNotifier {
     }
     
     // Returns List of all registered CrewMembers
-    public List<CrewMember> getAllCrewMembers() {
-        List<CrewMember> list;
+    public List<Person> getAllCrewMembers() {
+        List<Person> list;
         try {
             list = requestQuery("SELECT * FROM \"persons\" "
                     + "JOIN \"FUNCTIONS\" "
@@ -297,8 +297,8 @@ public final class VoyagerModel extends StateNotifier {
     }
     
     // Returns List of all boarded CrewMembers
-    public List<CrewMember> getAllBoardedCrewMembers() {
-        List<CrewMember> list;
+    public List<Person> getAllBoardedCrewMembers() {
+        List<Person> list;
         try {
             list = requestQuery("SELECT * FROM \"persons\" "
                     + "JOIN \"FUNCTIONS\" "
@@ -313,8 +313,8 @@ public final class VoyagerModel extends StateNotifier {
     }
     
     // Returns List of all non-boarded CrewMembers
-    public List<CrewMember> getAllNonBoardedCrewMembers() {
-        List<CrewMember> list;
+    public List<Person> getAllNonBoardedCrewMembers() {
+        List<Person> list;
         try {
             list = requestQuery("SELECT * FROM \"persons\" "
                     + "JOIN \"FUNCTIONS\" "
@@ -328,7 +328,7 @@ public final class VoyagerModel extends StateNotifier {
         return null;
     }
     
-    // Sets all CrewMember of the provided crew as Boarded, and the others as 
+    // Sets all Person of the provided crew as Boarded, and the others as 
     // not boarded
     public void boardCrew(String crew) {
         // Checks if crew parameter exists
@@ -381,7 +381,7 @@ public final class VoyagerModel extends StateNotifier {
     }
     
     // Updates crew member with specified ID
-    public int updateCrewMember(CrewMember updatedMember) {
+    public int updateCrewMember(Person updatedMember) {
                 
         PreparedStatement updateCM = null;
         
@@ -492,8 +492,8 @@ public final class VoyagerModel extends StateNotifier {
      
     
     // Sends querys to connected database and returns as list of crew members
-    private List<CrewMember> requestQuery(String query) throws SQLException {
-        List<CrewMember> list = null;
+    private List<Person> requestQuery(String query) throws SQLException {
+        List<Person> list = null;
         try (Statement stmt = conn.createStatement()) {
             ResultSet rs = stmt.executeQuery(query);            
             list = parseResult(rs);            
@@ -506,11 +506,11 @@ public final class VoyagerModel extends StateNotifier {
     }
     
     // Parses a ResultSet to Crew Member objects, than adds them to a list
-    private List<CrewMember> parseResult(ResultSet rs) {
-        List<CrewMember> list = new ArrayList<>();
+    private List<Person> parseResult(ResultSet rs) {
+        List<Person> list = new ArrayList<>();
         try {
             while (rs.next()) {
-                CrewMember c = new CrewMember();
+                Person c = new Person();
                 c.setId(rs.getInt("PERSONID"));
                 c.setName(rs.getString("NAME"));
                 c.setCompany(rs.getString("COMPANY"));

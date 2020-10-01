@@ -5,7 +5,7 @@
  */
 package com.nauta.voyager.dialog;
 
-import com.nauta.voyager.people.CrewMember;
+import com.nauta.voyager.people.Person;
 import com.nauta.voyager.Function;
 import com.nauta.voyager.VoyagerModel;
 import java.awt.Component;
@@ -39,7 +39,7 @@ public class EditPersonDialog extends javax.swing.JDialog {
     private static final int MAX_NATIONALITY_SIZE = 20;
     private static final int MAX_CIR_SIZE = 14;       
     
-    private CrewMember person;
+    private Person person;
     private final VoyagerModel model;     
     private boolean editMode = false;
 
@@ -53,9 +53,9 @@ public class EditPersonDialog extends javax.swing.JDialog {
      * Use this constructor to <b>add</b> a previously inexistent CrewMember to
      * the model.
      * <p>
-     * WARNING: providing an empty CrewMember with the intention to insert a new
-     * one into the model will trigger model UPDATE function instead of INSERT,
-     * causing unexpected behavior.
+ WARNING: providing an empty Person with the intention to insert a new
+ one into the model will trigger model UPDATE function instead of INSERT,
+ causing unexpected behavior.
      * 
      * @param frame the owner frame, which the dialog will attempt to return
      *              to on completion
@@ -67,7 +67,7 @@ public class EditPersonDialog extends javax.swing.JDialog {
     public EditPersonDialog(Frame frame, boolean modal, VoyagerModel model){
         super(frame, modal);
         
-        this.person = new CrewMember();
+        this.person = new Person();
         this.editMode = false;
         
         // If model is null, exits application - saving would be impossible
@@ -87,22 +87,22 @@ public class EditPersonDialog extends javax.swing.JDialog {
     /**
      * Use this constructor to <b>edit</b> an existent CrewMember in the model.
      * <p>
-     * WARNING: providing a non-existent CrewMember will trigger model UPDATE
-     * instead of INSERT function. The modifications will NOT be persisted.
+ WARNING: providing a non-existent Person will trigger model UPDATE
+ instead of INSERT function. The modifications will NOT be persisted.
      * 
      * @param frame     the owner frame, which the dialog will attempt to return
      *                  to on completion
      * @param modal     if true, creates JDialog as a modal form     *   
      * @param model     the VoyagerModel instance the dialog uses to persist
                   its changes
-     * @param person    the CrewMember instance to be edited. Must be a 
-     *                  previously existent one  
+     * @param person    the Person instance to be edited. Must be a 
+                  previously existent one  
      */
     public EditPersonDialog(
             Frame frame,
             boolean modal,
             VoyagerModel model,
-            CrewMember person) {
+            Person person) {
         super(frame, modal);
         
         /*
@@ -135,9 +135,9 @@ public class EditPersonDialog extends javax.swing.JDialog {
      * Use this constructor to <b>add</b> a previously inexistent CrewMember to
      * the model.
      * <p>
-     * WARNING: providing an empty CrewMember with the intention to insert a new
-     * one into the model will trigger model UPDATE function instead of INSERT,
-     * causing unexpected behavior.
+ WARNING: providing an empty Person with the intention to insert a new
+ one into the model will trigger model UPDATE function instead of INSERT,
+ causing unexpected behavior.
      * 
      * @param dialog the owner Dialog, which the dialog will attempt to return
      *              to on completion
@@ -149,7 +149,7 @@ public class EditPersonDialog extends javax.swing.JDialog {
     public EditPersonDialog(Dialog dialog, boolean modal, VoyagerModel model){
         super(dialog, modal);
         
-        this.person = new CrewMember();
+        this.person = new Person();
         this.editMode = false;
         
         // If model is null, exits application - saving would be impossible
@@ -169,22 +169,22 @@ public class EditPersonDialog extends javax.swing.JDialog {
     /**
      * Use this constructor to <b>edit</b> an existent CrewMember in the model.
      * <p>
-     * WARNING: providing a non-existent CrewMember will trigger model UPDATE
-     * instead of INSERT function. The modifications will NOT be persisted.
+ WARNING: providing a non-existent Person will trigger model UPDATE
+ instead of INSERT function. The modifications will NOT be persisted.
      * 
      * @param dialog     the owner Dialog, which the dialog will attempt to return
      *                  to on completion
      * @param modal     if true, creates JDialog as a modal form     *   
      * @param model     the VoyagerModel instance the dialog uses to persist
                   its changes
-     * @param person    the CrewMember instance to be edited. Must be a 
-     *                  previously existent one  
+     * @param person    the Person instance to be edited. Must be a 
+                  previously existent one  
      */
     public EditPersonDialog(
             Dialog dialog,
             boolean modal,
             VoyagerModel model,
-            CrewMember person) {
+            Person person) {
         super(dialog, modal);
         
         /*
@@ -261,6 +261,7 @@ public class EditPersonDialog extends javax.swing.JDialog {
         nameField.setColumns(60);
         nameField.setFont(new java.awt.Font("Verdana", 0, 16)); // NOI18N
         nameField.setForeground(new java.awt.Color(0, 0, 0));
+        nameField.setName(""); // NOI18N
 
         jLabel1.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(0, 0, 0));

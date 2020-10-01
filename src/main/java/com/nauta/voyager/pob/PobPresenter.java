@@ -6,10 +6,8 @@
 package com.nauta.voyager.pob;
 
 import com.nauta.voyager.dialog.BoardingDialog;
-import com.nauta.voyager.people.CrewMember;
+import com.nauta.voyager.people.Person;
 import com.nauta.voyager.dialog.EditBoardedDialog;
-import com.nauta.voyager.Function;
-import com.nauta.voyager.MainView;
 import com.nauta.voyager.util.StateListener;
 import com.nauta.voyager.VoyagerModel;
 import com.nauta.voyager.dialog.RaftRuleDialog;
@@ -88,7 +86,7 @@ public class PobPresenter implements StateListener {
         PobTableHandler handler = new PobTableHandler();        
         table.getSelectionModel().addListSelectionListener(handler);
         table.addMouseListener(handler);
-        
+        setTableRenderingPreferences();
         
         // Sets PobDateField
         view.getPobDateField().addFocusListener(new DateFieldHandler());
@@ -99,6 +97,31 @@ public class PobPresenter implements StateListener {
         view.getDeleteMemberButton().addActionListener(bHandler);
         view.getPrintPobButton().addActionListener(bHandler);
         view.getRaftRuleButton().addActionListener(bHandler);
+    }
+    
+    private void setTableRenderingPreferences() {
+        // Sets Center Alighment render for columns
+        DefaultTableCellRenderer centerRenderer = 
+                new DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment(DefaultTableCellRenderer.CENTER);
+        centerRenderer.setVerticalAlignment(DefaultTableCellRenderer.CENTER);         
+        
+        TableColumnModel m = view.getPobTable().getColumnModel();
+        m.getColumn(0).setPreferredWidth(40);
+        m.getColumn(0).setCellRenderer(centerRenderer);
+        m.getColumn(1).setPreferredWidth(40);
+        m.getColumn(1).setCellRenderer(centerRenderer);
+        m.getColumn(2).setPreferredWidth(250);        
+        m.getColumn(3).setCellRenderer(centerRenderer);
+        m.getColumn(4).setPreferredWidth(220);
+        m.getColumn(5).setPreferredWidth(80);
+        m.getColumn(5).setCellRenderer(centerRenderer);        
+        m.getColumn(6).setCellRenderer(centerRenderer);
+        m.getColumn(7).setCellRenderer(centerRenderer);
+        m.getColumn(8).setPreferredWidth(80);
+        m.getColumn(8).setCellRenderer(centerRenderer);
+        m.getColumn(9).setPreferredWidth(80);
+        m.getColumn(9).setCellRenderer(centerRenderer);
     }
     
     private void readGUIStateFromDomain() {
@@ -244,9 +267,9 @@ public class PobPresenter implements StateListener {
                             int cRow = table.convertRowIndexToModel(row);
                             Integer id = (Integer) table.getModel()
                                     .getValueAt(cRow, 0);
-                            CrewMember person = model.getCrewMember(id);
+                            Person person = model.getCrewMember(id);
 
-                            // Sets the CrewMember instances' boarded as false
+                            // Sets the Person instances' boarded as false
                             person.setBoarded(false);
 
                             // Sends changes for model to update
@@ -312,7 +335,7 @@ public class PobPresenter implements StateListener {
             dateCell.setCellValue(pob.getDateIssued());
             
             // Adds crewmembers to their row            
-            List<CrewMember> members = pob.getMembers();
+            List<Person> members = pob.getMembers();
             
             int startingRowIndex = 5; 
             int currentRowIndex = startingRowIndex;
@@ -320,7 +343,7 @@ public class PobPresenter implements StateListener {
                 
                 Row currentRow = sheet.getRow(currentRowIndex);
                 
-                CrewMember member = members.get(i);
+                Person member = members.get(i);
                 currentRow.getCell(0).setCellValue(member.getCabin());
                 currentRow.getCell(1).setCellValue(member.getName());
                 currentRow.getCell(2).setCellValue(member.getCompany());
@@ -388,7 +411,7 @@ public class PobPresenter implements StateListener {
     private final class PobTableModel extends AbstractTableModel {
         private final String[] columnNames = {
             "ID",
-            "CABINE",
+            "CAM.",
             "NOME",
             "EMPRESA",
             "FUNÇÃO",
@@ -406,12 +429,12 @@ public class PobPresenter implements StateListener {
         }
         
         public void loadData() {
-            List<CrewMember> list = model.getAllBoardedCrewMembers();            
+            List<Person> list = model.getAllBoardedCrewMembers();            
             
             int size = list.size();            
             data = new Object[size][getColumnCount()];
             for (int i = 0; i < size; i++) {
-                CrewMember m = list.get(i);
+                Person m = list.get(i);
                 data[i][0] = m.getId();
                 data[i][1] = m.getCabin();
                 data[i][2] = m.getName();
