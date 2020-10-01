@@ -538,7 +538,7 @@ public class EditPersonDialog extends javax.swing.JDialog {
         boardingDataButton.addActionListener(handler);
         
         // Loads functionField item list with model data
-        functions = model.getFunctions();        
+        functions = model.getAllFunctions();        
         functions.forEach(f -> {
             functionField.addItem(f);
         });
@@ -795,9 +795,7 @@ public class EditPersonDialog extends javax.swing.JDialog {
             }
         }
         return true;
-    }
-    
-    
+    }  
     
     
     // Implementes custom renderer for functionField combobox

@@ -1,5 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
+/* License header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
@@ -106,7 +105,7 @@ public final class VoyagerModel extends StateNotifier {
      * @return List{@code <Function>} list of Function objects available 
      *                                in database
      */
-    public List<Function> getFunctions() {
+    public List<Function> getAllFunctions() {
         String query = "SELECT * FROM \"FUNCTIONS\"";
         List<Function> list = new ArrayList<>();
         
@@ -129,6 +128,19 @@ public final class VoyagerModel extends StateNotifier {
         return list;
     }
     
+    public Function getFunctionByIdentifier(String identifier) {
+        Function result = getAllFunctions().stream()
+                .filter(f -> f.getIdentifier().equals(identifier))
+                .findFirst()
+                .orElse(null);
+        
+        return result;        
+    }
+    
+    public Map<Object, Raft> getAllRaftRules() {
+        return raftRules;
+    }
+    
     /**
      * Adds a raft rule. Key is either a Function object or a String cabin.
      * 
@@ -137,19 +149,33 @@ public final class VoyagerModel extends StateNotifier {
      *  
      */
     public void addRaftRule(Object key, Raft raft) {
-        raftRules.put(key, raft);
+        if (key instanceof Function) {
+            raftRules.put(((Function) key).getIdentifier(), raft);        
+        } else {
+            raftRules.put(key, raft);            
+        }   
+        
+        fireStateChanged();    
     }
     
-    public void removeRaftRule(Object key) {
-        raftRules.remove(key);
+    public void removeRaftRule(Object key) {      
+        if (key instanceof Function) {
+            raftRules.remove(((Function) key).getIdentifier());        
+        } else {
+            raftRules.remove(key);            
+        }       
+        
+        fireStateChanged();
     }
     
     public String getRaft(final CrewMember person) {
-        Function functionKey = person.getFunction();
+        String functionKey = person.getFunction().getIdentifier();
         String cabinKey = person.getCabin();
-        
+                   
         Raft result = raftRules.get(functionKey);
         if (result != null) {
+            //DEBUG
+            System.out.println("Function raft returned");
             return result.textPT();
         } 
         
@@ -159,7 +185,7 @@ public final class VoyagerModel extends StateNotifier {
         } else {
             return "N/A";
         }       
-    }    
+    }
     
     
     /**
@@ -503,7 +529,7 @@ public final class VoyagerModel extends StateNotifier {
                 c.setShift(rs.getString("SHIFT"));
                 
                 int id = rs.getInt("FUNCTION");
-                Function f = getFunctions()
+                Function f = getAllFunctions()
                         .stream()
                         .filter(i -> i.getFunctionId() == id)
                         .findFirst()

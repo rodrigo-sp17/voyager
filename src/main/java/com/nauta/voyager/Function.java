@@ -10,6 +10,8 @@ package com.nauta.voyager;
  * @author rodrigo
  */
 public class Function {
+        
+    public static final String TAG = Function.class.getSimpleName();
     
     private final int functionId;
     private final String functionPrefix;
@@ -58,5 +60,9 @@ public class Function {
                     functionVariation,
                     functionDescription);
         }
-    }   
+    }
+    
+    public String getIdentifier() {
+        return TAG + functionId;
+    }
 }

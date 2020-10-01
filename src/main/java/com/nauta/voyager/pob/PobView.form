@@ -39,7 +39,9 @@
                       <Component id="jLabel3" min="-2" pref="56" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="crewField" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="254" max="32767" attributes="0"/>
+                      <EmptySpace pref="64" max="32767" attributes="0"/>
+                      <Component id="raftRuleButton" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Component id="printPobButton" min="-2" max="-2" attributes="0"/>
                       <EmptySpace min="-2" pref="100" max="-2" attributes="0"/>
                       <Component id="addMemberButton" min="-2" max="-2" attributes="0"/>
@@ -66,9 +68,10 @@
                   <Component id="crewField" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="pobSizeField" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="pobDateField" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="raftRuleButton" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace type="unrelated" max="-2" attributes="0"/>
-              <Component id="jScrollPane2" min="-2" pref="483" max="-2" attributes="0"/>
+              <EmptySpace type="unrelated" min="-2" max="-2" attributes="0"/>
+              <Component id="jScrollPane2" pref="485" max="32767" attributes="0"/>
               <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
           </Group>
       </Group>
@@ -107,7 +110,7 @@
               <Color id="Default Cursor"/>
             </Property>
             <Property name="fillsViewportHeight" type="boolean" value="true"/>
-            <Property name="selectionMode" type="int" value="0"/>
+            <Property name="selectionMode" type="int" value="2"/>
           </Properties>
         </Component>
       </SubComponents>
@@ -257,6 +260,21 @@
         </Property>
         <Property name="text" type="java.lang.String" value="Exportar para Excel"/>
         <Property name="actionCommand" type="java.lang.String" value="print"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JButton" name="raftRuleButton">
+      <Properties>
+        <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+          <Color blue="ff" green="ff" red="ff" type="rgb"/>
+        </Property>
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+          <Font name="Verdana" size="14" style="1"/>
+        </Property>
+        <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+          <Color blue="0" green="0" red="0" type="rgb"/>
+        </Property>
+        <Property name="text" type="java.lang.String" value="Regras para Balsas"/>
+        <Property name="actionCommand" type="java.lang.String" value="raft"/>
       </Properties>
     </Component>
   </SubComponents>

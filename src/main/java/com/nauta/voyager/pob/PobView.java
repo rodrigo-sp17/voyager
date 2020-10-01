@@ -50,6 +50,7 @@ public class PobView extends javax.swing.JPanel {
         deleteMemberButton = new javax.swing.JButton();
         addMemberButton = new javax.swing.JButton();
         printPobButton = new javax.swing.JButton();
+        raftRuleButton = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(255, 255, 255));
         setPreferredSize(new java.awt.Dimension(1120, 700));
@@ -70,7 +71,7 @@ public class PobView extends javax.swing.JPanel {
         ));
         pobTable.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         pobTable.setFillsViewportHeight(true);
-        pobTable.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        pobTable.setSelectionMode(javax.swing.ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
         jScrollPane2.setViewportView(pobTable);
 
         pobDateField.setBackground(new java.awt.Color(255, 255, 255));
@@ -133,6 +134,12 @@ public class PobView extends javax.swing.JPanel {
         printPobButton.setText("Exportar para Excel");
         printPobButton.setActionCommand("print");
 
+        raftRuleButton.setBackground(new java.awt.Color(255, 255, 255));
+        raftRuleButton.setFont(new java.awt.Font("Verdana", 1, 14)); // NOI18N
+        raftRuleButton.setForeground(new java.awt.Color(0, 0, 0));
+        raftRuleButton.setText("Regras para Balsas");
+        raftRuleButton.setActionCommand("raft");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -152,7 +159,9 @@ public class PobView extends javax.swing.JPanel {
                         .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(crewField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 254, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 64, Short.MAX_VALUE)
+                        .addComponent(raftRuleButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(printPobButton)
                         .addGap(100, 100, 100)
                         .addComponent(addMemberButton)
@@ -174,9 +183,10 @@ public class PobView extends javax.swing.JPanel {
                     .addComponent(printPobButton)
                     .addComponent(crewField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(pobSizeField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(pobDateField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(pobDateField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(raftRuleButton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 483, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 485, Short.MAX_VALUE)
                 .addGap(12, 12, 12))
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -209,6 +219,10 @@ public class PobView extends javax.swing.JPanel {
         return crewField;
     }
 
+    public JButton getRaftRuleButton() {
+        return raftRuleButton;
+    }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addMemberButton;
     private javax.swing.JComboBox<String> crewField;
@@ -221,5 +235,6 @@ public class PobView extends javax.swing.JPanel {
     private javax.swing.JFormattedTextField pobSizeField;
     private javax.swing.JTable pobTable;
     private javax.swing.JButton printPobButton;
+    private javax.swing.JButton raftRuleButton;
     // End of variables declaration//GEN-END:variables
 }

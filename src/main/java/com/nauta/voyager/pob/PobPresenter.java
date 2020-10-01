@@ -9,8 +9,10 @@ import com.nauta.voyager.dialog.BoardingDialog;
 import com.nauta.voyager.people.CrewMember;
 import com.nauta.voyager.dialog.EditBoardedDialog;
 import com.nauta.voyager.Function;
+import com.nauta.voyager.MainView;
 import com.nauta.voyager.util.StateListener;
 import com.nauta.voyager.VoyagerModel;
+import com.nauta.voyager.dialog.RaftRuleDialog;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -95,7 +97,8 @@ public class PobPresenter implements StateListener {
         ButtonsHandler bHandler = new ButtonsHandler();
         view.getAddMemberButton().addActionListener(bHandler);
         view.getDeleteMemberButton().addActionListener(bHandler);
-        view.getPrintPobButton().addActionListener(bHandler);        
+        view.getPrintPobButton().addActionListener(bHandler);
+        view.getRaftRuleButton().addActionListener(bHandler);
     }
     
     private void readGUIStateFromDomain() {
@@ -218,7 +221,7 @@ public class PobPresenter implements StateListener {
                 }
                 
                 case "delete" -> {
-                    
+                    // TODO - solve multiple selection bug
                     JTable table = view.getPobTable();
                     int[] rows = table.getSelectedRows();
                     
@@ -271,6 +274,12 @@ public class PobPresenter implements StateListener {
                         File outputFile = fc.getSelectedFile();                        
                         exportPOBToExcel(pob, outputFile);
                     }
+                }
+                
+                case "raft" -> {
+                    JFrame topFrame = (JFrame) SwingUtilities
+                            .getWindowAncestor(view);
+                    JDialog d = new RaftRuleDialog(topFrame, false, model);
                 }
                 
                 default -> {                    
@@ -397,8 +406,7 @@ public class PobPresenter implements StateListener {
         }
         
         public void loadData() {
-            List<CrewMember> list = model.getAllBoardedCrewMembers();
-            List<Function> functions = model.getFunctions();
+            List<CrewMember> list = model.getAllBoardedCrewMembers();            
             
             int size = list.size();            
             data = new Object[size][getColumnCount()];
@@ -412,7 +420,7 @@ public class PobPresenter implements StateListener {
                 data[i][5] = m.getShift();
                 data[i][6] = m.getBoardingDate();
                 data[i][7] = model.getRaft(m);
-                data[i][8] = calculateDaysOnBoard(list.get(i).getBoardingDate());
+                data[i][8] = calculateDaysOnBoard(m.getBoardingDate());
                 data[i][9] = list.get(i).getSispat();
             }
             
