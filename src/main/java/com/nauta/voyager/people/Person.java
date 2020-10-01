@@ -1,6 +1,5 @@
 package com.nauta.voyager.people;
 
-import com.nauta.voyager.Function;
 import java.time.*;
 
 

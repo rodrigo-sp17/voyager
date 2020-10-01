@@ -5,6 +5,7 @@
  */
 package com.nauta.voyager;
 
+import com.nauta.voyager.people.PeopleView;
 import com.nauta.voyager.pob.PobView;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.*;
@@ -25,7 +26,7 @@ TODO
 public class MainView extends javax.swing.JFrame {
     
     public PobView pobPane;
-    
+    public PeopleView peoplePane;    
     
            
     public MainView() {
@@ -40,19 +41,7 @@ public class MainView extends javax.swing.JFrame {
      * to the presenter.
      */
     private void initViewLogic() {
-        // Adds Main Menu buttons to a button group
-        ButtonGroup group = new ButtonGroup();
-        group.add(statusTab);
-        group.add(pobTab);
-        group.add(databaseTab);
-        group.add(navTab);
-                
-        // Adds button color changer to Main Menu
-        MainMenuViewHandler handler = new MainMenuViewHandler();
-        statusTab.addItemListener(handler);
-        pobTab.addItemListener(handler);
-        databaseTab.addItemListener(handler);
-        navTab.addItemListener(handler);                   
+        
     }        
     
     /**
@@ -75,14 +64,6 @@ public class MainView extends javax.swing.JFrame {
         mainPane = new javax.swing.JPanel();
         statusPane = new javax.swing.JPanel();
         navPane = new javax.swing.JPanel();
-        databasePanel = new javax.swing.JPanel();
-        searchTextField = new javax.swing.JTextField();
-        editButton = new javax.swing.JButton();
-        deleteButton = new javax.swing.JButton();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        crewDBTable = new javax.swing.JTable();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
 
         jMenuItem1.setText("jMenuItem1");
 
@@ -199,91 +180,6 @@ public class MainView extends javax.swing.JFrame {
 
         mainPane.add(navPane, "navCard");
 
-        databasePanel.setBackground(new java.awt.Color(255, 255, 255));
-        databasePanel.setName("databasePanel"); // NOI18N
-
-        searchTextField.setFont(new java.awt.Font("Verdana", 0, 16)); // NOI18N
-        searchTextField.setToolTipText("Digite aqui para filtrar cadastros");
-        searchTextField.setMinimumSize(new java.awt.Dimension(15, 27));
-
-        editButton.setBackground(new java.awt.Color(0, 51, 102));
-        editButton.setFont(new java.awt.Font("Verdana", 1, 12)); // NOI18N
-        editButton.setForeground(new java.awt.Color(255, 255, 255));
-        editButton.setText("Editar");
-        editButton.setToolTipText("Edita a pessoa selecionada");
-        editButton.setActionCommand("edit");
-
-        deleteButton.setBackground(new java.awt.Color(200, 0, 0));
-        deleteButton.setFont(new java.awt.Font("Verdana", 1, 12)); // NOI18N
-        deleteButton.setForeground(new java.awt.Color(255, 255, 255));
-        deleteButton.setText("Deletar");
-        deleteButton.setToolTipText("Deleta a pessoa selecionada do cadastro");
-        deleteButton.setActionCommand("delete");
-        deleteButton.setEnabled(false);
-
-        crewDBTable.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        crewDBTable.setFont(new java.awt.Font("Calibri", 0, 12)); // NOI18N
-        crewDBTable.setToolTipText("");
-        crewDBTable.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        crewDBTable.setFillsViewportHeight(true);
-        crewDBTable.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        jScrollPane1.setViewportView(crewDBTable);
-        crewDBTable.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_INTERVAL_SELECTION);
-
-        jLabel2.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
-        jLabel2.setForeground(new java.awt.Color(0, 0, 0));
-        jLabel2.setText("Buscar");
-
-        jLabel3.setFont(new java.awt.Font("Verdana", 0, 18)); // NOI18N
-        jLabel3.setForeground(new java.awt.Color(0, 0, 0));
-        jLabel3.setText("Banco de Dados de Pessoal");
-
-        javax.swing.GroupLayout databasePanelLayout = new javax.swing.GroupLayout(databasePanel);
-        databasePanel.setLayout(databasePanelLayout);
-        databasePanelLayout.setHorizontalGroup(
-            databasePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(databasePanelLayout.createSequentialGroup()
-                .addGap(20, 20, 20)
-                .addGroup(databasePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(databasePanelLayout.createSequentialGroup()
-                        .addComponent(jLabel2)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(databasePanelLayout.createSequentialGroup()
-                        .addGroup(databasePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane1)
-                            .addGroup(databasePanelLayout.createSequentialGroup()
-                                .addComponent(searchTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 759, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(editButton, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(deleteButton, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 104, Short.MAX_VALUE)))
-                        .addGap(20, 20, 20))))
-            .addGroup(databasePanelLayout.createSequentialGroup()
-                .addGap(20, 20, 20)
-                .addComponent(jLabel3)
-                .addGap(0, 0, Short.MAX_VALUE))
-        );
-        databasePanelLayout.setVerticalGroup(
-            databasePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(databasePanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel3)
-                .addGap(18, 18, 18)
-                .addComponent(jLabel2)
-                .addGap(1, 1, 1)
-                .addGroup(databasePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(editButton, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(databasePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(searchTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(deleteButton, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(20, 20, 20)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 567, Short.MAX_VALUE)
-                .addGap(20, 20, 20))
-        );
-
-        mainPane.add(databasePanel, "databaseCard");
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -304,75 +200,25 @@ public class MainView extends javax.swing.JFrame {
     
     private void initCustomComponents() {
         pobPane = new PobView();        
-        mainPane.add(pobPane, "pobCard");               
+        mainPane.add(pobPane, "pobCard");
+        
+        peoplePane = new PeopleView();
+        mainPane.add(peoplePane, "databaseCard");        
     }
     
-    /**
-     * This method sets visual properties of the CrewDB JTable.
-     * It is NOT dynamic - manual update when JTable changes data is required.
-     */    
-    public void setCrewDBTableFormat() {
-        // Sets Center Alighment render for columns
-        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
-        centerRenderer.setHorizontalAlignment(DefaultTableCellRenderer.CENTER);
-        centerRenderer.setVerticalAlignment(DefaultTableCellRenderer.CENTER);
-
-        // Sets Vertical Center alighment render for columns
-        DefaultTableCellRenderer midRenderer = new DefaultTableCellRenderer();
-        midRenderer.setVerticalAlignment(DefaultTableCellRenderer.CENTER);
-        
-        TableColumnModel m = crewDBTable.getColumnModel();
-        
-        // Defines columns visual properties
-        m.getColumn(0).setCellRenderer(centerRenderer);
-        m.getColumn(0).setPreferredWidth(40);
-        m.getColumn(0).setMinWidth(4);
-        m.getColumn(0).setMaxWidth(100);
-        m.getColumn(1).setCellRenderer(midRenderer);
-        m.getColumn(1).setPreferredWidth(250);        
-        m.getColumn(2).setPreferredWidth(200);        
-        
-        m.getColumn(4).setCellRenderer(centerRenderer);
-        m.getColumn(5).setCellRenderer(centerRenderer);
-        m.getColumn(6).setCellRenderer(centerRenderer);        
-        m.getColumn(7).setCellRenderer(centerRenderer);
-        m.getColumn(8).setCellRenderer(centerRenderer);        
-    }    
     
     
-    // Changes color of buttons when selected
-    private class MainMenuViewHandler implements ItemListener {
-        @Override
-        public void itemStateChanged(ItemEvent e) {
-            JToggleButton source = (JToggleButton) e.getSource();
-            if (e.getStateChange() == ItemEvent.SELECTED) {
-                source.setBackground(Color.WHITE);
-                source.setForeground(new Color(0, 0, 0));                
-            } else {
-                source.setBackground(new Color(0, 51, 102));
-                source.setForeground(new Color(255, 255, 255));                
-            }                
-        }      
-    }    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    javax.swing.JTable crewDBTable;
-    javax.swing.JPanel databasePanel;
     javax.swing.JToggleButton databaseTab;
-    javax.swing.JButton deleteButton;
-    javax.swing.JButton editButton;
     public javax.swing.Box.Filler filler1;
     javax.swing.JButton jButton2;
-    public javax.swing.JLabel jLabel2;
-    public javax.swing.JLabel jLabel3;
     public javax.swing.JMenuItem jMenuItem1;
-    javax.swing.JScrollPane jScrollPane1;
     javax.swing.JToolBar jToolBar1;
     javax.swing.JPanel mainPane;
     javax.swing.JPanel navPane;
     javax.swing.JToggleButton navTab;
     javax.swing.JToggleButton pobTab;
-    javax.swing.JTextField searchTextField;
     javax.swing.JPanel statusPane;
     javax.swing.JToggleButton statusTab;
     // End of variables declaration//GEN-END:variables

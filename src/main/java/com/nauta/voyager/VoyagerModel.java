@@ -4,6 +4,8 @@
  */
 package com.nauta.voyager;
 
+import com.nauta.voyager.pob.Raft;
+import com.nauta.voyager.people.Function;
 import com.nauta.voyager.people.Person;
 import com.nauta.voyager.util.StateNotifier;
 import com.nauta.voyager.util.DatabaseUtil;

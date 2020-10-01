@@ -5,6 +5,7 @@
  */
 package com.nauta.voyager;
 
+import com.nauta.voyager.people.PeoplePresenter;
 import com.nauta.voyager.pob.PobPresenter;
 import com.formdev.flatlaf.FlatLightLaf;
 import javax.swing.UIManager;
@@ -34,13 +35,17 @@ public class VoyagerRun {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {            
             public void run() {
-                MainView view = new MainView();
-                view.setVisible(true);
+                MainView mainView = new MainView();                
+                mainView.setVisible(true);
                 
                 VoyagerModel model = new VoyagerModel();
                 
-                PeoplePresenter crewPresenter = new PeoplePresenter(view, model);
-                PobPresenter pobPresenter = new PobPresenter(view.pobPane, model);
+                MainPresenter presenter = new MainPresenter(mainView);
+                
+                PeoplePresenter peoplePresenter = 
+                        new PeoplePresenter(mainView.peoplePane, model);
+                PobPresenter pobPresenter = 
+                        new PobPresenter(mainView.pobPane, model);
             }
         });
     }

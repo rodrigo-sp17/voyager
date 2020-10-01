@@ -3,12 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.nauta.voyager;
+package com.nauta.voyager.people;
 
-import com.nauta.voyager.people.CrewMember;
+import com.nauta.voyager.VoyagerModel;
+import com.nauta.voyager.people.Person;
 import com.nauta.voyager.dialog.EditPersonDialog;
 import com.nauta.voyager.util.StateListener;
-import java.awt.CardLayout;
 import java.awt.event.*;
 import java.awt.Point;
 import javax.swing.*;
@@ -18,6 +18,8 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableRowSorter;
 import javax.swing.table.TableModel;
 import java.io.*;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableColumnModel;
 
 /*
 TODO:
@@ -33,8 +35,8 @@ TODO:
  *
  * @author rodrigo
  */
-public class CrewPresenter implements StateListener {
-    final private MainView view;
+public class PeoplePresenter implements StateListener {
+    final private PeopleView view;
     final private VoyagerModel model;
     final Properties properties;
     
@@ -42,33 +44,24 @@ public class CrewPresenter implements StateListener {
     private TableRowSorter<CrewTableModel> sorter;
     
     
-    CrewPresenter(MainView view, VoyagerModel model) {
+    public PeoplePresenter(PeopleView view, VoyagerModel model) {
         this.view = view;
         this.model = model;
         this.properties = loadProperties();
         initPresentationLogic();
     }   
-    
-    /*
-     * This method initiates component models, view event handlers
-     */    
+       
     private void initPresentationLogic() {
         // UI Models / Handle Events / Swing Actions
         model.addStateListener(this);
         
-        // Sets menu buttons for event handling
-        MainMenuHandler menuHandler = new MainMenuHandler();
-        view.statusTab.addActionListener(menuHandler);        
-        view.pobTab.addActionListener(menuHandler);        
-        view.databaseTab.addActionListener(menuHandler);        
-        view.navTab.addActionListener(menuHandler);
-        
+                
         // Sets crewDBTable Table Model and appearance
         CrewTableModel tModel = new CrewTableModel();
         view.crewDBTable.setModel(tModel);
         this.sorter = new TableRowSorter<>(tModel);
         view.crewDBTable.setRowSorter(sorter);
-        view.setCrewDBTableFormat();        
+        setTableRenderingPreferences();        
         
         // Sets searchCrewDBTable for event handling
         CrewDBTableHandler tableHandler = new CrewDBTableHandler();
@@ -83,7 +76,35 @@ public class CrewPresenter implements StateListener {
         view.deleteButton.addActionListener(buttonsHandler);
         setDeleteButtonState();
     }
-    
+        
+    private void setTableRenderingPreferences() {
+        // Sets Center Alighment render for columns
+        DefaultTableCellRenderer centerRenderer = 
+                new DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment(DefaultTableCellRenderer.CENTER);
+        centerRenderer.setVerticalAlignment(DefaultTableCellRenderer.CENTER);
+
+        // Sets Vertical Center alighment render for columns
+        DefaultTableCellRenderer midRenderer = new DefaultTableCellRenderer();
+        midRenderer.setVerticalAlignment(DefaultTableCellRenderer.CENTER);
+        
+        TableColumnModel m = view.crewDBTable.getColumnModel();
+        
+        // Defines columns visual properties
+        m.getColumn(0).setCellRenderer(centerRenderer);
+        m.getColumn(0).setPreferredWidth(40);
+        m.getColumn(0).setMinWidth(4);
+        m.getColumn(0).setMaxWidth(100);
+        m.getColumn(1).setCellRenderer(midRenderer);
+        m.getColumn(1).setPreferredWidth(250);        
+        m.getColumn(2).setPreferredWidth(200);        
+        
+        m.getColumn(4).setCellRenderer(centerRenderer);
+        m.getColumn(5).setCellRenderer(centerRenderer);
+        m.getColumn(6).setCellRenderer(centerRenderer);        
+        m.getColumn(7).setCellRenderer(centerRenderer);
+        m.getColumn(8).setCellRenderer(centerRenderer);        
+    }   
     
     private void readGUIStateFromDomain() {
         // Reloads CrewDBTable model
@@ -102,22 +123,7 @@ public class CrewPresenter implements StateListener {
         readGUIStateFromDomain();
     }
     
-    // Event Handlers
-    private class MainMenuHandler implements ActionListener {
-        // Listens for main menu buttons, handles their initial GUI State
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            CardLayout cl = (CardLayout) view.mainPane.getLayout();        
-        
-            switch (e.getActionCommand()) {
-                case "status" -> cl.show(view.mainPane, "statusCard");
-                case "nav" -> cl.show(view.mainPane, "navPane");
-                case "pob" -> cl.show(view.mainPane, "pobCard");
-                case "database" -> cl.show(view.mainPane, "databaseCard");                        
-            }
-        }
-    }
-    
+    // Event Handlers  
     private class SearchCrewTableHandler implements DocumentListener {
         @Override
         public void changedUpdate(DocumentEvent e) {
@@ -162,7 +168,9 @@ public class CrewPresenter implements StateListener {
                 Integer id = (Integer) view.crewDBTable.getModel()
                     .getValueAt(view.crewDBTable.convertRowIndexToModel(row),
                             0);
-                JDialog d = new EditPersonDialog(view, true,
+                JFrame mainView = (JFrame) SwingUtilities
+                        .getWindowAncestor(view);
+                JDialog d = new EditPersonDialog(mainView, true,
                         model, model.getCrewMember(id));
             }            
         }
@@ -202,13 +210,17 @@ public class CrewPresenter implements StateListener {
                     
                     Integer id = (Integer) tableModel
                             .getValueAt(table.convertRowIndexToModel(0), 0);
-                    JDialog d = new EditPersonDialog(view, true, model, 
+                    JFrame mainView = (JFrame) SwingUtilities
+                        .getWindowAncestor(view);
+                    JDialog d = new EditPersonDialog(mainView, true, model, 
                             model.getCrewMember(id));                    
                 }
                 
                 case "add" -> {
                     // Instantiates new EditPersonDialog for creation
-                    JDialog d = new EditPersonDialog(view, true, model);                    
+                    JFrame mainView = (JFrame) SwingUtilities
+                        .getWindowAncestor(view);
+                    JDialog d = new EditPersonDialog(mainView, true, model);                    
                 }
                 
                 case "delete" -> {
@@ -258,8 +270,7 @@ public class CrewPresenter implements StateListener {
     
     
     
-    // General purpose methods
-    
+    // General purpose methods    
     // Sets Edit button status
     private void setEditButtonState() {
     
@@ -344,7 +355,7 @@ public class CrewPresenter implements StateListener {
         // Implements logic to retrieve the objects that will compose the rows 
         // of the table
         public void loadData() {
-            List<CrewMember> list = model.getAllCrewMembers();            
+            List<Person> list = model.getAllCrewMembers();            
             int listSize = list.size();            
             
             this.data = new Object[listSize][getColumnCount()];

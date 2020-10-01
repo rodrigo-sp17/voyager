@@ -6,7 +6,7 @@
 package com.nauta.voyager.dialog;
 
 import com.nauta.voyager.people.Person;
-import com.nauta.voyager.Function;
+import com.nauta.voyager.people.Function;
 import com.nauta.voyager.VoyagerModel;
 import java.awt.Component;
 import java.awt.Dialog;
