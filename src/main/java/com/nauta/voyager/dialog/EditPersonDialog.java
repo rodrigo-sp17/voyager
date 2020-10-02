@@ -18,6 +18,7 @@ import java.time.format.*;
 import javax.swing.InputVerifier;
 import javax.swing.JButton;
 import javax.swing.JComponent;
+import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
@@ -544,7 +545,11 @@ public class EditPersonDialog extends javax.swing.JDialog {
         companyField.setInputVerifier(new CompanyVerifier());
         sispatField.setInputVerifier(new SispatVerifier());
         nationalityField.setInputVerifier(new NationalityVerifier());
-        cirField.setInputVerifier(new CirVerifier());                
+        cirField.setInputVerifier(new CirVerifier());
+        
+        DateVerifier dv = new DateVerifier();
+        birthDateField.setInputVerifier(dv);
+        cirExpDateField.setInputVerifier(dv);
     }       
     
     private void readGUIState() {        
@@ -586,7 +591,7 @@ public class EditPersonDialog extends javax.swing.JDialog {
             person.setCirExpDate(LocalDate.parse(cirExpDateField.getText(),
                     FORMATTER));
         } catch (DateTimeParseException e) {
-            System.err.println(TAG + "Could not save date to Crew Member" + e);
+            System.err.println(TAG + "Could not save date to Person" + e);
         }
     }    
     
@@ -742,25 +747,27 @@ public class EditPersonDialog extends javax.swing.JDialog {
         }       
     }
     
-    class BirthDateVerifier extends InputVerifier {
+    private final class DateVerifier extends InputVerifier {
         @Override
         public boolean shouldYieldFocus(JComponent source, JComponent target) {
             boolean inputOK = verify(source);
             if (inputOK) {
                 return true;
             } else {
-                JOptionPane.showMessageDialog(rootPane,
-                        "Campo deve ter no máximo " 
-                                + MAX_CIR_SIZE + " letras!%n");
+                source.setToolTipText("Data deve estar no formato dd/MM/yyyy");
                 return false;
             }
         }        
         
         @Override
         public boolean verify(JComponent input) {
-            JTextField tf = (JTextField) input;           
-            return isInputAlphanumeric(tf.getText()) 
-                    && tf.getText().length() <= MAX_CIR_SIZE;
+            JFormattedTextField tf = (JFormattedTextField) input;
+            try {
+                LocalDate.parse(tf.getText(), FORMATTER);
+                return true;
+            } catch (DateTimeParseException d) {
+                return false;
+            }            
         }       
     }
     

@@ -11,12 +11,16 @@ import java.awt.Dialog;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import javax.swing.InputVerifier;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
+import javax.swing.JFormattedTextField;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.text.AttributeSet;
@@ -457,6 +461,9 @@ public class EditBoardedDialog extends javax.swing.JDialog {
                 new LengthRestrictedDocument(MAX_PLACE_SIZE));
         arrivalPlaceField.setInputVerifier(new PlaceVerifier());
         
+        DateVerifier dv = new DateVerifier();
+        boardingDateField.setInputVerifier(dv);
+        arrivalDateField.setInputVerifier(dv);        
     }
     
     private void readGUIState() {
@@ -518,7 +525,7 @@ public class EditBoardedDialog extends javax.swing.JDialog {
     }
     
     
-    // TODO - Input verifiers
+    // Input Verifiers
     private class PlaceVerifier extends InputVerifier {
         @Override
         public boolean shouldYieldFocus(JComponent source, JComponent target) {
@@ -542,6 +549,30 @@ public class EditBoardedDialog extends javax.swing.JDialog {
             
             return answer;            
         }
+    }
+    
+    private final class DateVerifier extends InputVerifier {
+        @Override
+        public boolean shouldYieldFocus(JComponent source, JComponent target) {
+            boolean inputOK = verify(source);
+            if (inputOK) {
+                return true;
+            } else {
+                source.setToolTipText("Data deve estar no formato dd/MM/yyyy");
+                return false;
+            }
+        }        
+        
+        @Override
+        public boolean verify(JComponent input) {
+            JFormattedTextField tf = (JFormattedTextField) input;
+            try {
+                LocalDate.parse(tf.getText(), FORMATTER);
+                return true;
+            } catch (DateTimeParseException d) {
+                return false;
+            }            
+        }       
     }
     
     /*
