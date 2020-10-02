@@ -11,6 +11,8 @@ import com.nauta.voyager.VoyagerModel;
 import com.nauta.voyager.util.StateListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.util.Map;
 import javax.swing.JDialog;
 import javax.swing.event.ListSelectionEvent;
@@ -22,7 +24,7 @@ import javax.swing.table.AbstractTableModel;
  * @author rodrigo
  */
 public class RaftRuleDialog extends javax.swing.JDialog 
-        implements StateListener {
+        implements StateListener, WindowListener {
     
     private final VoyagerModel model;
     
@@ -43,7 +45,7 @@ public class RaftRuleDialog extends javax.swing.JDialog
         initPresentationLogic();
         setTitle(TITLE);
         setVisible(true);
-    }
+    }   
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -146,6 +148,7 @@ public class RaftRuleDialog extends javax.swing.JDialog
     }// </editor-fold>//GEN-END:initComponents
 
     private void initPresentationLogic() {
+        addWindowListener(this);
         model.addStateListener(this);
         
         ActionListener bHandler = new ButtonsHandler();
@@ -166,6 +169,37 @@ public class RaftRuleDialog extends javax.swing.JDialog
     @Override
     public void onListenedStateChanged() {
         readGUIStateFromDomain();
+    }
+
+    @Override
+    public void windowOpened(WindowEvent e) {
+    }
+
+    @Override
+    public void windowClosing(WindowEvent e) {
+        // Saves raft rules on model
+        model.saveRaftRules();
+        dispose();
+    }
+
+    @Override
+    public void windowClosed(WindowEvent e) {
+    }
+
+    @Override
+    public void windowIconified(WindowEvent e) {
+    }
+
+    @Override
+    public void windowDeiconified(WindowEvent e) {
+    }
+
+    @Override
+    public void windowActivated(WindowEvent e) {
+    }
+
+    @Override
+    public void windowDeactivated(WindowEvent e) {
     }
     
     private final class ButtonsHandler implements ActionListener {

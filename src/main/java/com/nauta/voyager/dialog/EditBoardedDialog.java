@@ -483,7 +483,7 @@ public class EditBoardedDialog extends javax.swing.JDialog {
             switch(e.getActionCommand()) {
                 case "save" -> {                    
                     writeGUIState();
-                    model.updateCrewMember(person);
+                    model.updatePerson(person);
                     dispose();
                 }
                 

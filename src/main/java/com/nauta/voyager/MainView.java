@@ -7,11 +7,6 @@ package com.nauta.voyager;
 
 import com.nauta.voyager.people.PeopleView;
 import com.nauta.voyager.pob.PobView;
-import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.table.TableColumnModel;
 
 /* 
 TODO

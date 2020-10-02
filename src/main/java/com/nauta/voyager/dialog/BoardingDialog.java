@@ -179,7 +179,7 @@ public class BoardingDialog extends javax.swing.JDialog implements
                     
                     // 1 is the ID row
                     Person member = model
-                            .getCrewMember((Integer) peopleTable
+                            .getPerson((Integer) peopleTable
                             .getModel()
                             .getValueAt(correctedRow, 1));
                     
@@ -253,7 +253,7 @@ public class BoardingDialog extends javax.swing.JDialog implements
         
         private void loadData() {
             
-            List<Person> list = model.getAllNonBoardedCrewMembers();
+            List<Person> list = model.getAllNonBoardedPeople();
             
             int size = list.size();
             data = new Object[size][getColumnCount() + 1];

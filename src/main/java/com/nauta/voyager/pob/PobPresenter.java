@@ -125,19 +125,19 @@ public class PobPresenter implements StateListener {
     }
     
     private void readGUIStateFromDomain() {
-        LocalDate date = model.getLastPob().getDateIssued();
+        LocalDate date = model.getPob().getDateIssued();
         view.getPobDateField().setText(date.format(view.DATE_FORMATTER));
         
         view.getPobSizeField().setText(
                 Integer.toString(view.getPobTable().getModel().getRowCount()));
         
-        String currentCrew = model.getLastPob().getCrew();
+        String currentCrew = model.getPob().getCrew();
         view.getCrewField().setSelectedItem(currentCrew);       
     }
     
     private void writeGUIStateToDomain() {
         Pob pob = new Pob(99,
-                model.getAllBoardedCrewMembers(),
+                model.getAllBoardedPeople(),
                 LocalDate.parse(view.getPobDateField().getText(), FORMATTER),
                 view.getCrewField().getSelectedItem().toString());
         model.savePob(pob);
@@ -155,7 +155,7 @@ public class PobPresenter implements StateListener {
         public void focusLost(FocusEvent e) {
             LocalDate date = LocalDate.parse(view.getPobDateField().getText(),
                     view.DATE_FORMATTER);            
-            model.setLastPobDate(date);
+            model.setPobDate(date);
         }        
     }
     
@@ -196,7 +196,7 @@ public class PobPresenter implements StateListener {
                     .getValueAt(table.convertRowIndexToModel(row),
                             0);
                 JDialog d = new EditBoardedDialog(model,
-                        model.getCrewMember(id));
+                        model.getPerson(id));
                 d.setVisible(true);
             }           
         }
@@ -268,13 +268,13 @@ public class PobPresenter implements StateListener {
                             int cRow = table.convertRowIndexToModel(row);
                             Integer id = (Integer) table.getModel()
                                     .getValueAt(cRow, 0);
-                            Person person = model.getCrewMember(id);
+                            Person person = model.getPerson(id);
 
                             // Sets the Person instances' boarded as false
                             person.setBoarded(false);
 
                             // Sends changes for model to update
-                            model.updateCrewMember(person);
+                            model.updatePerson(person);
                         }                        
                     }
                 }
@@ -282,7 +282,7 @@ public class PobPresenter implements StateListener {
                 case "print" -> {
                     // Shows final chooser for selecting place for new worksheet
                     writeGUIStateToDomain();
-                    Pob pob = model.getLastPob();
+                    Pob pob = model.getPob();
                     
                     // Opens File Chooser with default name
                     final JFileChooser fc = new JFileChooser();
@@ -430,7 +430,7 @@ public class PobPresenter implements StateListener {
         }
         
         public void loadData() {
-            List<Person> list = model.getAllBoardedCrewMembers();            
+            List<Person> list = model.getAllBoardedPeople();            
             
             int size = list.size();            
             data = new Object[size][getColumnCount()];
@@ -452,7 +452,7 @@ public class PobPresenter implements StateListener {
         }
         
         private long calculateDaysOnBoard(LocalDate dateBoarded) {
-            LocalDate pobDate = model.getLastPob().getDateIssued();            
+            LocalDate pobDate = model.getPob().getDateIssued();            
             return ChronoUnit.DAYS.between(dateBoarded, pobDate);
         }    
         

@@ -11,24 +11,28 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import javax.swing.ButtonGroup;
-import javax.swing.JFrame;
 import javax.swing.JToggleButton;
 
 /**
  *
  * @author rodrigo
  */
-public class MainPresenter {
+public class MainPresenter implements WindowListener {
     
     private final MainView view;
+    private final VoyagerModel model;
     
-    public MainPresenter(MainView view) {
+    public MainPresenter(MainView view, VoyagerModel model) {
         this.view = view;
+        this.model = model;
         initPresentationLogic();
     }
     
     private void initPresentationLogic() {
+        view.addWindowListener(this);
                 
         // Sets menu buttons for event handling
         MainMenuHandler menuHandler = new MainMenuHandler();
@@ -49,9 +53,38 @@ public class MainPresenter {
         view.statusTab.addItemListener(handler);
         view.pobTab.addItemListener(handler);
         view.databaseTab.addItemListener(handler);
-        view.navTab.addItemListener(handler); 
-                        
-           
+        view.navTab.addItemListener(handler);       
+    }
+
+    @Override
+    public void windowOpened(WindowEvent e) {
+    }
+
+    @Override
+    public void windowClosing(WindowEvent e) {
+        model.saveProperties();
+        view.dispose();
+        System.exit(0);
+    }
+
+    @Override
+    public void windowClosed(WindowEvent e) {
+    }
+
+    @Override
+    public void windowIconified(WindowEvent e) {
+    }
+
+    @Override
+    public void windowDeiconified(WindowEvent e) {
+    }
+
+    @Override
+    public void windowActivated(WindowEvent e) {
+    }
+
+    @Override
+    public void windowDeactivated(WindowEvent e) {
     }
     
     private class MainMenuHandler implements ActionListener {

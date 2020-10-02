@@ -9,6 +9,7 @@ import com.nauta.voyager.people.PeoplePresenter;
 import com.nauta.voyager.pob.PobPresenter;
 import com.formdev.flatlaf.FlatLightLaf;
 import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
         
 /*
 TODO
@@ -27,25 +28,28 @@ public class VoyagerRun {
         // Tries to get FlatLightLaf theme
         try {
             UIManager.setLookAndFeel( new FlatLightLaf() );
-        } catch( Exception ex ) {
+        } catch( UnsupportedLookAndFeelException ex ) {
             System.err.println( "Failed to initialize LaF" );
         }
         
         
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {            
+            @Override
             public void run() {
                 MainView mainView = new MainView();                
-                mainView.setVisible(true);
                 
                 VoyagerModel model = new VoyagerModel();
                 
-                MainPresenter presenter = new MainPresenter(mainView);
+                MainPresenter presenter = new MainPresenter(mainView, model);
                 
                 PeoplePresenter peoplePresenter = 
                         new PeoplePresenter(mainView.peoplePane, model);
                 PobPresenter pobPresenter = 
                         new PobPresenter(mainView.pobPane, model);
+                
+                mainView.setVisible(true);                
+                
             }
         });
     }

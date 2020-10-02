@@ -10,6 +10,12 @@ import com.nauta.voyager.people.Person;
 import com.nauta.voyager.util.StateNotifier;
 import com.nauta.voyager.util.DatabaseUtil;
 import com.nauta.voyager.pob.Pob;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.*;
 import java.sql.*;
 import java.time.LocalDate;
@@ -20,9 +26,8 @@ TODO:
 * - Transform to queries
 * - Implement PreparedStatements on all fields to prevent Injection attacks
 * - Implement function recovery
-* Implement Update
-- Check if notifying listeners implementation is adequate
-- Implement updateModel method
+* - Implement Update
+* - Implement updateModel method
 */
 
 /**
@@ -33,18 +38,22 @@ public final class VoyagerModel extends StateNotifier {
     
     private static final String TAG = VoyagerModel.class.getSimpleName();
     
-    // Holds list of CrewMembers for manipulation
-    private List<Person> crewMemberList;
+    // Holds list of People for manipulation
+    private List<Person> peopleList;
     
     // Holds raft rules used to define the raft of boarded people
     private final Map<Object, Raft> raftRules;
+    private Properties raftProperties;
     
     // Current loaded POB for manipulation    
     private Pob currentPob;
     
-    // Holds connection data to the database
-    private final Connection conn;
+    // Holds loaded localProperties
+    private Properties localProperties;
     
+    
+    // Holds connection to the database
+    private final Connection conn;    
          
     
     // Constructor
@@ -52,53 +61,106 @@ public final class VoyagerModel extends StateNotifier {
         // Connects to database
         conn = DatabaseUtil.getConnection();
         
-        // TODO - remove, its DUMMY
-        currentPob = new Pob(1, getAllCrewMembers(), LocalDate.now(), "A");
+        // Loads localProperties
+        localProperties = loadProperties();        
         
-        raftRules = new HashMap<>();
+        // Loads raftRules
+        raftProperties = loadRaftProperties();
+        raftRules = loadRaftRules(raftProperties);                  
+    }   
+    
+    // Loads localProperties from classpath
+    private Properties loadProperties() {
+       
+        Properties result = new Properties();
+        
+        try (InputStream in = new FileInputStream("local.properties")) {    
+            result.load(in);
+            System.out.println("Local Properties loaded successfully!");
+        } catch (FileNotFoundException e) {
+            System.out.println("Could not find local properties. "
+                    + "Trying to load defaults...");
+            try (InputStream in = ClassLoader
+                    .getSystemResource("default.properties").openStream()) {
+                result.load(in);
+                System.out.println("Default properties loaded successfully!");
+            } catch (IOException f) {
+                System.err.println(TAG 
+                        + " - Error loading properties! "  
+                        + f.getMessage());
+            }           
+        } catch (IOException g) {
+            System.err.println(TAG + " - Error loading local properties: " 
+                    + g.getMessage());
+            throw new RuntimeException("IOException while loading properties."
+                    + " Closing application!");
+        }        
+        return result;
     }
     
+    /**        
+     * Saves modified localProperties to local.properties. Call this method
+     * when closing the application to avoid excessive IO operations.
+     */
+    public void saveProperties() {
+        try (OutputStream out = new FileOutputStream("local.properties")) {
+            System.out.println("Saving local properties...");
+            localProperties.store(out, "DO NOT MODIFY");
+            System.out.println("Properties saved!");
+        } catch (IOException e) {
+            System.err.println(TAG + " - IO errror saving properties: " 
+                    + e.getMessage());
+        }
+    }  
     
-    public Pob getLastPob() {
-        // TODO        
+    // Loads POB from localProperties 
+    private Pob loadPob(final Properties localProperties) {
+        int pobId = 1; // Can be any int if not saved to a RDB
+        LocalDate date = LocalDate.now();
+        String crew = localProperties.getProperty("pob_crew", "A");
+        return new Pob(pobId, getAllBoardedPeople(), date, crew);        
+    }    
+    
+    public Pob getPob() {        
+        currentPob = loadPob(localProperties);
         return currentPob;
     }
     
-    public void setLastPobDate(LocalDate date) {
-        // DUMMY
-        // TODO
+    public void setPobDate(final LocalDate date) {        
         currentPob.setDateIssued(date);        
         fireStateChanged();
     }
     
     public void savePob(final Pob pob) {
         currentPob = pob;
-    }    
-    
-    private final String[] CREWS = {"A", "B", "N/A"};
+        localProperties.setProperty("pob_crew", pob.getCrew());
+    }       
     
     public List<String> getAllCrews() {
-        return new ArrayList<>(Arrays.asList(CREWS));      
+        // TODO - handle Null
+        String[] crews = localProperties.getProperty("crews").split(",");
+        List<String> result = new ArrayList<>(Arrays.asList(crews));        
+        return result;   
     }
-    
-    private final String[] CABINS = {"401", "402", "403"};
-    
+       
     public List<String> getAllCabins() {
-        return new ArrayList<>(Arrays.asList(CABINS));
+        // TODO - handle null
+        String[] cabins = localProperties.getProperty("cabins").split(",");
+        List<String> result = new ArrayList<>(Arrays.asList(cabins));        
+        return result;
     }
     
-    // TODO - remove hardcoded
-    private final String[] SHIFTS = {
-        "0600-1800",
-        "1800-0600",
-        "0000-1200",
-        "1200-2400",
-        "24h",
-        "N/A"
-    };
-    
+    /**
+     * Returns a List{@code <String>} containing all shifts from loaded
+ localProperties
+     * 
+     * @return List{@code <String>} with all shifts
+     */
     public List<String> getAllShifts() {
-        return new ArrayList<>(Arrays.asList(SHIFTS));        
+        // TODO - handle null
+        String[] shifts = localProperties.getProperty("shifts").split(",");
+        List<String> result = new ArrayList<>(Arrays.asList(shifts));        
+        return result;
     }
     
     /**
@@ -117,20 +179,29 @@ public final class VoyagerModel extends StateNotifier {
                 Function f = new Function(
                         rs.getInt("FUNCTION_ID"),
                         rs.getString("FUNCTION_PREFIX"),
-                        rs.getString("FUNCTION_DESCRIPTION"), 0
+                        rs.getString("FUNCTION_DESCRIPTION"),
+                        0
                 );
                 list.add(f);
             }
             
             stmt.close();
         } catch (SQLException e) {
-            System.err.println(TAG + " Could not get functions from DB" + e);
+            System.err.println(TAG + " Could not get functions from DB: " + e);
         }
         
         return list;
     }
     
-    public Function getFunctionByIdentifier(String identifier) {
+    /**
+     * Returns a Function instance corresponding to the supplied identifier. 
+     * The identifier is the one returned by Function.getIdentifier().
+     * 
+     * @param identifier a String as returned from Function.getIdentifier()
+     * @return Function instance corresponding to the supplied identifier, or
+     *         null if not found
+     */
+    public Function getFunctionByIdentifier(final String identifier) {
         Function result = getAllFunctions().stream()
                 .filter(f -> f.getIdentifier().equals(identifier))
                 .findFirst()
@@ -139,6 +210,41 @@ public final class VoyagerModel extends StateNotifier {
         return result;        
     }
     
+    // Used by constructor to load raftProperties file
+    private Properties loadRaftProperties() {
+        Properties result = new Properties();
+        
+        try (InputStream in = new FileInputStream("raft.properties")) {    
+            result.load(in);
+            System.out.println("Raft Properties loaded successfully!");        
+        } catch (IOException g) {
+            System.err.println(TAG + " - Error loading local properties: " 
+                    + g.getMessage());            
+        }        
+        return result;
+    }
+    
+    // Used by constructor to parse raftProperties to a Map<Object, Raft>
+    private Map<Object, Raft> loadRaftRules(final Properties raftProperties) {
+        Map<Object, Raft> result = new HashMap<>();
+        
+        raftProperties.forEach((k,v) -> {
+            if (v.equals("P")) {
+                result.put(k, Raft.PORT);               
+            } else if (v.equals("S")) {
+                result.put(k, Raft.STBD);
+            }
+        });      
+        
+        return result;
+    }
+    
+    /**
+     * Returns a Map containing all the raft rules contained in localProperties
+     * 
+     * @return Map{@code <Object, Raft>} containing a Function identifier or 
+     *         cabin as key, and a Raft type as value
+     */    
     public Map<Object, Raft> getAllRaftRules() {
         return raftRules;
     }
@@ -155,49 +261,88 @@ public final class VoyagerModel extends StateNotifier {
             raftRules.put(((Function) key).getIdentifier(), raft);        
         } else {
             raftRules.put(key, raft);            
-        }   
+        }
         
         fireStateChanged();    
     }
     
-    public void removeRaftRule(Object key) {      
+    /**
+     * Save Raft Rules as a property file, raft.properties. It parses Raft to
+     * a string value which is read by loadRaftRules() method.
+     * 
+     * Call this method only when raftRules modifications is finished so as to
+     * minimize IO operations.
+     */
+    public void saveRaftRules() {
+        // Clears raftProperties for overwriting
+        raftProperties.clear();
+        
+        // Iterates over raftRules MAP, adding strings instead of Raft objects
+        raftRules.forEach((k,v) -> {
+            if (v == Raft.PORT) {
+                raftProperties.setProperty((String)k, "P");                
+            } else {
+                raftProperties.setProperty((String)k, "S");
+            }
+        });
+        
+        try (OutputStream out = new FileOutputStream("raft.properties")) {
+            System.out.println("Saving raft properties...");
+            raftProperties.store(out, "DO NOT MODIFY");
+            System.out.println("Raft properties saved!");
+        } catch (IOException e) {
+            System.err.println(TAG + " - IO errror saving Raft properties: " 
+                    + e.getMessage());
+        }
+    }
+    
+    public void removeRaftRule(final Object key) {      
         if (key instanceof Function) {
             raftRules.remove(((Function) key).getIdentifier());        
         } else {
             raftRules.remove(key);            
-        }       
+        }
         
         fireStateChanged();
     }
     
+    /**
+     * Returns the String text of a Person object's Raft based on raftRules 
+     * loaded in the model.
+     * 
+     * @param person the Person instance to be analyzed through raftRules
+     * @return Raft text corresponding to the Raft type of the Person. If the
+     *         Raft type cannot be found, returns "N/A"
+     */
     public String getRaft(final Person person) {
         String functionKey = person.getFunction().getIdentifier();
         String cabinKey = person.getCabin();
-                   
+        
+        // Checks if Function produces a Raft
         Raft result = raftRules.get(functionKey);
-        if (result != null) {
-            //DEBUG
-            System.out.println("Function raft returned");
+        if (result != null) {            
             return result.textPT();
         } 
         
+        // Checks if the Cabin produces a Raft
         result = raftRules.get(cabinKey);
         if (result != null) {
             return result.textPT();
         } else {
+            // If neither has produced any Raft, there is no rule
             return "N/A";
-        }       
+        }        
     }
     
     
     /**
-     * Inserts a CrewMember in the database. The id field in CrewMember is
+     * Inserts a Person in the database. The id field in Person is
      * ignored, since the database provided its own identification on INSERT
      * operations.
      * 
-     * @param member    the Person instance to add to the database 
+     * @param member the Person instance to add to the database 
      */
-    public void insertCrewMember(Person member) {        
+    public void insertPerson(final Person member) {        
         
         PreparedStatement insertCM = null;
         
@@ -235,9 +380,11 @@ public final class VoyagerModel extends StateNotifier {
             insertCM.setDate(8, java.sql.Date.valueOf(member.getBirthDate()));
             insertCM.setString(9, member.getCrew());
             insertCM.setBoolean(10, member.isBoarded());
-            insertCM.setDate(11, java.sql.Date.valueOf(member.getBoardingDate()));
+            insertCM.setDate(11, java.sql.Date.valueOf(member
+                    .getBoardingDate()));
             insertCM.setString(12, member.getBoardingPlace());
-            insertCM.setDate(13, java.sql.Date.valueOf(member.getArrivalDate()));
+            insertCM.setDate(13, java.sql.Date.valueOf(member
+                    .getArrivalDate()));
             insertCM.setString(14, member.getArrivalPlace());
             insertCM.setString(15, member.getCabin());
             insertCM.setString(16, member.getShift());
@@ -249,22 +396,32 @@ public final class VoyagerModel extends StateNotifier {
             fireStateChanged();     
             
         } catch (SQLException e) {
-            System.err.println("Model - insertCM() - SQLError");
-            System.err.println(e.getMessage());
+            System.err.println(TAG + " - Error inserting person: " 
+                    + e.getMessage());            
         } finally {
             try {
                 if (insertCM != null) {
-                insertCM.close();
-                conn.setAutoCommit(true);
+                    insertCM.close();
+                    conn.setAutoCommit(true);
                 }
             } catch (SQLException e) {
-                // TODO - error handling
+                System.err.println(TAG 
+                        + " - Exception while closing commit: " 
+                        + e.getMessage());
             }            
         }       
     }
-
-    // Gets crewmember with specified ID (It is assumed the id is unique!)
-    public Person getCrewMember(int id) {
+    
+    /**
+     * Returns a Person instance containing the id of the parameter. It is 
+     * assumed the ID is unique.
+     * 
+     * @param id the unique id as supplied by the database to the Person
+     * @return Person instance corresponding to the id
+     * 
+     * @throws IllegalArgumentException if id is negative
+     */
+    public Person getPerson(final int id) {
         if (id < 0) {
             throw new IllegalArgumentException();
         }
@@ -272,7 +429,8 @@ public final class VoyagerModel extends StateNotifier {
         try {
             List<Person> list = requestQuery("SELECT * FROM \"persons\" "
                     + "JOIN \"FUNCTIONS\" "
-                    + "ON \"persons\".\"FUNCTION\" = \"FUNCTIONS\".FUNCTION_ID WHERE PERSONID="
+                    + "ON \"persons\".\"FUNCTION\""
+                    + "= \"FUNCTIONS\".FUNCTION_ID WHERE PERSONID="
                     + id);
             return list.get(0);
         } catch (SQLException e) {
@@ -283,7 +441,7 @@ public final class VoyagerModel extends StateNotifier {
     }
     
     // Returns List of all registered CrewMembers
-    public List<Person> getAllCrewMembers() {
+    public List<Person> getAllPeople() {
         List<Person> list;
         try {
             list = requestQuery("SELECT * FROM \"persons\" "
@@ -299,7 +457,7 @@ public final class VoyagerModel extends StateNotifier {
     }
     
     // Returns List of all boarded CrewMembers
-    public List<Person> getAllBoardedCrewMembers() {
+    public List<Person> getAllBoardedPeople() {
         List<Person> list;
         try {
             list = requestQuery("SELECT * FROM \"persons\" "
@@ -315,7 +473,7 @@ public final class VoyagerModel extends StateNotifier {
     }
     
     // Returns List of all non-boarded CrewMembers
-    public List<Person> getAllNonBoardedCrewMembers() {
+    public List<Person> getAllNonBoardedPeople() {
         List<Person> list;
         try {
             list = requestQuery("SELECT * FROM \"persons\" "
@@ -332,7 +490,7 @@ public final class VoyagerModel extends StateNotifier {
     
     // Sets all Person of the provided crew as Boarded, and the others as 
     // not boarded
-    public void boardCrew(String crew) {
+    public void boardCrew(final String crew) {
         // Checks if crew parameter exists
         if (!getAllCrews().contains(crew)) {
             throw new IllegalArgumentException("Provided crew does not exist!");
@@ -355,8 +513,7 @@ public final class VoyagerModel extends StateNotifier {
                 
         String boardString = "UPDATE \"persons\" "
                 + "SET \"BOARDED\"=true "
-                + "WHERE \"CREW\" = ?";
-                
+                + "WHERE \"CREW\" = ?";                
         
         try {            
             conn.setAutoCommit(false);
@@ -383,7 +540,7 @@ public final class VoyagerModel extends StateNotifier {
     }
     
     // Updates crew member with specified ID
-    public int updateCrewMember(Person updatedMember) {
+    public int updatePerson(final Person updatedMember) {
                 
         PreparedStatement updateCM = null;
         
@@ -416,14 +573,18 @@ public final class VoyagerModel extends StateNotifier {
             updateCM.setString(3, updatedMember.getCompany());
             updateCM.setString(4, updatedMember.getNationality());
             updateCM.setString(5, updatedMember.getCir());
-            updateCM.setDate(6, java.sql.Date.valueOf(updatedMember.getCirExpDate()));
+            updateCM.setDate(6, java.sql.Date.valueOf(updatedMember
+                    .getCirExpDate()));
             updateCM.setString(7, updatedMember.getSispat());
-            updateCM.setDate(8, java.sql.Date.valueOf(updatedMember.getBirthDate()));
+            updateCM.setDate(8, java.sql.Date.valueOf(updatedMember
+                    .getBirthDate()));
             updateCM.setString(9, updatedMember.getCrew());
             updateCM.setBoolean(10, updatedMember.isBoarded());
-            updateCM.setDate(11, java.sql.Date.valueOf(updatedMember.getBoardingDate()));
+            updateCM.setDate(11, java.sql.Date.valueOf(updatedMember
+                    .getBoardingDate()));
             updateCM.setString(12, updatedMember.getBoardingPlace());
-            updateCM.setDate(13, java.sql.Date.valueOf(updatedMember.getArrivalDate()));
+            updateCM.setDate(13, java.sql.Date.valueOf(updatedMember
+                    .getArrivalDate()));
             updateCM.setString(14, updatedMember.getArrivalPlace());
             updateCM.setString(15, updatedMember.getCabin());
             updateCM.setString(16, updatedMember.getShift());            
@@ -451,13 +612,15 @@ public final class VoyagerModel extends StateNotifier {
         return 0;
     }
        
-    /*
-     * Deletes crew member with specified ID
-     * Returns 1 if successful, 0 if not 
-    */
-    public int deleteCrewMember(int id) {
+    /**
+     * Deletes Person with specified Id
+     * 
+     * @param id the unique Id from the Person
+     * @return 1 if successful, -1 if failed
+     */
+    public int deletePerson(final int id) {
         
-        int result = 0;
+        int result = -1;
         
         PreparedStatement deleteCM = null;
         
@@ -481,8 +644,8 @@ public final class VoyagerModel extends StateNotifier {
         } finally {
             try {
                 if (deleteCM != null) {
-                deleteCM.close();
-                conn.setAutoCommit(true);
+                    deleteCM.close();
+                    conn.setAutoCommit(true);
                 }
             } catch (SQLException e) {
                 // TODO - error handling
@@ -493,8 +656,9 @@ public final class VoyagerModel extends StateNotifier {
     
      
     
-    // Sends querys to connected database and returns as list of crew members
-    private List<Person> requestQuery(String query) throws SQLException {
+    // Sends querys to connected database and returns as List<Person>
+    private List<Person> requestQuery(String query)
+            throws SQLException {
         List<Person> list = null;
         try (Statement stmt = conn.createStatement()) {
             ResultSet rs = stmt.executeQuery(query);            
@@ -541,7 +705,7 @@ public final class VoyagerModel extends StateNotifier {
                 list.add(c);                
             }
         } catch (SQLException e){
-            System.err.println(TAG + " - Could not parse result" 
+            System.err.println(TAG + " - Could not parse result: " 
                     + e.getMessage());
         }
         return list;

@@ -169,7 +169,7 @@ public class PeoplePresenter implements StateListener {
                 JFrame mainView = (JFrame) SwingUtilities
                         .getWindowAncestor(view);
                 JDialog d = new EditPersonDialog(mainView, true,
-                        model, model.getCrewMember(id));
+                        model, model.getPerson(id));
                 d.setVisible(true);
             }            
         }
@@ -212,7 +212,7 @@ public class PeoplePresenter implements StateListener {
                     JFrame mainView = (JFrame) SwingUtilities
                         .getWindowAncestor(view);
                     JDialog d = new EditPersonDialog(mainView, true, model, 
-                            model.getCrewMember(id));
+                            model.getPerson(id));
                     d.setVisible(true);                    
                 }
                 
@@ -245,7 +245,7 @@ public class PeoplePresenter implements StateListener {
                                     .getValueAt(view.crewDBTable
                                             .convertRowIndexToModel(rowIndex),
                                             0);
-                            if (model.deleteCrewMember(personId) < 0) {
+                            if (model.deletePerson(personId) < 0) {
                                 JOptionPane.showMessageDialog(view,
                                         "Ops...Não foi possível deletar!",
                                         "Erro de Exclusão",
@@ -330,7 +330,7 @@ public class PeoplePresenter implements StateListener {
         // Implements logic to retrieve the objects that will compose the rows 
         // of the table
         public void loadData() {
-            List<Person> list = model.getAllCrewMembers();            
+            List<Person> list = model.getAllPeople();            
             int listSize = list.size();            
             
             this.data = new Object[listSize][getColumnCount()];

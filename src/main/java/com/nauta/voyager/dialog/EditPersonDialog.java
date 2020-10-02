@@ -600,9 +600,9 @@ public class EditPersonDialog extends javax.swing.JDialog {
                 case "save" -> {
                     writeGUIState();
                     if (editMode) {
-                        model.updateCrewMember(person);                        
+                        model.updatePerson(person);                        
                     } else {
-                        model.insertCrewMember(person);
+                        model.insertPerson(person);
                     }                    
                     dispose();
                 }
