@@ -19,7 +19,6 @@ import java.io.OutputStream;
 import java.util.*;
 import java.sql.*;
 import java.time.LocalDate;
-import org.apache.logging.log4j.*;
 
 
 /*
@@ -33,17 +32,17 @@ TODO:
  */
 public final class VoyagerModel extends StateNotifier {
     
-    private static final String TAG = VoyagerModel.class.getSimpleName();        
+    private static final String TAG = VoyagerModel.class.getSimpleName();    
         
     // Holds raft rules used to define the raft of boarded people
     private final Map<Object, Raft> raftRules;
-    private Properties raftProperties;
+    private final Properties raftProperties;
     
     // Current loaded POB for manipulation    
     private Pob currentPob;
     
     // Holds loaded localProperties
-    private Properties localProperties;
+    private final Properties localProperties;
     
     
     // Holds connection to the database
@@ -66,23 +65,25 @@ public final class VoyagerModel extends StateNotifier {
     // Loads localProperties from classpath
     private Properties loadProperties() {
        
-        Properties result = new Properties();
+        Properties defaults = new Properties();
         
-        try (InputStream in = new FileInputStream("local.properties")) {    
+        try (InputStream in = ClassLoader
+                .getSystemResource("default.properties").openStream()) {
+            defaults.load(in);            
+            System.out.println("Default properties loaded successfully!");
+        } catch (IOException f) {
+            System.err.println(TAG 
+                    + " - Error loading properties! "  
+                    + f.getMessage());
+        }
+        
+        Properties result = new Properties(defaults);
+        try (InputStream in = new FileInputStream("local.properties")) {                
             result.load(in);
-            System.out.println("Local Properties loaded successfully!");
+            System.out.println("Local Properties loaded successfully!");            
         } catch (FileNotFoundException e) {
             System.out.println("Could not find local properties. "
-                    + "Trying to load defaults...");
-            try (InputStream in = ClassLoader
-                    .getSystemResource("default.properties").openStream()) {
-                result.load(in);
-                System.out.println("Default properties loaded successfully!");
-            } catch (IOException f) {
-                System.err.println(TAG 
-                        + " - Error loading properties! "  
-                        + f.getMessage());
-            }           
+                    + "Using defaults...");
         } catch (IOException g) {
             System.err.println(TAG + " - Error loading local properties: " 
                     + g.getMessage());
@@ -149,7 +150,7 @@ public final class VoyagerModel extends StateNotifier {
     
     /**
      * Returns a List{@code <String>} containing all shifts from loaded
- localProperties
+     * localProperties
      * 
      * @return List{@code <String>} with all shifts
      */
@@ -603,7 +604,9 @@ public final class VoyagerModel extends StateNotifier {
                     conn.setAutoCommit(true);
                 }
             } catch (SQLException e) {
-                // TODO - error handling
+                System.err.println(TAG + "- SQLError updating Person: " 
+                        + e.getMessage());
+                System.err.println("SQLState: " + e.getSQLState());
             }            
         }             
         return 0;
@@ -645,7 +648,9 @@ public final class VoyagerModel extends StateNotifier {
                     conn.setAutoCommit(true);
                 }
             } catch (SQLException e) {
-                // TODO - error handling
+                System.err.println(TAG + "- SQLError deleting Person: " 
+                        + e.getMessage());
+                System.err.println("SQLState: " + e.getSQLState());
             }            
         }       
         return result;
@@ -662,8 +667,9 @@ public final class VoyagerModel extends StateNotifier {
             list = parseResult(rs);            
             stmt.close();
         } catch (SQLException e) {
-            // TODO - proper error handling
-            System.err.println(e.getMessage());
+            System.err.println(TAG + "- SQLError on requestQuery: " 
+                        + e.getMessage());
+                System.err.println("SQLState: " + e.getSQLState());
         }
         return list;
     }
