@@ -29,6 +29,7 @@ public class MainPresenter implements WindowListener {
         this.view = view;
         this.model = model;
         initPresentationLogic();
+        readGUIStateFromDomain();
     }
     
     private void initPresentationLogic() {
@@ -53,7 +54,16 @@ public class MainPresenter implements WindowListener {
         view.statusTab.addItemListener(handler);
         view.pobTab.addItemListener(handler);
         view.databaseTab.addItemListener(handler);
-        view.navTab.addItemListener(handler);       
+        view.navTab.addItemListener(handler);
+        
+        // REMOVE THIS AFTER IMPLEMENTING
+        view.statusTab.setVisible(false);
+        view.navTab.setVisible(false);
+    }
+    
+    private void readGUIStateFromDomain() {
+        view.vesselButton.setText(model.getVessel());
+        ((CardLayout)view.mainPane.getLayout()).show(view.mainPane, "pobCard");
     }
 
     @Override

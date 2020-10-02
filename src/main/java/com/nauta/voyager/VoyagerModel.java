@@ -113,6 +113,9 @@ public final class VoyagerModel extends StateNotifier {
         }
     }  
     
+    public String getVessel() {
+        return localProperties.getProperty("vessel_name");
+    }    
     // Loads POB from localProperties 
     private Pob loadPob(final Properties localProperties) {
         int pobId = 1; // Can be any int if not saved to a RDB

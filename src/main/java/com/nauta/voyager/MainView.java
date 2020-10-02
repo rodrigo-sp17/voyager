@@ -50,7 +50,7 @@ public class MainView extends javax.swing.JFrame {
 
         jMenuItem1 = new javax.swing.JMenuItem();
         jToolBar1 = new javax.swing.JToolBar();
-        jButton2 = new javax.swing.JButton();
+        vesselButton = new javax.swing.JToggleButton();
         filler1 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 30));
         statusTab = new javax.swing.JToggleButton();
         navTab = new javax.swing.JToggleButton();
@@ -75,20 +75,24 @@ public class MainView extends javax.swing.JFrame {
         jToolBar1.setRollover(true);
         jToolBar1.setFocusable(false);
 
-        jButton2.setBackground(new java.awt.Color(0, 51, 102));
-        jButton2.setFont(new java.awt.Font("Calibri Light", 0, 18)); // NOI18N
-        jButton2.setForeground(new java.awt.Color(255, 255, 255));
-        jButton2.setText("Ostreiro");
-        jButton2.setFocusable(false);
-        jButton2.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jButton2.setMaximumSize(new java.awt.Dimension(200, 35));
-        jButton2.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jToolBar1.add(jButton2);
+        vesselButton.setBackground(new java.awt.Color(255, 255, 255));
+        vesselButton.setFont(new java.awt.Font("Verdana", 0, 14)); // NOI18N
+        vesselButton.setForeground(new java.awt.Color(255, 255, 255));
+        vesselButton.setText("Embarcação");
+        vesselButton.setActionCommand("vessel");
+        vesselButton.setBorderPainted(false);
+        vesselButton.setFocusable(false);
+        vesselButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        vesselButton.setMaximumSize(new java.awt.Dimension(200, 35));
+        vesselButton.setName("statusTab"); // NOI18N
+        vesselButton.setPreferredSize(new java.awt.Dimension(100, 25));
+        vesselButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jToolBar1.add(vesselButton);
         jToolBar1.add(filler1);
 
-        statusTab.setBackground(new java.awt.Color(255, 255, 255));
+        statusTab.setBackground(new java.awt.Color(0, 51, 102));
         statusTab.setFont(new java.awt.Font("Verdana", 0, 14)); // NOI18N
-        statusTab.setSelected(true);
+        statusTab.setForeground(new java.awt.Color(255, 255, 255));
         statusTab.setText("Estado Geral");
         statusTab.setActionCommand("status");
         statusTab.setBorderPainted(false);
@@ -117,6 +121,7 @@ public class MainView extends javax.swing.JFrame {
         pobTab.setBackground(new java.awt.Color(0, 51, 102));
         pobTab.setFont(new java.awt.Font("Verdana", 0, 14)); // NOI18N
         pobTab.setForeground(new java.awt.Color(255, 255, 255));
+        pobTab.setSelected(true);
         pobTab.setText("POB");
         pobTab.setActionCommand("pob");
         pobTab.setBorderPainted(false);
@@ -207,7 +212,6 @@ public class MainView extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     javax.swing.JToggleButton databaseTab;
     public javax.swing.Box.Filler filler1;
-    javax.swing.JButton jButton2;
     public javax.swing.JMenuItem jMenuItem1;
     javax.swing.JToolBar jToolBar1;
     javax.swing.JPanel mainPane;
@@ -216,6 +220,7 @@ public class MainView extends javax.swing.JFrame {
     javax.swing.JToggleButton pobTab;
     javax.swing.JPanel statusPane;
     javax.swing.JToggleButton statusTab;
+    javax.swing.JToggleButton vesselButton;
     // End of variables declaration//GEN-END:variables
         
 }
