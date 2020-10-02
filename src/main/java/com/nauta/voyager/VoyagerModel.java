@@ -19,15 +19,12 @@ import java.io.OutputStream;
 import java.util.*;
 import java.sql.*;
 import java.time.LocalDate;
+import org.apache.logging.log4j.*;
 
 
 /*
 TODO:
-* - Transform to queries
 * - Implement PreparedStatements on all fields to prevent Injection attacks
-* - Implement function recovery
-* - Implement Update
-* - Implement updateModel method
 */
 
 /**
@@ -36,11 +33,8 @@ TODO:
  */
 public final class VoyagerModel extends StateNotifier {
     
-    private static final String TAG = VoyagerModel.class.getSimpleName();
-    
-    // Holds list of People for manipulation
-    private List<Person> peopleList;
-    
+    private static final String TAG = VoyagerModel.class.getSimpleName();        
+        
     // Holds raft rules used to define the raft of boarded people
     private final Map<Object, Raft> raftRules;
     private Properties raftProperties;

@@ -7,12 +7,7 @@ package com.nauta.voyager;
 
 import com.nauta.voyager.people.PeopleView;
 import com.nauta.voyager.pob.PobView;
-
-/* 
-TODO
-- Colors - build enums or constants for basic app color and inverted color
-- 
-*/ 
+import javax.swing.ImageIcon;
 
 /**
  *
@@ -22,12 +17,16 @@ public class MainView extends javax.swing.JFrame {
     
     public PobView pobPane;
     public PeopleView peoplePane;    
-    
            
     public MainView() {
         initComponents();
         initCustomComponents();
-        initViewLogic();        
+        initViewLogic();
+        
+        // Sets icon
+        ImageIcon icon = new ImageIcon(ClassLoader
+                .getSystemResource("icon.png"));
+        setIconImage(icon.getImage());
     }
     
     /* 

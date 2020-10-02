@@ -72,7 +72,7 @@ public class PobView extends javax.swing.JPanel {
         ));
         pobTable.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         pobTable.setFillsViewportHeight(true);
-        pobTable.setSelectionMode(javax.swing.ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+        pobTable.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         jScrollPane2.setViewportView(pobTable);
 
         pobDateField.setBackground(new java.awt.Color(255, 255, 255));
@@ -143,7 +143,7 @@ public class PobView extends javax.swing.JPanel {
         raftRuleButton.setFont(new java.awt.Font("Verdana", 1, 14)); // NOI18N
         raftRuleButton.setForeground(new java.awt.Color(0, 0, 0));
         raftRuleButton.setText("Postos de Abandono");
-        raftRuleButton.setToolTipText("Edita as regras para definição dos posto de abandono");
+        raftRuleButton.setToolTipText("Edita as regras para definição dos postos de abandono");
         raftRuleButton.setActionCommand("raft");
 
         jLabel4.setFont(new java.awt.Font("Verdana", 0, 18)); // NOI18N

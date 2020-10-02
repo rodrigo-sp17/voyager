@@ -136,7 +136,7 @@
               <Color id="Default Cursor"/>
             </Property>
             <Property name="fillsViewportHeight" type="boolean" value="true"/>
-            <Property name="selectionMode" type="int" value="2"/>
+            <Property name="selectionMode" type="int" value="0"/>
           </Properties>
         </Component>
       </SubComponents>
@@ -308,7 +308,7 @@
           <Color blue="0" green="0" red="0" type="rgb"/>
         </Property>
         <Property name="text" type="java.lang.String" value="Postos de Abandono"/>
-        <Property name="toolTipText" type="java.lang.String" value="Edita as regras para defini&#xe7;&#xe3;o dos posto de abandono"/>
+        <Property name="toolTipText" type="java.lang.String" value="Edita as regras para defini&#xe7;&#xe3;o dos postos de abandono"/>
         <Property name="actionCommand" type="java.lang.String" value="raft"/>
       </Properties>
     </Component>
