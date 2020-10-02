@@ -14,7 +14,9 @@ import java.awt.event.ActionListener;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import javax.swing.InputVerifier;
+import javax.swing.JButton;
 import javax.swing.JComponent;
+import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.text.AttributeSet;
@@ -73,7 +75,6 @@ public class EditBoardedDialog extends javax.swing.JDialog {
         initComponents();
         initPresentationLogic();
         readGUIState();
-        setVisible(true);
     }
     
     /**
@@ -109,8 +110,7 @@ public class EditBoardedDialog extends javax.swing.JDialog {
         
         initComponents();
         initPresentationLogic();
-        readGUIState();
-        setVisible(true);
+        readGUIState();        
     }
     
     // TODO - documentation
@@ -172,6 +172,7 @@ public class EditBoardedDialog extends javax.swing.JDialog {
         staticDataButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Editar Dados de Embarque");
         setBackground(new java.awt.Color(255, 255, 255));
 
         boardedPanel.setBackground(new java.awt.Color(255, 255, 255));
@@ -492,8 +493,12 @@ public class EditBoardedDialog extends javax.swing.JDialog {
                 }
                 
                 case "staticData" -> {                    
-                    new EditPersonDialog(EditBoardedDialog.this, true,
+                    EditPersonDialog d = new EditPersonDialog(
+                            EditBoardedDialog.this,
+                            true,
                             model, person);
+                    d.getBoardingDataButton().setEnabled(false);
+                    d.setVisible(true);
                     break;
                 }
                 
@@ -557,6 +562,12 @@ public class EditBoardedDialog extends javax.swing.JDialog {
           }
         }
     }
+
+    public JButton getStaticDataButton() {
+        return staticDataButton;
+    }
+    
+    
     
     
 

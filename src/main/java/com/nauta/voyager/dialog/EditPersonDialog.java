@@ -16,6 +16,7 @@ import java.util.*;
 import java.time.LocalDate;
 import java.time.format.*;
 import javax.swing.InputVerifier;
+import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
@@ -80,8 +81,7 @@ public class EditPersonDialog extends javax.swing.JDialog {
         
         initComponents();
         initPresentationLogic();
-        readGUIState();
-        setVisible(true);
+        readGUIState();        
     }
     
     /**
@@ -127,8 +127,7 @@ public class EditPersonDialog extends javax.swing.JDialog {
         
         initComponents();
         initPresentationLogic();
-        readGUIState();
-        setVisible(true);
+        readGUIState();        
     }
     
     /**
@@ -162,8 +161,7 @@ public class EditPersonDialog extends javax.swing.JDialog {
         
         initComponents();
         initPresentationLogic();
-        readGUIState();
-        setVisible(true);
+        readGUIState();        
     }
     
     /**
@@ -209,8 +207,7 @@ public class EditPersonDialog extends javax.swing.JDialog {
         
         initComponents();
         initPresentationLogic();
-        readGUIState();
-        setVisible(true);
+        readGUIState();        
     }
 
     /**
@@ -617,11 +614,13 @@ public class EditPersonDialog extends javax.swing.JDialog {
                 
                 case "boardingData" -> {
                     // TODO
-                    JDialog d = new EditBoardedDialog(
+                    EditBoardedDialog d = new EditBoardedDialog(
                             EditPersonDialog.this,
                             true,
                             model,
                             person);
+                    d.getStaticDataButton().setEnabled(false);
+                    d.setVisible(true);
                 }
                 
                 default -> {
@@ -817,7 +816,12 @@ public class EditPersonDialog extends javax.swing.JDialog {
             
             return this;            
         }   
-    }   
+    }
+
+    public JButton getBoardingDataButton() {
+        return boardingDataButton;
+    }    
+    
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JFormattedTextField birthDateField;

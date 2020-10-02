@@ -48,7 +48,7 @@
                               <Component id="pobSizeField" min="-2" max="-2" attributes="0"/>
                               <EmptySpace min="-2" pref="40" max="-2" attributes="0"/>
                               <Component id="crewField" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace pref="216" max="32767" attributes="0"/>
+                              <EmptySpace pref="203" max="32767" attributes="0"/>
                               <Component id="raftRuleButton" min="-2" max="-2" attributes="0"/>
                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
                               <Component id="printPobButton" min="-2" max="-2" attributes="0"/>
@@ -77,18 +77,27 @@
                   </Group>
                   <Component id="jLabel3" alignment="0" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace min="-2" pref="1" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="pobDateField" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="pobSizeField" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="crewField" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="deleteMemberButton" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="addMemberButton" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="printPobButton" alignment="3" min="-2" pref="31" max="-2" attributes="0"/>
-                  <Component id="raftRuleButton" alignment="0" pref="29" max="32767" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="102" attributes="0">
+                      <EmptySpace min="-2" pref="1" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="pobDateField" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="pobSizeField" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="crewField" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="deleteMemberButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="addMemberButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                  </Group>
+                  <Group type="102" attributes="0">
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                          <Component id="printPobButton" alignment="1" max="32767" attributes="0"/>
+                          <Component id="raftRuleButton" alignment="1" max="32767" attributes="0"/>
+                      </Group>
+                  </Group>
               </Group>
               <EmptySpace type="separate" max="-2" attributes="0"/>
-              <Component id="jScrollPane2" pref="564" max="32767" attributes="0"/>
+              <Component id="jScrollPane2" pref="567" max="32767" attributes="0"/>
               <EmptySpace min="-2" pref="20" max="-2" attributes="0"/>
           </Group>
       </Group>
@@ -298,7 +307,7 @@
         <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
           <Color blue="0" green="0" red="0" type="rgb"/>
         </Property>
-        <Property name="text" type="java.lang.String" value="Regras para Balsas"/>
+        <Property name="text" type="java.lang.String" value="Postos de Abandono"/>
         <Property name="toolTipText" type="java.lang.String" value="Edita as regras para defini&#xe7;&#xe3;o dos posto de abandono"/>
         <Property name="actionCommand" type="java.lang.String" value="raft"/>
       </Properties>

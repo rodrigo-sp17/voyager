@@ -167,8 +167,8 @@ public class PobPresenter implements StateListener {
             if (e.getStateChange() == ItemEvent.SELECTED) {
                 // Prompts if action is intentional
                 int option = JOptionPane.showConfirmDialog(view,
-                        "Deseja desembarcar os membros atuais e embarcar a turma"
-                                + " selecionada?",
+                        "Deseja desembarcar os membros atuais e embarcar"
+                                + " a turma selecionada?",
                         "Embarcar Nova Turma",
                         JOptionPane.OK_CANCEL_OPTION,
                         JOptionPane.QUESTION_MESSAGE);
@@ -197,6 +197,7 @@ public class PobPresenter implements StateListener {
                             0);
                 JDialog d = new EditBoardedDialog(model,
                         model.getCrewMember(id));
+                d.setVisible(true);
             }           
         }
 

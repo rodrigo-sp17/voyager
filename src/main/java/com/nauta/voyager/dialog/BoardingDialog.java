@@ -15,6 +15,7 @@ import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
+import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JTable;
@@ -184,13 +185,16 @@ public class BoardingDialog extends javax.swing.JDialog implements
                     
                     member.setBoarded(true);
                     
-                    new EditBoardedDialog(BoardingDialog.this, true,
+                    JDialog d = new EditBoardedDialog(BoardingDialog.this, true,
                             model, member);
+                    d.setVisible(true);
                 }
                 
                 case "add" -> {
                     // Calls new dialog to build a Person
-                    new EditPersonDialog(BoardingDialog.this, true, model);
+                    JDialog d = new EditPersonDialog(BoardingDialog.this, true,
+                            model);
+                    d.setVisible(true);
                 }
                 
                 default -> {
@@ -335,6 +339,7 @@ public class BoardingDialog extends javax.swing.JDialog implements
         peopleTable = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Embarcar Pessoal");
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 

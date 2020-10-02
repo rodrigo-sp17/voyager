@@ -30,7 +30,7 @@ public class RaftRuleDialog extends javax.swing.JDialog
     // rule
     private final int KEY_COLUMN = 3;
     
-    private final String TITLE = "Editar Regras de Balsas";
+    private final String TITLE = "Editar Postos de Abandono";
     
     /**
      * Creates new form RaftRuleDialog

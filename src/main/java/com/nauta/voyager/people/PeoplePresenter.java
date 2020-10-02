@@ -37,8 +37,7 @@ TODO:
  */
 public class PeoplePresenter implements StateListener {
     final private PeopleView view;
-    final private VoyagerModel model;
-    final Properties properties;
+    final private VoyagerModel model;    
     
     // JTable variables
     private TableRowSorter<CrewTableModel> sorter;
@@ -46,8 +45,7 @@ public class PeoplePresenter implements StateListener {
     
     public PeoplePresenter(PeopleView view, VoyagerModel model) {
         this.view = view;
-        this.model = model;
-        this.properties = loadProperties();
+        this.model = model;        
         initPresentationLogic();
     }   
        
@@ -172,6 +170,7 @@ public class PeoplePresenter implements StateListener {
                         .getWindowAncestor(view);
                 JDialog d = new EditPersonDialog(mainView, true,
                         model, model.getCrewMember(id));
+                d.setVisible(true);
             }            
         }
 
@@ -213,14 +212,16 @@ public class PeoplePresenter implements StateListener {
                     JFrame mainView = (JFrame) SwingUtilities
                         .getWindowAncestor(view);
                     JDialog d = new EditPersonDialog(mainView, true, model, 
-                            model.getCrewMember(id));                    
+                            model.getCrewMember(id));
+                    d.setVisible(true);                    
                 }
                 
                 case "add" -> {
                     // Instantiates new EditPersonDialog for creation
                     JFrame mainView = (JFrame) SwingUtilities
                         .getWindowAncestor(view);
-                    JDialog d = new EditPersonDialog(mainView, true, model);                    
+                    JDialog d = new EditPersonDialog(mainView, true, model);
+                    d.setVisible(true);
                 }
                 
                 case "delete" -> {
@@ -301,33 +302,7 @@ public class PeoplePresenter implements StateListener {
         } else {
             view.deleteButton.setEnabled(true);
         }       
-    }
-        
-     // Loads properties from specified folder. If not, loads default.
-    private Properties loadProperties() {
-       
-        Properties result = new Properties();
-        InputStream in = null;
-        // Searches FOLDER for properties
-        try {    
-            try {    
-                in = this.getClass().getClassLoader()
-                        .getResourceAsStream("default.properties");
-                result.load(in);
-                System.out.println("Properties loaded successfully");
-            } catch (NullPointerException e) {
-                System.err.println("Could not load properties stream" + e);
-            } finally {
-                if (in != null) {
-                    in.close();
-                }
-            }                    
-        } catch (IOException e) {
-            System.err.println("IO Error found when loading properties" + e);
-        }
-        return result;
-    }
-    
+    }   
     
     /*
      * This inner class implements the crew table model that will be used by
