@@ -6,9 +6,9 @@
 package com.nauta.voyager.people;
 
 import com.nauta.voyager.VoyagerModel;
-import com.nauta.voyager.people.Person;
 import com.nauta.voyager.dialog.EditPersonDialog;
 import com.nauta.voyager.util.StateListener;
+import java.awt.Color;
 import java.awt.event.*;
 import java.awt.Point;
 import javax.swing.*;
@@ -17,19 +17,9 @@ import java.util.*;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableRowSorter;
 import javax.swing.table.TableModel;
-import java.io.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumnModel;
 
-/*
-TODO:
-- Implement loadProperties correctly
-* - Change Edit Person to allow return values (?)
-- Update Table Model with all the appropriate columns
-- Add custom filter checkboxes below searchTextField
-- Regex Filter - Remove hardcoded ints
-- Perfect the visuals
-*/
 
 /**
  *
@@ -110,10 +100,7 @@ public class PeoplePresenter implements StateListener {
         tModel.loadData();
         sorter = new TableRowSorter<>(tModel);
         view.crewDBTable.setRowSorter(sorter);                
-    }
-    
-    private void writeGUIStateToDomain() {        
-    }
+    }   
     
     // Reacts to model changes
     @Override
@@ -280,17 +267,20 @@ public class PeoplePresenter implements StateListener {
                 view.editButton.setEnabled(true);
                 view.editButton.setText("Adicionar");
                 view.editButton.setActionCommand("add");
+                view.editButton.setBackground(new Color(102, 255, 0));
             }
             case 1 -> {
                 view.editButton.setEnabled(true);
                 view.editButton.setText("Editar");
                 view.editButton.setActionCommand("edit");
+                view.editButton.setBackground(new Color(0, 51, 102));
                 view.crewDBTable.setRowSelectionInterval(0, 0);
             }
             default -> {
                 view.editButton.setEnabled(false);
                 view.editButton.setText("Editar");
                 view.editButton.setActionCommand("edit");
+                view.editButton.setBackground(new Color(0, 51, 102));
             }
         }
     }

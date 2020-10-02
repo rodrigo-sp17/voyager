@@ -195,7 +195,9 @@ public class PobPresenter implements StateListener {
                 Integer id = (Integer) table.getModel()
                     .getValueAt(table.convertRowIndexToModel(row),
                             0);
-                JDialog d = new EditBoardedDialog(model,
+                JFrame topFrame = (JFrame) SwingUtilities
+                        .getWindowAncestor(view);
+                JDialog d = new EditBoardedDialog(topFrame, model,
                         model.getPerson(id));
                 d.setVisible(true);
             }           
@@ -245,7 +247,7 @@ public class PobPresenter implements StateListener {
                 }
                 
                 case "delete" -> {
-                    // TODO - solve multiple selection bug
+                    // FIXME - solve multiple selection bug
                     JTable table = view.getPobTable();
                     int[] rows = table.getSelectedRows();
                     
@@ -352,16 +354,14 @@ public class PobPresenter implements StateListener {
                         .getFormalDescription());
                 currentRow.getCell(4).setCellValue(member.getShift());                
                 currentRow.getCell(5).setCellValue(member.getBoardingDate());
-                
-                // TODO - set the life raft
+                                
                 currentRow.getCell(6).setCellValue(model.getRaft(member));
                 
                 // Ensures the formula is correct
                 Cell daysOnBoardCell = currentRow.getCell(7);
                 daysOnBoardCell.setCellFormula("D3-F"+ (currentRowIndex + 1));
                 
-                currentRow.getCell(8).setCellValue(member.getSispat());                
-                
+                currentRow.getCell(8).setCellValue(member.getSispat());               
                 
                 // Inserts new row if it is not the last item
                 if (i != members.size() - 1) {

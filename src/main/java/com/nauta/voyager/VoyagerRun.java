@@ -11,13 +11,7 @@ import com.formdev.flatlaf.FlatLightLaf;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
         
-/*
-TODO
-- Config loading
-- Error log and exception handling
-- 
- *//**
- *
+/**
  * @author rodrigo
  */
 public class VoyagerRun {
@@ -33,7 +27,7 @@ public class VoyagerRun {
         }
         
         
-        /* Create and display the form */
+        /* Create and display the app */
         java.awt.EventQueue.invokeLater(new Runnable() {            
             @Override
             public void run() {
@@ -51,6 +45,7 @@ public class VoyagerRun {
                 mainView.setVisible(true);                
                 
             }
+            // TODO - top level exception handling
         });
     }
     

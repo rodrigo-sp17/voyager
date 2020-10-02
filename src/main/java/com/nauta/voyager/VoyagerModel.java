@@ -21,11 +21,6 @@ import java.sql.*;
 import java.time.LocalDate;
 
 
-/*
-TODO:
-* - Implement PreparedStatements on all fields to prevent Injection attacks
-*/
-
 /**
  *
  * @author rodrigo
@@ -42,12 +37,10 @@ public final class VoyagerModel extends StateNotifier {
     private Pob currentPob;
     
     // Holds loaded localProperties
-    private final Properties localProperties;
-    
+    private final Properties localProperties;    
     
     // Holds connection to the database
-    private final Connection conn;    
-         
+    private final Connection conn;        
     
     // Constructor
     public VoyagerModel() {        
@@ -111,6 +104,7 @@ public final class VoyagerModel extends StateNotifier {
     public String getVessel() {
         return localProperties.getProperty("vessel_name");
     }    
+    
     // Loads POB from localProperties 
     private Pob loadPob(final Properties localProperties) {
         int pobId = 1; // Can be any int if not saved to a RDB
@@ -134,29 +128,53 @@ public final class VoyagerModel extends StateNotifier {
         localProperties.setProperty("pob_crew", pob.getCrew());
     }       
     
-    public List<String> getAllCrews() {
-        // TODO - handle Null
-        String[] crews = localProperties.getProperty("crews").split(",");
+    /**
+     * Returns a List of Strings containing all crews persisted on
+     * local.properties. If it is not possible to find any crew, returns null.
+     * 
+     * @return List{@code <String>} with all crews, or null if none 
+     */
+    public List<String> getAllCrews() {        
+        String value = localProperties.getProperty("crews");
+        if (value == null) {
+            return null;
+        }
+        
+        String[] crews = value.split(",");
         List<String> result = new ArrayList<>(Arrays.asList(crews));        
         return result;   
     }
-       
-    public List<String> getAllCabins() {
-        // TODO - handle null
-        String[] cabins = localProperties.getProperty("cabins").split(",");
+    
+    /**
+     * Returns a List of Strings containing all cabins persisted on
+     * local.properties. If it is not possible to find any cabin, returns null.
+     * 
+     * @return List{@code <String>} with all cabins, or null if none 
+     */
+    public List<String> getAllCabins() {        
+        String value = localProperties.getProperty("cabins");
+        if (value == null) {
+            return null;
+        }
+        
+        String[] cabins = value.split(",");
         List<String> result = new ArrayList<>(Arrays.asList(cabins));        
         return result;
     }
     
     /**
-     * Returns a List{@code <String>} containing all shifts from loaded
-     * localProperties
+     * Returns a List of Strings containing all shifts persisted on
+     * local.properties. If it is not possible to find any shift, returns null.
      * 
-     * @return List{@code <String>} with all shifts
+     * @return List{@code <String>} with all shifts, or null if none 
      */
-    public List<String> getAllShifts() {
-        // TODO - handle null
-        String[] shifts = localProperties.getProperty("shifts").split(",");
+    public List<String> getAllShifts() {        
+        String value = localProperties.getProperty("shifts");
+        if (value == null) {
+            return null;
+        }
+        
+        String[] shifts = value.split(",");
         List<String> result = new ArrayList<>(Arrays.asList(shifts));        
         return result;
     }
@@ -168,7 +186,7 @@ public final class VoyagerModel extends StateNotifier {
      *                                in database
      */
     public List<Function> getAllFunctions() {
-        String query = "SELECT * FROM \"FUNCTIONS\"";
+        String query = "SELECT * FROM functions";
         List<Function> list = new ArrayList<>();
         
         try (Statement stmt = conn.createStatement()) {
@@ -178,7 +196,7 @@ public final class VoyagerModel extends StateNotifier {
                         rs.getInt("FUNCTION_ID"),
                         rs.getString("FUNCTION_PREFIX"),
                         rs.getString("FUNCTION_DESCRIPTION"),
-                        0
+                        rs.getInt("FUNCTION_VARIATION")
                 );
                 list.add(f);
             }
@@ -330,8 +348,7 @@ public final class VoyagerModel extends StateNotifier {
             // If neither has produced any Raft, there is no rule
             return "N/A";
         }        
-    }
-    
+    }    
     
     /**
      * Inserts a Person in the database. The id field in Person is
@@ -345,21 +362,21 @@ public final class VoyagerModel extends StateNotifier {
         PreparedStatement insertCM = null;
         
         String insertString = 
-                "INSERT INTO \"persons\" ("
-                + "NAME,"
-                + "\"FUNCTION\","
+                "INSERT INTO people ("
+                + "PERSON_NAME,"
+                + "PERSON_FUNCTION,"
                 + "COMPANY,"
                 + "NATIONALITY,"
                 + "CIR,"
-                + "CIREXPDATE,"
+                + "CIR_EXP_DATE,"
                 + "SISPAT,"
-                + "BIRTHDATE,"
+                + "BIRTH_DATE,"
                 + "CREW,"
-                + "BOARDED,"
-                + "BOARDINGDATE,"
-                + "BOARDINGPLACE,"
-                + "ARRIVALDATE,"
-                + "ARRIVALPLACE,"
+                + "IS_BOARDED,"
+                + "BOARDING_DATE,"
+                + "BOARDING_PLACE,"
+                + "ARRIVAL_DATE,"
+                + "ARRIVAL_PLACE,"
                 + "CABIN,"
                 + "SHIFT"
                 + ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";               
@@ -425,14 +442,14 @@ public final class VoyagerModel extends StateNotifier {
         }
         
         try {
-            List<Person> list = requestQuery("SELECT * FROM \"persons\" "
-                    + "JOIN \"FUNCTIONS\" "
-                    + "ON \"persons\".\"FUNCTION\""
-                    + "= \"FUNCTIONS\".FUNCTION_ID WHERE PERSONID="
+            List<Person> list = requestQuery("SELECT * FROM people "
+                    + "JOIN functions "
+                    + "ON people.person_function"
+                    + "= functions.function_id WHERE person_id ="
                     + id);
             return list.get(0);
         } catch (SQLException e) {
-            System.err.println("Model - getCrewMember() - SQL Error");
+            System.err.println("Model - getPerson() - SQL Error");
             System.err.println(e.getMessage());
         }
         return null;       
@@ -442,13 +459,13 @@ public final class VoyagerModel extends StateNotifier {
     public List<Person> getAllPeople() {
         List<Person> list;
         try {
-            list = requestQuery("SELECT * FROM \"persons\" "
-                    + "JOIN \"FUNCTIONS\" "
-                    + "ON \"persons\".\"FUNCTION\" "
-                    + "= \"FUNCTIONS\".\"FUNCTION_ID\"");            
+            list = requestQuery("SELECT * FROM people "
+                    + "JOIN functions "
+                    + "ON people.person_function "
+                    + "= functions.function_id");            
             return list;
         } catch (SQLException e) {
-            System.err.println("Model - getAllCrewMembers() - SQL Error:");
+            System.err.println("Model - getAllPeople() - SQL Error:");
             System.err.println(e.getMessage());
         }
         return null;
@@ -458,11 +475,11 @@ public final class VoyagerModel extends StateNotifier {
     public List<Person> getAllBoardedPeople() {
         List<Person> list;
         try {
-            list = requestQuery("SELECT * FROM \"persons\" "
-                    + "JOIN \"FUNCTIONS\" "
-                    + "ON \"persons\".\"FUNCTION\" "
-                    + "= \"FUNCTIONS\".\"FUNCTION_ID\" "
-                    + "WHERE \"persons\".\"BOARDED\"=true");            
+            list = requestQuery("SELECT * FROM people "
+                    + "JOIN functions "
+                    + "ON people.person_function "
+                    + "= functions.function_id "
+                    + "WHERE people.is_boarded=true");            
             return list;
         } catch (SQLException e) {
             System.err.println(TAG + e.getMessage());            
@@ -474,11 +491,11 @@ public final class VoyagerModel extends StateNotifier {
     public List<Person> getAllNonBoardedPeople() {
         List<Person> list;
         try {
-            list = requestQuery("SELECT * FROM \"persons\" "
-                    + "JOIN \"FUNCTIONS\" "
-                    + "ON \"persons\".\"FUNCTION\" "
-                    + "= \"FUNCTIONS\".\"FUNCTION_ID\" "
-                    + "WHERE \"persons\".\"BOARDED\"=false");            
+            list = requestQuery("SELECT * FROM people "
+                    + "JOIN functions "
+                    + "ON people.person_function "
+                    + "= functions.function_id "
+                    + "WHERE people.is_boarded=true");            
             return list;
         } catch (SQLException e) {
             System.err.println(TAG + e.getMessage());  
@@ -495,9 +512,9 @@ public final class VoyagerModel extends StateNotifier {
         }        
 
         // Unboard boarded
-        String unboardQuery = "UPDATE \"persons\" "
-                + "SET \"BOARDED\"=false "
-                + "WHERE \"BOARDED\"=true";
+        String unboardQuery = "UPDATE people "
+                + "SET is_boarded=false "
+                + "WHERE is_boarded=true";
         
         try (Statement stmt = conn.createStatement()) {            
             stmt.executeUpdate(unboardQuery);                    
@@ -509,9 +526,9 @@ public final class VoyagerModel extends StateNotifier {
         // Board crew
         PreparedStatement boardStatement = null;
                 
-        String boardString = "UPDATE \"persons\" "
-                + "SET \"BOARDED\"=true "
-                + "WHERE \"CREW\" = ?";                
+        String boardString = "UPDATE people "
+                + "SET is_boarded=true "
+                + "WHERE crew = ?";                
         
         try {            
             conn.setAutoCommit(false);
@@ -543,24 +560,24 @@ public final class VoyagerModel extends StateNotifier {
         PreparedStatement updateCM = null;
         
         String updateString = 
-                "UPDATE \"persons\" SET "
-                + "NAME = ?,"
-                + "\"FUNCTION\" = ?,"
-                + "COMPANY = ?,"
-                + "NATIONALITY = ?,"
-                + "CIR = ?,"
-                + "CIREXPDATE = ?,"
+                "UPDATE people SET "
+                + "person_name = ?,"
+                + "person_function = ?,"
+                + "company = ?,"
+                + "nationality = ?,"
+                + "cir = ?,"
+                + "CIR_EXP_DATE = ?,"
                 + "SISPAT = ?,"
-                + "BIRTHDATE = ?,"
+                + "BIRTH_DATE = ?,"
                 + "CREW = ?,"
-                + "BOARDED = ?,"
-                + "BOARDINGDATE = ?,"
-                + "BOARDINGPLACE = ?,"
-                + "ARRIVALDATE = ?,"
-                + "ARRIVALPLACE = ?,"
+                + "is_boarded = ?,"
+                + "BOARDING_DATE = ?,"
+                + "BOARDING_PLACE = ?,"
+                + "ARRIVAL_DATE = ?,"
+                + "ARRIVAL_PLACE = ?,"
                 + "CABIN = ?,"
                 + "SHIFT = ?"       
-                + " WHERE PERSONID = ?";
+                + " WHERE PERSON_ID = ?";
         
         try {
             conn.setAutoCommit(false);
@@ -595,7 +612,7 @@ public final class VoyagerModel extends StateNotifier {
             fireStateChanged();     
             
         } catch (SQLException e) {
-            System.err.println("Model - updateCM() - SQLError:");
+            System.err.println("Model - updatePerson() - SQLError:");
             System.err.println(e.getMessage());
         } finally {
             try {
@@ -624,7 +641,7 @@ public final class VoyagerModel extends StateNotifier {
         
         PreparedStatement deleteCM = null;
         
-        String deleteString = "DELETE FROM \"persons\" WHERE PERSONID = ?";
+        String deleteString = "DELETE FROM people WHERE person_id = ?";
         
         try {
             conn.setAutoCommit(false);
@@ -639,7 +656,7 @@ public final class VoyagerModel extends StateNotifier {
             fireStateChanged();           
             
         } catch (SQLException e) {
-            System.err.println("Model - deleteCM() - SQLError:");
+            System.err.println("Model - deletePerson() - SQLError:");
             System.err.println(e.getMessage());            
         } finally {
             try {
@@ -680,24 +697,24 @@ public final class VoyagerModel extends StateNotifier {
         try {
             while (rs.next()) {
                 Person c = new Person();
-                c.setId(rs.getInt("PERSONID"));
-                c.setName(rs.getString("NAME"));
+                c.setId(rs.getInt("PERSON_ID"));
+                c.setName(rs.getString("PERSON_NAME"));
                 c.setCompany(rs.getString("COMPANY"));
                 c.setNationality(rs.getString("NATIONALITY"));
                 c.setCir(rs.getString("CIR"));
-                c.setCirExpDate(rs.getDate("CIREXPDATE").toLocalDate());
+                c.setCirExpDate(rs.getDate("CIR_EXP_DATE").toLocalDate());
                 c.setSispat(rs.getString("SISPAT"));
-                c.setBirthDate(rs.getDate("BIRTHDATE").toLocalDate());
+                c.setBirthDate(rs.getDate("BIRTH_DATE").toLocalDate());
                 c.setCrew(rs.getString("CREW"));
-                c.setBoarded(rs.getBoolean("BOARDED"));
-                c.setBoardingDate(rs.getDate("BOARDINGDATE").toLocalDate());
-                c.setBoardingPlace(rs.getString("BOARDINGPLACE"));
-                c.setArrivalDate(rs.getDate("ARRIVALDATE").toLocalDate());
-                c.setArrivalPlace(rs.getString("ARRIVALPLACE"));
+                c.setBoarded(rs.getBoolean("IS_BOARDED"));
+                c.setBoardingDate(rs.getDate("BOARDING_DATE").toLocalDate());
+                c.setBoardingPlace(rs.getString("BOARDING_PLACE"));
+                c.setArrivalDate(rs.getDate("ARRIVAL_DATE").toLocalDate());
+                c.setArrivalPlace(rs.getString("ARRIVAL_PLACE"));
                 c.setCabin(rs.getString("CABIN"));
                 c.setShift(rs.getString("SHIFT"));
                 
-                int id = rs.getInt("FUNCTION");
+                int id = rs.getInt("PERSON_FUNCTION");
                 Function f = getAllFunctions()
                         .stream()
                         .filter(i -> i.getFunctionId() == id)

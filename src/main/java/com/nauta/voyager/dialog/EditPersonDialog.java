@@ -18,7 +18,6 @@ import java.time.format.*;
 import javax.swing.InputVerifier;
 import javax.swing.JButton;
 import javax.swing.JComponent;
-import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
@@ -607,13 +606,11 @@ public class EditPersonDialog extends javax.swing.JDialog {
                     dispose();
                 }
                 
-                case "cancel" -> {
-                    // TODO - add dialog to confirm intention
+                case "cancel" -> {                    
                     dispose();                    
                 }
                 
-                case "boardingData" -> {
-                    // TODO
+                case "boardingData" -> {                    
                     EditBoardedDialog d = new EditBoardedDialog(
                             EditPersonDialog.this,
                             true,

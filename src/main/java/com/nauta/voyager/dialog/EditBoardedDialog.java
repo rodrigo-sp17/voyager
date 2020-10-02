@@ -79,7 +79,7 @@ public class EditBoardedDialog extends javax.swing.JDialog {
     
     /**
      * Creates new form EditBoardedDialog. It is assumed there is an already
-     * existent CrewMember.
+     * existent Person.
      * 
      * @param dialog    the parent Dialog view of this dialog
      * @param modal     if true, the dialog is instantiated as modal
@@ -113,9 +113,19 @@ public class EditBoardedDialog extends javax.swing.JDialog {
         readGUIState();        
     }
     
-    // TODO - documentation
-    public EditBoardedDialog(VoyagerModel model, Person person) {
-        super();
+    /**
+     * Creates new form EditBoardedDialog. It is assumed there is an already
+     * existent Person.
+     * 
+     * @param frame    the parent JFrame view of this dialog
+     * @param modal     if true, the dialog is instantiated as modal
+     * @param model     the model used by the dialog to retrieve and persist
+     *                  its data
+     * @param person    the Person instance which is having its boarding
+                  data edited
+     */
+    public EditBoardedDialog(Frame frame, VoyagerModel model, Person person) {
+        super(frame, true);
 
         // A null person is result of improper usage by programmer
         if (person == null) {            
@@ -487,8 +497,7 @@ public class EditBoardedDialog extends javax.swing.JDialog {
                     dispose();
                 }
                 
-                case "cancel" -> {
-                    // TODO - add dialog to ensure intention
+                case "cancel" -> {                    
                     dispose();
                 }
                 
@@ -502,13 +511,10 @@ public class EditBoardedDialog extends javax.swing.JDialog {
                     break;
                 }
                 
-                default -> {               
-                    // TODO - return focus to parent
-                    EditBoardedDialog.this.getParent().requestFocus();
+                default -> {                                   
                 }
             }
-        }
-        
+        }        
     }
     
     

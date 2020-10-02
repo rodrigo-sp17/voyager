@@ -55,7 +55,7 @@ public class Function {
                     functionPrefix,
                     functionDescription);
         } else {
-            return String.format("%s - %l - %s",
+            return String.format("%s - %d - %s",
                     functionPrefix,
                     functionVariation,
                     functionDescription);
