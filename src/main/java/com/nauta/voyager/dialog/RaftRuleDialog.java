@@ -206,28 +206,28 @@ public class RaftRuleDialog extends javax.swing.JDialog
         @Override
         public void actionPerformed(ActionEvent e) {
             switch (e.getActionCommand()) {
-                case "add" -> {                    
+                case "add":                 
                     JDialog d = new AddRuleDialog(RaftRuleDialog.this, model,
                             null);
-                }
+                    break;
                 
-                case "edit" -> {                    
+                case "edit":               
                     int row = ruleTable.getSelectedRow();                    
                     Object key = ruleTable.getModel()
                             .getValueAt(row, KEY_COLUMN);
-                    JDialog d = new AddRuleDialog(RaftRuleDialog.this, model,
+                    JDialog f = new AddRuleDialog(RaftRuleDialog.this, model,
                             key );
-                }
+                    break;
                 
-                case "remove" -> {
-                    int row = ruleTable.getSelectedRow();
-                    Object key = ruleTable.getModel()
-                            .getValueAt(row, KEY_COLUMN);
-                    model.removeRaftRule(key);
-                }
                 
-                default -> {                    
-                }
+                case "remove":
+                    int newRow = ruleTable.getSelectedRow();
+                    Object newKey = ruleTable.getModel()
+                            .getValueAt(newRow, KEY_COLUMN);
+                    model.removeRaftRule(newKey);  
+                    break;
+                
+                default:
             }
         }        
     }

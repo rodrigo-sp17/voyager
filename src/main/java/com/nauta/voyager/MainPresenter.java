@@ -37,24 +37,24 @@ public class MainPresenter implements WindowListener {
                 
         // Sets menu buttons for event handling
         MainMenuHandler menuHandler = new MainMenuHandler();
-        view.statusTab.addActionListener(menuHandler);        
+        //view.statusTab.addActionListener(menuHandler);        
         view.pobTab.addActionListener(menuHandler);        
         view.databaseTab.addActionListener(menuHandler);        
-        view.navTab.addActionListener(menuHandler);
+        //view.navTab.addActionListener(menuHandler);
         
         // Adds Main Menu buttons to a button group
         ButtonGroup group = new ButtonGroup();
-        group.add(view.statusTab);
+        //group.add(view.statusTab);
         group.add(view.pobTab);
         group.add(view.databaseTab);
-        group.add(view.navTab);
+        //group.add(view.navTab);
         
         // Adds button color changer to Main Menu
         MainMenuViewHandler handler = new MainMenuViewHandler();
-        view.statusTab.addItemListener(handler);
+        //view.statusTab.addItemListener(handler);
         view.pobTab.addItemListener(handler);
         view.databaseTab.addItemListener(handler);
-        view.navTab.addItemListener(handler);
+        //view.navTab.addItemListener(handler);
         
         // REMOVE THIS AFTER IMPLEMENTING
         view.statusTab.setVisible(false);
@@ -63,7 +63,8 @@ public class MainPresenter implements WindowListener {
     
     private void readGUIStateFromDomain() {
         view.vesselButton.setText(model.getVessel());
-        ((CardLayout)view.mainPane.getLayout()).show(view.mainPane, "pobCard");
+        //CardLayout cl = (CardLayout) view.mainPane.getLayout();
+        //cl.show(view.mainPane, "pobCard");
     }
 
     @Override
@@ -104,10 +105,18 @@ public class MainPresenter implements WindowListener {
             CardLayout cl = (CardLayout) view.mainPane.getLayout();        
         
             switch (e.getActionCommand()) {
-                case "status" -> cl.show(view.mainPane, "statusCard");
-                case "nav" -> cl.show(view.mainPane, "navPane");
-                case "pob" -> cl.show(view.mainPane, "pobCard");
-                case "database" -> cl.show(view.mainPane, "databaseCard");                        
+                case "status": 
+                    cl.show(view.mainPane, "statusCard");
+                    break;
+                case "nav": 
+                    cl.show(view.mainPane, "navPane");
+                    break;
+                case "pob": 
+                    cl.show(view.mainPane, "pobCard");
+                    break;
+                case "database": 
+                    cl.show(view.mainPane, "databaseCard");
+                    break;
             }
         }
     }

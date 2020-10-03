@@ -189,7 +189,7 @@ public class PeoplePresenter implements StateListener {
         @Override
         public void actionPerformed(ActionEvent e) {
             switch (e.getActionCommand()) {
-                case "edit" -> {
+                case "edit":
                     // Instantiates new EditDialog with data from table               
                     JTable table = view.crewDBTable;
                     TableModel tableModel = table.getModel();
@@ -200,18 +200,20 @@ public class PeoplePresenter implements StateListener {
                         .getWindowAncestor(view);
                     JDialog d = new EditPersonDialog(mainView, true, model, 
                             model.getPerson(id));
-                    d.setVisible(true);                    
-                }
-                
-                case "add" -> {
-                    // Instantiates new EditPersonDialog for creation
-                    JFrame mainView = (JFrame) SwingUtilities
-                        .getWindowAncestor(view);
-                    JDialog d = new EditPersonDialog(mainView, true, model);
                     d.setVisible(true);
-                }
+                    break;
                 
-                case "delete" -> {
+                
+                case "add":
+                    // Instantiates new EditPersonDialog for creation
+                    JFrame mainView2 = (JFrame) SwingUtilities
+                        .getWindowAncestor(view);
+                    JDialog f = new EditPersonDialog(mainView2, true, model);
+                    f.setVisible(true);
+                    break;
+                
+                
+                case "delete":
                     int[] rows = view.crewDBTable.getSelectedRows();
                     int delete = JOptionPane.showConfirmDialog(
                             view,
@@ -244,14 +246,13 @@ public class PeoplePresenter implements StateListener {
                         }                       
                         JOptionPane.showMessageDialog(view, "Deletado(s) "
                                 + counter + " registro(s)!");
-                    }                   
-                }
+                    }
+                    break;
                 
-                default -> {
+                default:
                     // Requests focus back on to searchTextField
                     view.searchTextField.requestFocusInWindow();
-                    view.searchTextField.selectAll();                   
-                }                    
+                    view.searchTextField.selectAll();                                                      
             }       
         }
     }
@@ -263,25 +264,27 @@ public class PeoplePresenter implements StateListener {
     private void setEditButtonState() {
     
         switch (view.crewDBTable.getRowCount()) {
-            case 0 -> {
+            case 0:
                 view.editButton.setEnabled(true);
                 view.editButton.setText("Adicionar");
                 view.editButton.setActionCommand("add");
                 view.editButton.setBackground(new Color(102, 255, 0));
-            }
-            case 1 -> {
+                break;
+            
+            case 1:
                 view.editButton.setEnabled(true);
                 view.editButton.setText("Editar");
                 view.editButton.setActionCommand("edit");
                 view.editButton.setBackground(new Color(0, 51, 102));
-                view.crewDBTable.setRowSelectionInterval(0, 0);
-            }
-            default -> {
+                //view.crewDBTable.setRowSelectionInterval(0, 0);
+                view.crewDBTable.getSelectionModel().setSelectionInterval(0, 0);
+                break;
+            
+            default:
                 view.editButton.setEnabled(false);
                 view.editButton.setText("Editar");
                 view.editButton.setActionCommand("edit");
-                view.editButton.setBackground(new Color(0, 51, 102));
-            }
+                view.editButton.setBackground(new Color(0, 51, 102));            
         }
     }
     

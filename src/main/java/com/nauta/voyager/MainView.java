@@ -24,8 +24,10 @@ public class MainView extends javax.swing.JFrame {
         initViewLogic();
         
         // Sets icon
-        ImageIcon icon = new ImageIcon(ClassLoader
-                .getSystemResource("icon.png"));
+        ImageIcon icon = new ImageIcon(getClass()
+                .getClassLoader()
+                .getResource("outline_directions_boat_white_18dp.png"));
+                
         setIconImage(icon.getImage());
     }
     
@@ -120,7 +122,6 @@ public class MainView extends javax.swing.JFrame {
         pobTab.setBackground(new java.awt.Color(0, 51, 102));
         pobTab.setFont(new java.awt.Font("Verdana", 0, 14)); // NOI18N
         pobTab.setForeground(new java.awt.Color(255, 255, 255));
-        pobTab.setSelected(true);
         pobTab.setText("POB");
         pobTab.setActionCommand("pob");
         pobTab.setBorderPainted(false);

@@ -601,7 +601,7 @@ public class EditPersonDialog extends javax.swing.JDialog {
         @Override
         public void actionPerformed(ActionEvent e) {
             switch (e.getActionCommand()) {
-                case "save" -> {
+                case "save":
                     writeGUIState();
                     if (editMode) {
                         model.updatePerson(person);                        
@@ -609,13 +609,13 @@ public class EditPersonDialog extends javax.swing.JDialog {
                         model.insertPerson(person);
                     }                    
                     dispose();
-                }
+                    break;
                 
-                case "cancel" -> {                    
-                    dispose();                    
-                }
+                case "cancel":
+                    dispose();
+                    break;
                 
-                case "boardingData" -> {                    
+                case "boardingData":          
                     EditBoardedDialog d = new EditBoardedDialog(
                             EditPersonDialog.this,
                             true,
@@ -623,11 +623,10 @@ public class EditPersonDialog extends javax.swing.JDialog {
                             person);
                     d.getStaticDataButton().setEnabled(false);
                     d.setVisible(true);
-                }
-                
-                default -> {
-                    EditPersonDialog.this.getParent().requestFocus();
-                }
+                    break;
+                                
+                default:
+                    EditPersonDialog.this.getParent().requestFocus();                
             }  
         }       
     }   
@@ -655,8 +654,7 @@ public class EditPersonDialog extends javax.swing.JDialog {
                     && (tf.getText().length() <= MAX_NAME_SIZE);
         }
         
-    }
-        
+    }        
     
     class CompanyVerifier extends InputVerifier {        
         @Override

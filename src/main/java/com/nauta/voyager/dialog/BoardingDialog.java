@@ -6,8 +6,6 @@
 package com.nauta.voyager.dialog;
 
 import com.nauta.voyager.people.Person;
-import com.nauta.voyager.dialog.EditBoardedDialog;
-import com.nauta.voyager.dialog.EditPersonDialog;
 import com.nauta.voyager.VoyagerModel;
 import com.nauta.voyager.util.StateListener;
 import java.awt.Component;
@@ -17,9 +15,7 @@ import java.awt.event.ActionListener;
 import java.util.List;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
-import javax.swing.JList;
 import javax.swing.JTable;
-import javax.swing.ListCellRenderer;
 import javax.swing.RowFilter;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -27,7 +23,6 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
 /**
@@ -170,7 +165,7 @@ public class BoardingDialog extends javax.swing.JDialog implements
         @Override
         public void actionPerformed(ActionEvent e) {
             switch (e.getActionCommand()) {
-                case "board" -> {
+                case "board":
                     // Gets selected row, sets the Person as boarded,
                     // Passes the Person to a EditBoardedDialog for 
                     // fine-tuning
@@ -188,20 +183,19 @@ public class BoardingDialog extends javax.swing.JDialog implements
                     JDialog d = new EditBoardedDialog(BoardingDialog.this, true,
                             model, member);
                     d.setVisible(true);
-                }
+                    break;                
                 
-                case "add" -> {
+                case "add":
                     // Calls new dialog to build a Person
-                    JDialog d = new EditPersonDialog(BoardingDialog.this, true,
+                    JDialog f = new EditPersonDialog(BoardingDialog.this, true,
                             model);
-                    d.setVisible(true);
-                }
-                
-                default -> {
+                    f.setVisible(true);                
+                    break;
+                    
+                default:
                     // Request focus on nameField
                     nameField.requestFocus();
-                    nameField.selectAll();
-                }
+                    nameField.selectAll();                
             }
         }
         
@@ -211,23 +205,21 @@ public class BoardingDialog extends javax.swing.JDialog implements
     private void setButtonsStates() {
           
         switch (peopleTable.getRowCount()) {
-            case 0 -> {
+            case 0:
                 addButton.setEnabled(true);
                 boardButton.setEnabled(false);
                 break;
-            }
-            
-            case 1 -> {
+                        
+            case 1:
                 addButton.setEnabled(false);
                 boardButton.setEnabled(true);
                 break;
-            }
-            
-            default -> {
+                        
+            default:
                 addButton.setEnabled(false);
                 if (peopleTable.getSelectedRowCount() > 0) {
-                    boardButton.setEnabled(true);                    
-                }
+                    boardButton.setEnabled(true);  
+                
             }
         }
     }  

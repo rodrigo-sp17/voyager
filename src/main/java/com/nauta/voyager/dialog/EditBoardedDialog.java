@@ -11,15 +11,12 @@ import java.awt.Dialog;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import javax.swing.InputVerifier;
 import javax.swing.JButton;
 import javax.swing.JComponent;
-import javax.swing.JDialog;
 import javax.swing.JFormattedTextField;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
@@ -121,8 +118,7 @@ public class EditBoardedDialog extends javax.swing.JDialog {
      * Creates new form EditBoardedDialog. It is assumed there is an already
      * existent Person.
      * 
-     * @param frame    the parent JFrame view of this dialog
-     * @param modal     if true, the dialog is instantiated as modal
+     * @param frame    the parent JFrame view of this dialog     * 
      * @param model     the model used by the dialog to retrieve and persist
      *                  its data
      * @param person    the Person instance which is having its boarding
@@ -498,28 +494,26 @@ public class EditBoardedDialog extends javax.swing.JDialog {
         @Override
         public void actionPerformed(ActionEvent e) {
             switch(e.getActionCommand()) {
-                case "save" -> {                    
+                case "save":
                     writeGUIState();
                     model.updatePerson(person);
                     dispose();
-                }
+                    break;
                 
-                case "cancel" -> {                    
+                case "cancel":
                     dispose();
-                }
+                    break;
                 
-                case "staticData" -> {                    
+                case "staticData":
                     EditPersonDialog d = new EditPersonDialog(
                             EditBoardedDialog.this,
                             true,
                             model, person);
                     d.getBoardingDataButton().setEnabled(false);
                     d.setVisible(true);
-                    break;
-                }
+                    break;                
                 
-                default -> {                                   
-                }
+                default:                
             }
         }        
     }
