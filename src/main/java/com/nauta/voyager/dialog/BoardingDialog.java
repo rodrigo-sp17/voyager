@@ -72,8 +72,7 @@ public class BoardingDialog extends javax.swing.JDialog implements
         }
         
         initComponents();
-        initPresentationLogic();
-        readGUIStateFromDomain();
+        initPresentationLogic();        
         setVisible(true);
     }
     
@@ -84,8 +83,7 @@ public class BoardingDialog extends javax.swing.JDialog implements
     
     
     private void initPresentationLogic() {
-        model.addStateListener(this);
-        
+        model.addStateListener(this);        
 
         // Sets people table up
         PeopleTableModel model = new PeopleTableModel();

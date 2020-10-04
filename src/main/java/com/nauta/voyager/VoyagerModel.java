@@ -495,7 +495,7 @@ public final class VoyagerModel extends StateNotifier {
                     + "JOIN functions "
                     + "ON people.person_function "
                     + "= functions.function_id "
-                    + "WHERE people.is_boarded=true");            
+                    + "WHERE people.is_boarded=false");            
             return list;
         } catch (SQLException e) {
             System.err.println(TAG + e.getMessage());  
