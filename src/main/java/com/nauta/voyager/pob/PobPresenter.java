@@ -241,12 +241,13 @@ public class PobPresenter implements StateListener {
         @Override
         public void actionPerformed(ActionEvent e) {
             switch (e.getActionCommand()) {
-                case "add" -> {
+                case "add":
                     // Assumed the parant of POB View is MonitorFrame
                     JDialog d = new BoardingDialog(model);
-                }
+                    break;
+                    
                 
-                case "delete" -> {
+                case "delete":
                     // FIXME - solve multiple selection bug
                     JTable table = view.getPobTable();
                     int[] rows = table.getSelectedRows();
@@ -279,9 +280,10 @@ public class PobPresenter implements StateListener {
                             model.updatePerson(person);
                         }                        
                     }
-                }
+                    break;
                 
-                case "print" -> {
+                
+                case "print":
                     // Shows final chooser for selecting place for new worksheet
                     writeGUIStateToDomain();
                     Pob pob = model.getPob();
@@ -300,16 +302,16 @@ public class PobPresenter implements StateListener {
                         File outputFile = fc.getSelectedFile();                        
                         exportPOBToExcel(pob, outputFile);
                     }
-                }
+                    break;
                 
-                case "raft" -> {
+                
+                case "raft":
                     JFrame topFrame = (JFrame) SwingUtilities
                             .getWindowAncestor(view);
-                    JDialog d = new RaftRuleDialog(topFrame, false, model);
-                }
+                    JDialog f = new RaftRuleDialog(topFrame, false, model);
+                    break;
                 
-                default -> {                    
-                }
+                default:                
             }            
         }
         

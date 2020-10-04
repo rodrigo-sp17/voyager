@@ -10,7 +10,7 @@ public class Person {
     final String DEFAULT_NATIONALITY = "BRASILEIRA";
     
     // Counter to keep track of number of instances, used as default ID
-    private static int numMembers = 0;
+    //private static int numMembers
     
     // Fixed crew member data
     private int id;
@@ -36,7 +36,7 @@ public class Person {
     // Constructors
     // Basic info constructor
     public Person(String name, String company, Function function) {
-        this.id = ++numMembers;
+        this.id = 0;
         this.name = name;
         this.function = function;
         this.company = company;
@@ -58,7 +58,7 @@ public class Person {
     
     // Instantiates a default Crew Member
     public Person() {
-        this.id = numMembers++;
+        this.id = 0;
         this.name = "";  
         this.function = null;
         this.company = "";
