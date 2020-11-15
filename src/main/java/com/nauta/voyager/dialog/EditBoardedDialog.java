@@ -145,8 +145,7 @@ public class EditBoardedDialog extends javax.swing.JDialog {
         
         initComponents();
         initPresentationLogic();
-        readGUIState();
-        setVisible(true);
+        readGUIState();        
     }
 
     /**
