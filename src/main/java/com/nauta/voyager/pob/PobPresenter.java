@@ -5,12 +5,18 @@
  */
 package com.nauta.voyager.pob;
 
+import com.nauta.voyager.util.VoyagerContext;
+import com.nauta.voyager.entity.Pob;
+import com.nauta.voyager.service.RaftService;
+import com.nauta.voyager.util.ServiceFactory;
 import com.nauta.voyager.dialog.BoardingDialog;
-import com.nauta.voyager.people.Person;
+import com.nauta.voyager.entity.Person;
 import com.nauta.voyager.dialog.EditBoardedDialog;
 import com.nauta.voyager.util.StateListener;
-import com.nauta.voyager.VoyagerModel;
 import com.nauta.voyager.dialog.RaftRuleDialog;
+import com.nauta.voyager.service.ExporterService;
+import com.nauta.voyager.service.PersonService;
+import com.nauta.voyager.service.PobService;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -21,11 +27,6 @@ import java.awt.event.ItemListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
@@ -36,7 +37,6 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.*;
-import org.apache.poi.ss.usermodel.*;
 
 /**
  *
@@ -46,34 +46,46 @@ public class PobPresenter implements StateListener {
     
     private final String TAG = PobPresenter.class.getSimpleName();
     
-    final private PobView view;
-    final private VoyagerModel model;
+    private final PobView view;
+    
+    private final VoyagerContext context;
+    
+    private final PersonService personService;
+    private final ExporterService exporterService;
+    private final RaftService raftService;
+    private final PobService pobService;
     
     // Format of the dates used on the dialog
-    private final DateTimeFormatter FORMATTER = DateTimeFormatter
+    private static final DateTimeFormatter FORMATTER = DateTimeFormatter
             .ofPattern("dd/MM/yyyy");
     
     // Constructor
-    public PobPresenter(PobView view, VoyagerModel model) {
+    public PobPresenter(PobView view, VoyagerContext context) {
         this.view = view;
-        this.model = model;        
+        this.context = context;
+        
+        personService = ServiceFactory.getPersonService();
+        pobService = ServiceFactory.getPobService();
+        raftService = ServiceFactory.getRaftService();
+        exporterService = ServiceFactory.getExporterService();
+        
         initPresentationLogic();
         readGUIStateFromDomain();
     }
     
     @Override
     public void onListenedStateChanged() {
-       // Reloads pobTable model
+        // Reloads pobTable model
         PobTableModel tModel = (PobTableModel) view.getPobTable().getModel();
         tModel.loadData();
     }    
    
     private void initPresentationLogic() {
         // Sets this class as a listener to VoyagerModel
-        model.addStateListener(this);
+        context.addStateListener(this);
         
         // Sets CrewField
-        model.getAllCrews().forEach(s -> view.getCrewField().addItem(s));
+        pobService.getAllCrews().forEach(s -> view.getCrewField().addItem(s));
         view.getCrewField().addItemListener(new CrewFieldHandler());
         
         // Sets up pobTable
@@ -125,22 +137,26 @@ public class PobPresenter implements StateListener {
     }
     
     private void readGUIStateFromDomain() {
-        LocalDate date = model.getPob().getDateIssued();
+        Pob pob = pobService.getLastPob();
+        LocalDate date = pob.getDateIssued();
         view.getPobDateField().setText(date.format(view.DATE_FORMATTER));
         
+        // Sets total of people on the POB
         view.getPobSizeField().setText(
                 Integer.toString(view.getPobTable().getModel().getRowCount()));
-        
-        String currentCrew = model.getPob().getCrew();
+                
+        String currentCrew = pob.getCrew();
         view.getCrewField().setSelectedItem(currentCrew);       
     }
     
     private void writeGUIStateToDomain() {
-        Pob pob = new Pob(99,
-                model.getAllBoardedPeople(),
-                LocalDate.parse(view.getPobDateField().getText(), FORMATTER),
-                view.getCrewField().getSelectedItem().toString());
-        model.savePob(pob);
+        Pob pob = pobService.getLastPob();
+        pob.setDateIssued(LocalDate.parse(view.getPobDateField().getText(),
+                FORMATTER));
+        pob.setPeople(pobService.getAllBoardedPeople());
+        pob.setCrew(view.getCrewField().getSelectedItem().toString());
+                
+        pobService.savePob(pob);
     }
     
     
@@ -153,9 +169,7 @@ public class PobPresenter implements StateListener {
 
         @Override
         public void focusLost(FocusEvent e) {
-            LocalDate date = LocalDate.parse(view.getPobDateField().getText(),
-                    view.DATE_FORMATTER);            
-            model.setPobDate(date);
+            writeGUIStateToDomain();            
         }        
     }
     
@@ -175,7 +189,7 @@ public class PobPresenter implements StateListener {
                      
                 // If yes, boards the crew members
                 if (option == JOptionPane.OK_OPTION) {
-                    model.boardCrew(e.getItem().toString());
+                    //model.boardCrew(e.getItem().toString());
                 }
             }
         }
@@ -192,13 +206,17 @@ public class PobPresenter implements StateListener {
             Point point = e.getPoint();
             int row = table.rowAtPoint(point);
             if (e.getClickCount() == 2) {
-                Integer id = (Integer) table.getModel()
+                Long personId = (Long) table.getModel()
                     .getValueAt(table.convertRowIndexToModel(row),
                             0);
+                
+                // Gets the parent view
                 JFrame topFrame = (JFrame) SwingUtilities
                         .getWindowAncestor(view);
-                JDialog d = new EditBoardedDialog(topFrame, model,
-                        model.getPerson(id));
+                
+                // Instantiates the dialog
+                JDialog d = new EditBoardedDialog(topFrame, true, 
+                        personService.getPersonById(personId));
                 d.setVisible(true);
             }           
         }
@@ -242,8 +260,9 @@ public class PobPresenter implements StateListener {
         public void actionPerformed(ActionEvent e) {
             switch (e.getActionCommand()) {
                 case "add":
-                    // Assumed the parant of POB View is MonitorFrame
-                    JDialog d = new BoardingDialog(model);
+                    JFrame topFrame = (JFrame) SwingUtilities
+                        .getWindowAncestor(view);
+                    JDialog d = new BoardingDialog(topFrame, true);
                     break;
                     
                 
@@ -269,24 +288,26 @@ public class PobPresenter implements StateListener {
                         for (int row : rows) {
                             // TODO - reduce number of reloading table
                             int cRow = table.convertRowIndexToModel(row);
-                            Integer id = (Integer) table.getModel()
+                            Long personId = (Long) table.getModel()
                                     .getValueAt(cRow, 0);
-                            Person person = model.getPerson(id);
+                            Person person = personService
+                                    .getPersonById(personId);
 
                             // Sets the Person instances' boarded as false
-                            person.setBoarded(false);
+                            person.getBoardingData().setBoarded(false);
 
                             // Sends changes for model to update
-                            model.updatePerson(person);
+                            personService.updatePerson(person);
                         }                        
                     }
+                    context.fireStateChanged();
                     break;
                 
                 
                 case "print":
                     // Shows final chooser for selecting place for new worksheet
                     writeGUIStateToDomain();
-                    Pob pob = model.getPob();
+                    Pob pob = pobService.getLastPob();
                     
                     // Opens File Chooser with default name
                     final JFileChooser fc = new JFileChooser();
@@ -300,15 +321,15 @@ public class PobPresenter implements StateListener {
                     int returnVal = fc.showSaveDialog(view);                    
                     if (returnVal == JFileChooser.APPROVE_OPTION) {
                         File outputFile = fc.getSelectedFile();                        
-                        exportPOBToExcel(pob, outputFile);
+                        exporterService.exportPOBToExcel(pob, outputFile);
                     }
                     break;
                 
                 
                 case "raft":
-                    JFrame topFrame = (JFrame) SwingUtilities
+                    JFrame topFrame2 = (JFrame) SwingUtilities
                             .getWindowAncestor(view);
-                    JDialog f = new RaftRuleDialog(topFrame, false, model);
+                    JDialog f = new RaftRuleDialog(topFrame2, false);
                     break;
                 
                 default:                
@@ -327,6 +348,7 @@ public class PobPresenter implements StateListener {
         }        
     }
     
+    /*
     // Exports the POB to the chosen outputFile
     // The template use is POB_std.xls
     private void exportPOBToExcel(Pob pob, File outputFile) {
@@ -408,7 +430,7 @@ public class PobPresenter implements StateListener {
             }            
         }        
     }
-    
+    */
     
     
     private final class PobTableModel extends AbstractTableModel {
@@ -432,21 +454,22 @@ public class PobPresenter implements StateListener {
         }
         
         public void loadData() {
-            List<Person> list = model.getAllBoardedPeople();            
+            List<Person> list = pobService.getAllBoardedPeople();            
             
             int size = list.size();            
             data = new Object[size][getColumnCount()];
             for (int i = 0; i < size; i++) {
-                Person m = list.get(i);
-                data[i][0] = m.getId();
-                data[i][1] = m.getCabin();
-                data[i][2] = m.getName();
-                data[i][3] = m.getCompany();                              
-                data[i][4] = m.getFunction().getFormalDescription();
-                data[i][5] = m.getShift();
-                data[i][6] = m.getBoardingDate();
-                data[i][7] = model.getRaft(m);
-                data[i][8] = calculateDaysOnBoard(m.getBoardingDate());
+                Person p = list.get(i);
+                data[i][0] = p.getPersonId();
+                data[i][1] = p.getBoardingData().getCabin();
+                data[i][2] = p.getName();
+                data[i][3] = p.getCompany();                              
+                data[i][4] = p.getFunction();
+                data[i][5] = p.getBoardingData().getShift();
+                data[i][6] = p.getBoardingData().getBoardingDate();
+                data[i][7] = raftService.getRaftByPerson(p);
+                data[i][8] = calculateDaysOnBoard(p.getBoardingData()
+                        .getBoardingDate());
                 data[i][9] = list.get(i).getSispat();
             }
             
@@ -454,7 +477,7 @@ public class PobPresenter implements StateListener {
         }
         
         private long calculateDaysOnBoard(LocalDate dateBoarded) {
-            LocalDate pobDate = model.getPob().getDateIssued();            
+            LocalDate pobDate = pobService.getLastPob().getDateIssued();
             return ChronoUnit.DAYS.between(dateBoarded, pobDate);
         }    
         

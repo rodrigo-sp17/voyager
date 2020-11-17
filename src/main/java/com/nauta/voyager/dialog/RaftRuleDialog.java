@@ -5,9 +5,13 @@
  */
 package com.nauta.voyager.dialog;
 
-import com.nauta.voyager.people.Function;
-import com.nauta.voyager.pob.Raft;
-import com.nauta.voyager.VoyagerModel;
+import com.nauta.voyager.util.VoyagerContext;
+import com.nauta.voyager.util.ServiceFactory;
+import com.nauta.voyager.entity.Post;
+import com.nauta.voyager.entity.Raft;
+import com.nauta.voyager.entity.RaftKey;
+import com.nauta.voyager.entity.RaftKeyType;
+import com.nauta.voyager.service.RaftService;
 import com.nauta.voyager.util.StateListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -24,23 +28,24 @@ import javax.swing.table.AbstractTableModel;
  * @author rodrigo
  */
 public class RaftRuleDialog extends javax.swing.JDialog 
-        implements StateListener, WindowListener {
+        implements StateListener {
     
-    private final VoyagerModel model;
     
     // The column number at the table that holds the formal key to use as a raft
     // rule
-    private final int KEY_COLUMN = 3;
+    private static final int KEY_COLUMN = 3;    
+    private static final String TITLE = "Editar Postos de Abandono";
     
-    private final String TITLE = "Editar Postos de Abandono";
+    private RaftService raftService;
     
     /**
      * Creates new form RaftRuleDialog
      */
-    public RaftRuleDialog(java.awt.Frame parent, boolean modal,
-            VoyagerModel model) {
+    public RaftRuleDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
-        this.model = model;
+        
+        raftService = ServiceFactory.getRaftService();
+
         initComponents();
         initPresentationLogic();
         setTitle(TITLE);
@@ -148,8 +153,7 @@ public class RaftRuleDialog extends javax.swing.JDialog
     }// </editor-fold>//GEN-END:initComponents
 
     private void initPresentationLogic() {
-        addWindowListener(this);
-        model.addStateListener(this);
+        VoyagerContext.getContext().addStateListener(this);
         
         ActionListener bHandler = new ButtonsHandler();
         addButton.addActionListener(bHandler);
@@ -168,63 +172,36 @@ public class RaftRuleDialog extends javax.swing.JDialog
 
     @Override
     public void onListenedStateChanged() {
-        readGUIStateFromDomain();
+        if (VoyagerContext.getContext().isScreaming("raft")) {
+            readGUIStateFromDomain();            
+        }
+        // TODO - listen to state changes
     }
 
-    @Override
-    public void windowOpened(WindowEvent e) {
-    }
-
-    @Override
-    public void windowClosing(WindowEvent e) {
-        // Saves raft rules on model
-        model.saveRaftRules();
-        dispose();
-    }
-
-    @Override
-    public void windowClosed(WindowEvent e) {
-    }
-
-    @Override
-    public void windowIconified(WindowEvent e) {
-    }
-
-    @Override
-    public void windowDeiconified(WindowEvent e) {
-    }
-
-    @Override
-    public void windowActivated(WindowEvent e) {
-    }
-
-    @Override
-    public void windowDeactivated(WindowEvent e) {
-    }
+  
     
     private final class ButtonsHandler implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
             switch (e.getActionCommand()) {
                 case "add":                 
-                    JDialog d = new AddRuleDialog(RaftRuleDialog.this, model,
-                            null);
+                    JDialog d = new AddRuleDialog(RaftRuleDialog.this, null);
+                    d.setVisible(true);
                     break;
                 
                 case "edit":               
                     int row = ruleTable.getSelectedRow();                    
-                    Object key = ruleTable.getModel()
+                    RaftKey key = (RaftKey) ruleTable.getModel()
                             .getValueAt(row, KEY_COLUMN);
-                    JDialog f = new AddRuleDialog(RaftRuleDialog.this, model,
-                            key );
-                    break;
-                
+                    JDialog f = new AddRuleDialog(RaftRuleDialog.this, key);
+                    f.setVisible(true);
+                    break;                
                 
                 case "remove":
                     int newRow = ruleTable.getSelectedRow();
-                    Object newKey = ruleTable.getModel()
+                    RaftKey newKey = (RaftKey) ruleTable.getModel()
                             .getValueAt(newRow, KEY_COLUMN);
-                    model.removeRaftRule(newKey);  
+                    raftService.removeRaftRule(newKey);  
                     break;
                 
                 default:
@@ -266,22 +243,22 @@ public class RaftRuleDialog extends javax.swing.JDialog
         }
         
         private void loadData() {
-            Map<Object, Raft> map = model.getAllRaftRules();
+            Map<RaftKey, Raft> map = raftService.getAllRaftRules();
             
             // The 1 is necessary to have a column that is not shown!
             // This column holds the type of the argument
             data = new Object[map.size()][getColumnCount() + 1];
             
             int row = 0;
-            for (Map.Entry<Object, Raft> entry : map.entrySet()) {
+            for (Map.Entry<RaftKey, Raft> entry : map.entrySet()) {
+                
                 data[row][0] = entry.getValue().textPT();
                 
-                String key = (String) entry.getKey();
-                if (key.contains(Function.TAG)) {
-                    Function f = model.getFunctionByIdentifier(key);
+                RaftKey key = entry.getKey();
+                if (key.getType().equals(RaftKeyType.FUNCTION)) {                    
                     data[row][1] = "Função";
-                    data[row][2] = (f.getFormalDescription());
-                    data[row][KEY_COLUMN] = f;
+                    data[row][2] = key;
+                    data[row][KEY_COLUMN] = key;
                 } else {
                     data[row][1] = "Camarote";
                     data[row][2] = key;

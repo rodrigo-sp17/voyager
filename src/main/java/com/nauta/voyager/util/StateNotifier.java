@@ -6,7 +6,11 @@
 package com.nauta.voyager.util;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * @author rodrigo
@@ -18,6 +22,8 @@ import java.util.List;
  */
 public class StateNotifier {
     private List<StateListener> listeners;
+    
+    private Set<String> screamers;
     
     /**
      * Adds a StateListener object to the list of listeners of this class
@@ -40,6 +46,21 @@ public class StateNotifier {
             l.onListenedStateChanged();            
         });
         System.out.println("State changed returned");
+    }
+    
+    public void addScreamer(String... screamers) {
+        this.screamers = new HashSet<>();
+        for (String s : screamers) {
+            this.screamers.add(s);                    
+        }
+    }
+    
+    public boolean isScreaming(String screamer) {
+        return screamers.contains(screamer);
+    }
+    
+    public void removeScreamer(String screamer) {
+        screamers.remove(screamer);
     }
         
     /**

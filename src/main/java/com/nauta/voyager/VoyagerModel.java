@@ -1,15 +1,10 @@
-/* License header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.nauta.voyager;
 
-import com.nauta.voyager.pob.Raft;
-import com.nauta.voyager.people.Function;
-import com.nauta.voyager.people.Person;
+import com.nauta.voyager.entity.Raft;
+import com.nauta.voyager.entity.Post;
+import com.nauta.voyager.entity.Person;
 import com.nauta.voyager.util.StateNotifier;
-import com.nauta.voyager.util.DatabaseUtil;
-import com.nauta.voyager.pob.Pob;
+import com.nauta.voyager.entity.Pob;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -20,13 +15,14 @@ import java.util.*;
 import java.sql.*;
 import java.time.LocalDate;
 
-
+@Deprecated
 /**
  *
  * @author rodrigo
  */
+
 public final class VoyagerModel extends StateNotifier {
-    
+    /*
     private static final String TAG = VoyagerModel.class.getSimpleName();    
         
     // Holds raft rules used to define the raft of boarded people
@@ -41,7 +37,7 @@ public final class VoyagerModel extends StateNotifier {
     
     // Holds connection to the database
     private final Connection conn;        
-    
+    /*
     // Constructor
     public VoyagerModel() {        
         // Connects to database
@@ -90,6 +86,7 @@ public final class VoyagerModel extends StateNotifier {
      * Saves modified localProperties to local.properties. Call this method
      * when closing the application to avoid excessive IO operations.
      */
+    /*
     public void saveProperties() {
         try (OutputStream out = new FileOutputStream("local.properties")) {
             System.out.println("Saving local properties...");
@@ -104,7 +101,7 @@ public final class VoyagerModel extends StateNotifier {
     public String getVessel() {
         return localProperties.getProperty("vessel_name");
     }    
-    
+    /*
     // Loads POB from localProperties 
     private Pob loadPob(final Properties localProperties) {
         int pobId = 1; // Can be any int if not saved to a RDB
@@ -127,6 +124,7 @@ public final class VoyagerModel extends StateNotifier {
         currentPob = pob;
         localProperties.setProperty("pob_crew", pob.getCrew());
     }       
+    */
     
     /**
      * Returns a List of Strings containing all crews persisted on
@@ -134,6 +132,7 @@ public final class VoyagerModel extends StateNotifier {
      * 
      * @return List{@code <String>} with all crews, or null if none 
      */
+    /*
     public List<String> getAllCrews() {        
         String value = localProperties.getProperty("crews");
         if (value == null) {
@@ -151,6 +150,7 @@ public final class VoyagerModel extends StateNotifier {
      * 
      * @return List{@code <String>} with all cabins, or null if none 
      */
+    /*
     public List<String> getAllCabins() {        
         String value = localProperties.getProperty("cabins");
         if (value == null) {
@@ -168,6 +168,7 @@ public final class VoyagerModel extends StateNotifier {
      * 
      * @return List{@code <String>} with all shifts, or null if none 
      */
+    /*
     public List<String> getAllShifts() {        
         String value = localProperties.getProperty("shifts");
         if (value == null) {
@@ -179,12 +180,14 @@ public final class VoyagerModel extends StateNotifier {
         return result;
     }
     
+    
     /**
      * Retrieves Functions from database, which may be modified by the user.
      * 
-     * @return List{@code <Function>} list of Function objects available 
+     * @return List{@code <Function>} list of Post objects available 
      *                                in database
      */
+    /*
     public List<Function> getAllFunctions() {
         String query = "SELECT * FROM functions";
         List<Function> list = new ArrayList<>();
@@ -192,7 +195,7 @@ public final class VoyagerModel extends StateNotifier {
         try (Statement stmt = conn.createStatement()) {
             ResultSet rs = stmt.executeQuery(query);
             while (rs.next()) {
-                Function f = new Function(
+                Post f = new Post(
                         rs.getInt("FUNCTION_ID"),
                         rs.getString("FUNCTION_PREFIX"),
                         rs.getString("FUNCTION_DESCRIPTION"),
@@ -208,6 +211,7 @@ public final class VoyagerModel extends StateNotifier {
         
         return list;
     }
+    */
     
     /**
      * Returns a Function instance corresponding to the supplied identifier. 
@@ -217,8 +221,9 @@ public final class VoyagerModel extends StateNotifier {
      * @return Function instance corresponding to the supplied identifier, or
      *         null if not found
      */
-    public Function getFunctionByIdentifier(final String identifier) {
-        Function result = getAllFunctions().stream()
+    /*
+    public Post getFunctionByIdentifier(final String identifier) {
+        Post result = getAllFunctions().stream()
                 .filter(f -> f.getIdentifier().equals(identifier))
                 .findFirst()
                 .orElse(null);
@@ -254,33 +259,36 @@ public final class VoyagerModel extends StateNotifier {
         
         return result;
     }
-    
+    */
     /**
      * Returns a Map containing all the raft rules contained in localProperties
      * 
      * @return Map{@code <Object, Raft>} containing a Function identifier or 
      *         cabin as key, and a Raft type as value
      */    
+    /*
     public Map<Object, Raft> getAllRaftRules() {
         return raftRules;
     }
     
     /**
-     * Adds a raft rule. Key is either a Function object or a String cabin.
+     * Adds a raft rule. Key is either a Post object or a String cabin.
      * 
-     * @param key A string, either a Function object or a String cabin
+     * @param key A string, either a Post object or a String cabin
      * @param raft A Raft type, defining the raft side the member should go to
      *  
      */
+    /*
     public void addRaftRule(Object key, Raft raft) {
-        if (key instanceof Function) {
-            raftRules.put(((Function) key).getIdentifier(), raft);        
+        if (key instanceof Post) {
+            raftRules.put(((Post) key).getIdentifier(), raft);        
         } else {
             raftRules.put(key, raft);            
         }
         
         fireStateChanged();    
     }
+    */
     
     /**
      * Save Raft Rules as a property file, raft.properties. It parses Raft to
@@ -289,6 +297,7 @@ public final class VoyagerModel extends StateNotifier {
      * Call this method only when raftRules modifications is finished so as to
      * minimize IO operations.
      */
+    /*
     public void saveRaftRules() {
         // Clears raftProperties for overwriting
         raftProperties.clear();
@@ -311,17 +320,17 @@ public final class VoyagerModel extends StateNotifier {
                     + e.getMessage());
         }
     }
-    
+    /*
     public void removeRaftRule(final Object key) {      
-        if (key instanceof Function) {
-            raftRules.remove(((Function) key).getIdentifier());        
+        if (key instanceof Post) {
+            raftRules.remove(((Post) key).getIdentifier());        
         } else {
             raftRules.remove(key);            
         }
         
         fireStateChanged();
     }
-    
+    */
     /**
      * Returns the String text of a Person object's Raft based on raftRules 
      * loaded in the model.
@@ -330,11 +339,12 @@ public final class VoyagerModel extends StateNotifier {
      * @return Raft text corresponding to the Raft type of the Person. If the
      *         Raft type cannot be found, returns "N/A"
      */
+    /*
     public String getRaft(final Person person) {
         String functionKey = person.getFunction().getIdentifier();
         String cabinKey = person.getCabin();
         
-        // Checks if Function produces a Raft
+        // Checks if Post produces a Raft
         Raft result = raftRules.get(functionKey);
         if (result != null) {            
             return result.textPT();
@@ -357,6 +367,7 @@ public final class VoyagerModel extends StateNotifier {
      * 
      * @param member the Person instance to add to the database 
      */
+    /*
     public void insertPerson(final Person member) {        
         
         PreparedStatement insertCM = null;
@@ -426,7 +437,7 @@ public final class VoyagerModel extends StateNotifier {
             }            
         }       
     }
-    
+    */
     /**
      * Returns a Person instance containing the id of the parameter. It is 
      * assumed the ID is unique.
@@ -436,6 +447,7 @@ public final class VoyagerModel extends StateNotifier {
      * 
      * @throws IllegalArgumentException if id is negative
      */
+    /*
     public Person getPerson(final int id) {
         if (id < 0) {
             throw new IllegalArgumentException();
@@ -553,7 +565,7 @@ public final class VoyagerModel extends StateNotifier {
         
         fireStateChanged();        
     }
-    
+    /*
     // Updates crew member with specified ID
     public int updatePerson(final Person updatedMember) {
                 
@@ -635,6 +647,7 @@ public final class VoyagerModel extends StateNotifier {
      * @param id the unique Id from the Person
      * @return 1 if successful, -1 if failed
      */
+    /*
     public int deletePerson(final int id) {
         
         int result = -1;
@@ -674,7 +687,7 @@ public final class VoyagerModel extends StateNotifier {
     }    
     
      
-    
+    /*
     // Sends querys to connected database and returns as List<Person>
     private List<Person> requestQuery(String query)
             throws SQLException {
@@ -690,7 +703,7 @@ public final class VoyagerModel extends StateNotifier {
         }
         return list;
     }
-    
+    /*
     // Parses a ResultSet to Crew Member objects, than adds them to a list
     private List<Person> parseResult(ResultSet rs) {
         List<Person> list = new ArrayList<>();
@@ -715,7 +728,7 @@ public final class VoyagerModel extends StateNotifier {
                 c.setShift(rs.getString("SHIFT"));
                 
                 int id = rs.getInt("PERSON_FUNCTION");
-                Function f = getAllFunctions()
+                Post f = getAllFunctions()
                         .stream()
                         .filter(i -> i.getFunctionId() == id)
                         .findFirst()
@@ -730,4 +743,5 @@ public final class VoyagerModel extends StateNotifier {
         }
         return list;
     }
+    */
 }

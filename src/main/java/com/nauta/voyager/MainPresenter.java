@@ -5,6 +5,9 @@
  */
 package com.nauta.voyager;
 
+import com.nauta.voyager.util.ServiceFactory;
+import com.nauta.voyager.util.VoyagerContext;
+import com.nauta.voyager.service.VesselService;
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
@@ -23,11 +26,12 @@ import javax.swing.JToggleButton;
 public class MainPresenter implements WindowListener {
     
     private final MainView view;
-    private final VoyagerModel model;
+    private VesselService vesselService;
+    //private final VoyagerModel model;
     
-    public MainPresenter(MainView view, VoyagerModel model) {
+    public MainPresenter(MainView view) {
         this.view = view;
-        this.model = model;
+        vesselService = ServiceFactory.getVesselService();
         initPresentationLogic();
         readGUIStateFromDomain();
     }
@@ -62,7 +66,7 @@ public class MainPresenter implements WindowListener {
     }
     
     private void readGUIStateFromDomain() {
-        view.vesselButton.setText(model.getVessel());
+        view.vesselButton.setText(vesselService.getVessel());
         //CardLayout cl = (CardLayout) view.mainPane.getLayout();
         //cl.show(view.mainPane, "pobCard");
     }
@@ -73,7 +77,7 @@ public class MainPresenter implements WindowListener {
 
     @Override
     public void windowClosing(WindowEvent e) {
-        model.saveProperties();
+        VoyagerContext.getContext().endContext();
         view.dispose();
         System.exit(0);
     }

@@ -5,20 +5,22 @@
  */
 package com.nauta.voyager.dialog;
 
-import com.nauta.voyager.people.Function;
-import com.nauta.voyager.pob.Raft;
-import com.nauta.voyager.VoyagerModel;
+import com.nauta.voyager.util.ServiceFactory;
+import com.nauta.voyager.util.VoyagerContext;
+import com.nauta.voyager.entity.Raft;
+import com.nauta.voyager.service.FunctionService;
+import com.nauta.voyager.service.PobService;
+import com.nauta.voyager.entity.RaftKey;
+import com.nauta.voyager.entity.RaftKeyType;
+import com.nauta.voyager.service.RaftService;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.util.List;
-import java.util.Map;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JList;
-import javax.swing.JOptionPane;
 import javax.swing.ListCellRenderer;
 import static javax.swing.SwingConstants.CENTER;
 
@@ -27,31 +29,38 @@ import static javax.swing.SwingConstants.CENTER;
  * @author rodrigo
  */
 public class AddRuleDialog extends javax.swing.JDialog {
-
-    private final VoyagerModel model;
     
-    private final String FUNCTION = "Função";
-    private final String CABIN = "Camarote"; 
+    private static final String FUNCTION = "Função";
+    private static final String CABIN = "Camarote";     
+    private static final String TITLE = "Regra de Balsa";    
     
-    private final String TITLE = "Regra de Balsa";
+    private final RaftKey originalKey;
     
-    private final Object ORIGINAL_KEY;
+    private final RaftService raftService;
+    private final FunctionService functionService;
+    private final PobService pobService;
     
     
     /**
      * Creates new form AddRuleDialog
      */
-    public AddRuleDialog(JDialog parent, VoyagerModel model,
-            Object key) {
+    public AddRuleDialog(JDialog parent, RaftKey key) {
         super(parent, true);
-        this.model = model;
+        raftService = ServiceFactory.getRaftService();
+        functionService = ServiceFactory.getFunctionService();
+        pobService = ServiceFactory.getPobService();
+        
+        
         initComponents();
         initPresentationLogic();
-        ORIGINAL_KEY = key;
+                
+        originalKey = key;
+        
         readGUIState(key);
+        
         setTitle(TITLE);
-        setVisible(true);
-    }
+        //setVisible(true);
+    }   
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -151,8 +160,8 @@ public class AddRuleDialog extends javax.swing.JDialog {
         );
 
         raftField.setRenderer(new RaftRenderer());
-        ValueRenderer renderer = new ValueRenderer();
-        valueField.setRenderer(renderer);
+        //ValueRenderer renderer = new ValueRenderer();
+        //valueField.setRenderer(renderer);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -182,22 +191,23 @@ public class AddRuleDialog extends javax.swing.JDialog {
         saveButton.addActionListener(new SaveButtonHandler());        
     }
     
-    private void readGUIState(Object key) {
+    private void readGUIState(RaftKey key) {
         if (key == null) {
             linkField.setSelectedItem(FUNCTION);
             return;
         }
         
-        if (key instanceof Function) {
-            raftField.setSelectedItem(model.getAllRaftRules()
-                    .get(((Function) key).getIdentifier()));
+        
+        raftField.setSelectedItem(raftService.getRaftByKey(key));        
+        System.out.println("Key is" + key.toString());
+        
+        if (key.getType().equals(RaftKeyType.FUNCTION)) {            
             linkField.setSelectedItem(FUNCTION);
-            valueField.setSelectedItem(((Function)key));
         } else {
-            raftField.setSelectedItem(model.getAllRaftRules().get(key));
             linkField.setSelectedItem(CABIN);
-            valueField.setSelectedItem((String) key);
         }
+        
+        valueField.setSelectedItem(key);        
     }
     
     // Adds a listener to linkField, to change the values available at 
@@ -210,9 +220,12 @@ public class AddRuleDialog extends javax.swing.JDialog {
             if (e.getStateChange() == ItemEvent.SELECTED) {
                 valueField.removeAllItems();
                 if (e.getItem().equals(FUNCTION)) {                    
-                    model.getAllFunctions().forEach(f -> valueField.addItem(f));
+                    functionService
+                            .getAllFunctions()
+                            .forEach(f -> valueField.addItem(f));
                 } else {                    
-                    model.getAllCabins().forEach(c -> valueField.addItem(c));
+                    pobService.getAllCabins()
+                            .forEach(c -> valueField.addItem(c));
                 }             
             }
         }        
@@ -223,19 +236,16 @@ public class AddRuleDialog extends javax.swing.JDialog {
         @Override
         public void actionPerformed(ActionEvent e) {           
             // Removes the previous key first
-            model.removeRaftRule(ORIGINAL_KEY);            
+            if (originalKey != null) {
+                raftService.removeRaftRule(originalKey);                            
+            }
 
             // Adds the raft rule to model. It will overwrite any previous rule,
             // if existant            
-            Object key = valueField.getSelectedItem();
-            if (key instanceof Function) {
-                model.addRaftRule((Function) key, 
-                        (Raft) raftField.getSelectedItem());
-            } else {
-                model.addRaftRule(key,
-                        (Raft) raftField.getSelectedItem());                 
-            }                   
-                    
+            RaftKey key = (RaftKey) valueField.getSelectedItem();
+            raftService.addRaftRule(key, (Raft) raftField.getSelectedItem());
+            
+            VoyagerContext.getContext().fireStateChanged();
             dispose();
         }
         
@@ -273,19 +283,13 @@ public class AddRuleDialog extends javax.swing.JDialog {
         @Override
         public Component getListCellRendererComponent(JList list, Object value,
                 int index, boolean isSelected, boolean cellHasFocus) {
-            if (value instanceof Function) {                
-                setText(((Function)value).getFormalDescription());                
-            } else {
-                setText((String) value);
-            }            
+            
+            RaftKey entry = (RaftKey) value;
+            setText(entry.asKey());                
                         
             return this;            
         }   
     }   
-    
-    
-    
-    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel10;

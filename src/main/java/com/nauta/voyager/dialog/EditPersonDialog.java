@@ -5,10 +5,12 @@
  */
 package com.nauta.voyager.dialog;
 
-import com.nauta.voyager.people.Person;
-import com.nauta.voyager.people.Function;
-import com.nauta.voyager.VoyagerModel;
-import java.awt.Component;
+import com.nauta.voyager.util.VoyagerContext;
+import com.nauta.voyager.util.ServiceFactory;
+import com.nauta.voyager.entity.Person;
+import com.nauta.voyager.entity.Post;
+import com.nauta.voyager.service.FunctionService;
+import com.nauta.voyager.service.PersonService;
 import java.awt.Dialog;
 import java.awt.Frame;
 import java.awt.event.*;
@@ -19,11 +21,8 @@ import javax.swing.InputVerifier;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFormattedTextField;
-import javax.swing.JLabel;
-import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
-import javax.swing.ListCellRenderer;
 
 
 /**
@@ -39,175 +38,46 @@ public class EditPersonDialog extends javax.swing.JDialog {
     private static final int MAX_SISPAT_SIZE = 8;
     private static final int MAX_NATIONALITY_SIZE = 20;
     private static final int MAX_CIR_SIZE = 14;       
+        
+    // Format of the dates used on the dialog
+    private static final DateTimeFormatter FORMATTER = DateTimeFormatter
+            .ofPattern("dd/MM/yyyy");
     
     private Person person;
-    private final VoyagerModel model;     
-    private boolean editMode = false;
-
-    private List<Function> functions;
+    private boolean editMode;
+    private List<Post> functions;
     
-    // Format of the dates used on the dialog
-    private final DateTimeFormatter FORMATTER = DateTimeFormatter
-            .ofPattern("dd/MM/yyyy");
-
-    /**
-     * Use this constructor to <b>add</b> a previously inexistent CrewMember to
-     * the model.
-     * <p>
- WARNING: providing an empty Person with the intention to insert a new
- one into the model will trigger model UPDATE function instead of INSERT,
- causing unexpected behavior.
-     * 
-     * @param frame the owner frame, which the dialog will attempt to return
-     *              to on completion
-     * @param modal if true, creates JDialog as a modal form 
-     * @param model the VoyagerModel instance the dialog uses to persist
-              its addition/changes  
-     * 
-     */
-    public EditPersonDialog(Frame frame, boolean modal, VoyagerModel model){
-        super(frame, modal);
-        
+    // Services
+    private final PersonService personService;
+    private final FunctionService functionService;
+    
+   
+    public EditPersonDialog(Frame frame, boolean modal) {
+        super(frame, modal);         
         this.person = new Person();
         this.editMode = false;
-        
-        // If model is null, exits application - saving would be impossible
-        if (model != null) {
-            this.model = model;
-        } else {                        
-            throw new IllegalArgumentException(TAG 
-                    + " - Model is null. Exiting dialog");
-        }        
-        
+        this.personService = ServiceFactory.getPersonService();
+        this.functionService = ServiceFactory.getFunctionService();
         initComponents();
         initPresentationLogic();
-        readGUIState();        
-    }
-    
-    /**
-     * Use this constructor to <b>edit</b> an existent CrewMember in the model.
-     * <p>
- WARNING: providing a non-existent Person will trigger model UPDATE
- instead of INSERT function. The modifications will NOT be persisted.
-     * 
-     * @param frame     the owner frame, which the dialog will attempt to return
-     *                  to on completion
-     * @param modal     if true, creates JDialog as a modal form     *   
-     * @param model     the VoyagerModel instance the dialog uses to persist
-                  its changes
-     * @param person    the Person instance to be edited. Must be a 
-                  previously existent one  
-     */
-    public EditPersonDialog(
-            Frame frame,
-            boolean modal,
-            VoyagerModel model,
-            Person person) {
-        super(frame, modal);
-        
-        /*
-         * person should not be assumed to be null. Having a null person means
-         * probable wrong usage or bug, so the dialog should return.
-         */
-        if (person == null) {            
-            throw new IllegalArgumentException(TAG 
-                    + " - Person is null. Exiting dialog" );
-        } else {
-            this.person = person;
-            editMode = true;
-        }
-        
-        // If model is null, exits application - saving would be impossible
-        if (model == null) {            
-            throw new IllegalArgumentException(TAG 
-                    + " - Model is null. Exiting dialog");
-        } else {
-            this.model = model;
-        }       
-        
-        initComponents();
-        initPresentationLogic();
-        readGUIState();        
-    }
-    
-    /**
-     * Use this constructor to <b>add</b> a previously inexistent CrewMember to
-     * the model.
-     * <p>
- WARNING: providing an empty Person with the intention to insert a new
- one into the model will trigger model UPDATE function instead of INSERT,
- causing unexpected behavior.
-     * 
-     * @param dialog the owner Dialog, which the dialog will attempt to return
-     *              to on completion
-     * @param modal if true, creates JDialog as a modal form 
-     * @param model the VoyagerModel instance the dialog uses to persist
-              its addition/changes  
-     * 
-     */
-    public EditPersonDialog(Dialog dialog, boolean modal, VoyagerModel model){
+    }    
+   
+    public EditPersonDialog(Dialog dialog, boolean modal) {
         super(dialog, modal);
-        
         this.person = new Person();
         this.editMode = false;
-        
-        // If model is null, exits application - saving would be impossible
-        if (model != null) {
-            this.model = model;
-        } else {                        
-            throw new IllegalArgumentException(TAG 
-                    + " - Model is null. Exiting dialog");
-        }        
-        
+        this.personService = ServiceFactory.getPersonService();
+        this.functionService = ServiceFactory.getFunctionService();
         initComponents();
         initPresentationLogic();
-        readGUIState();        
-    }
+    } 
     
-    /**
-     * Use this constructor to <b>edit</b> an existent CrewMember in the model.
-     * <p>
- WARNING: providing a non-existent Person will trigger model UPDATE
- instead of INSERT function. The modifications will NOT be persisted.
-     * 
-     * @param dialog     the owner Dialog, which the dialog will attempt to return
-     *                  to on completion
-     * @param modal     if true, creates JDialog as a modal form     *   
-     * @param model     the VoyagerModel instance the dialog uses to persist
-                  its changes
-     * @param person    the Person instance to be edited. Must be a 
-                  previously existent one  
-     */
-    public EditPersonDialog(
-            Dialog dialog,
-            boolean modal,
-            VoyagerModel model,
-            Person person) {
-        super(dialog, modal);
-        
-        /*
-         * person should not be assumed to be null. Having a null person means
-         * probable wrong usage or bug, so the dialog should return.
-         */
-        if (person == null) {            
-            throw new IllegalArgumentException(TAG 
-                    + " - Person is null. Exiting dialog" );
-        } else {
-            this.person = person;
-            editMode = true;
-        }
-        
-        // If model is null, exits application - saving would be impossible
-        if (model == null) {            
-            throw new IllegalArgumentException(TAG 
-                    + " - Model is null. Exiting dialog");
-        } else {
-            this.model = model;
-        }       
-        
-        initComponents();
-        initPresentationLogic();
-        readGUIState();        
+    public EditPersonDialog withPerson(Long personId) {
+        Person p = personService.getPersonById(personId);
+        this.person = p;
+        this.editMode = true;
+        readGUIState(p);
+        return this;
     }
 
     /**
@@ -334,6 +204,7 @@ public class EditPersonDialog extends javax.swing.JDialog {
         nationalityField.setColumns(20);
         nationalityField.setFont(new java.awt.Font("Verdana", 0, 16)); // NOI18N
         nationalityField.setForeground(new java.awt.Color(0, 0, 0));
+        nationalityField.setText("BRASILEIRA");
 
         jLabel6.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
         jLabel6.setForeground(new java.awt.Color(0, 0, 0));
@@ -511,8 +382,8 @@ public class EditPersonDialog extends javax.swing.JDialog {
                 .addGap(20, 20, 20))
         );
 
-        ComboBoxRenderer renderer = new ComboBoxRenderer();
-        functionField.setRenderer(renderer);
+        //ComboBoxRenderer renderer = new ComboBoxRenderer();
+        //functionField.setRenderer(renderer);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -536,7 +407,7 @@ public class EditPersonDialog extends javax.swing.JDialog {
         boardingDataButton.addActionListener(handler);
         
         // Loads functionField item list with model data
-        functions = model.getAllFunctions();        
+        functions = functionService.getAllFunctions();        
         functions.forEach(f -> {
             functionField.addItem(f);
         });
@@ -549,20 +420,20 @@ public class EditPersonDialog extends javax.swing.JDialog {
         
         DateVerifier dv = new DateVerifier();
         birthDateField.setInputVerifier(dv);
-        cirExpDateField.setInputVerifier(dv);
+        cirExpDateField.setInputVerifier(dv);       
     }       
     
-    private void readGUIState() {        
+    private void readGUIState(Person person) {        
         // Loads GUI State if in Edit Mode
-        if (editMode) {
+        //if (editMode) {
             // Fills fields with received value
             nameField.setText(person.getName());
             
-            Function function = functions.stream()
-                    .filter(f -> f.getFunctionId() == person
-                            .getFunction().getFunctionId())
+            Post function = functions.stream()
+                    .filter(f -> f.getPostId().equals(person
+                            .getFunction().getPostId()))
                     .findFirst()
-                    .orElse(null);
+                    .orElse(functions.get(0));
             functionField.setSelectedItem(function);
             companyField.setText(person.getCompany());
             sispatField.setText(person.getSispat());
@@ -570,15 +441,22 @@ public class EditPersonDialog extends javax.swing.JDialog {
             cirField.setText(person.getCir());
 
             // Date Fields
-            birthDateField.setText(person.getBirthDate().format(FORMATTER));
-            cirExpDateField.setText(person.getCirExpDate().format(FORMATTER));
-        }        
+            if (!person.getBirthDate().isEqual(LocalDate.MIN)) {
+                birthDateField.setText(person.getBirthDate()
+                        .format(FORMATTER));
+            }
+            
+            if (!person.getCirExpDate().isEqual(LocalDate.MIN)) {
+                cirExpDateField.setText(person.getCirExpDate()
+                        .format(FORMATTER));                
+            }
+        //}      
     }
     
     private void writeGUIState() {
         // Writes fields values to person variable
         person.setName(nameField.getText());        
-        person.setFunction((Function) functionField.getSelectedItem());
+        person.setFunction((Post) functionField.getSelectedItem());
         person.setCompany(companyField.getText());        
         person.setSispat(sispatField.getText());
         person.setNationality(nationalityField.getText());
@@ -604,10 +482,12 @@ public class EditPersonDialog extends javax.swing.JDialog {
                 case "save":
                     writeGUIState();
                     if (editMode) {
-                        model.updatePerson(person);                        
+                        personService.updatePerson(person);                        
                     } else {
-                        model.insertPerson(person);
-                    }                    
+                        personService.createPerson(person);
+                    }
+                    VoyagerContext.getContext().addScreamer("people");
+                    VoyagerContext.getContext().fireStateChanged();                    
                     dispose();
                     break;
                 
@@ -616,10 +496,12 @@ public class EditPersonDialog extends javax.swing.JDialog {
                     break;
                 
                 case "boardingData":          
+                    if (person.getPersonId() == null) {
+                        break;
+                    }
                     EditBoardedDialog d = new EditBoardedDialog(
                             EditPersonDialog.this,
-                            true,
-                            model,
+                            true,                            
                             person);
                     d.getStaticDataButton().setEnabled(false);
                     d.setVisible(true);
@@ -799,7 +681,7 @@ public class EditPersonDialog extends javax.swing.JDialog {
         return true;
     }  
     
-    
+    /*
     // Implementes custom renderer for functionField combobox
     class ComboBoxRenderer extends JLabel implements ListCellRenderer {
     
@@ -812,13 +694,14 @@ public class EditPersonDialog extends javax.swing.JDialog {
         @Override
         public Component getListCellRendererComponent(JList list, Object value,
                 int index, boolean isSelected, boolean cellHasFocus) {
-            Function function = (Function) value;
+            Post function = (Post) value;
             
             setText(function.getFormalDescription());
             
             return this;            
         }   
     }
+    * */
 
     public JButton getBoardingDataButton() {
         return boardingDataButton;
@@ -833,7 +716,7 @@ public class EditPersonDialog extends javax.swing.JDialog {
     private javax.swing.JTextField cirField;
     private javax.swing.JTextField companyField;
     private javax.swing.JPanel dialogPanel;
-    private javax.swing.JComboBox<Function> functionField;
+    private javax.swing.JComboBox<com.nauta.voyager.entity.Post> functionField;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;

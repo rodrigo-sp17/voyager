@@ -5,8 +5,15 @@
  */
 package com.nauta.voyager.dialog;
 
-import com.nauta.voyager.people.Person;
+import com.nauta.voyager.util.VoyagerContext;
+import com.nauta.voyager.util.ServiceFactory;
+import com.nauta.voyager.entity.Person;
 import com.nauta.voyager.VoyagerModel;
+import com.nauta.voyager.entity.BoardingData;
+import com.nauta.voyager.service.FunctionService;
+import com.nauta.voyager.service.PersonService;
+import com.nauta.voyager.entity.Cabin;
+import com.nauta.voyager.service.PobService;
 import java.awt.Dialog;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
@@ -31,48 +38,40 @@ import javax.swing.text.PlainDocument;
 public class EditBoardedDialog extends javax.swing.JDialog {
     
     private static final String TAG = EditBoardedDialog.class.getSimpleName();
+        
     
-    private final VoyagerModel model;
     private Person person;
     
+    private PobService pobService;
+    private PersonService personService;
+    private VoyagerContext context;
+    
     // Format of the dates used on the dialog
-    private final DateTimeFormatter FORMATTER = DateTimeFormatter
+    private static final DateTimeFormatter FORMATTER = DateTimeFormatter
             .ofPattern("dd/MM/yyyy");
     
-    private final int MAX_PLACE_SIZE = 30;
+    private static final int MAX_PLACE_SIZE = 30;
     
 
     /**
      * Creates new form EditBoardedDialog. It is assumed there is an already
-     * existent CrewMember.
+        existent CrewMember.
      * 
      * @param frame    the parent Frame view of this dialog
      * @param modal     if true, the dialog is instantiated as modal
-     * @param model     the model used by the dialog to retrieve and persist
-     *                  its data
      * @param person    the Person instance which is having its boarding
                   data edited
      */
-    public EditBoardedDialog(Frame frame, boolean modal,
-            VoyagerModel model, Person person) {
+    public EditBoardedDialog(Frame frame, boolean modal, Person person) {
         super(frame, modal);
-        
-        // A null person is result of improper usage by programmer
+                
         if (person == null) {            
             throw new IllegalArgumentException(TAG 
-                    + " - Person is null. Exiting dialog" );
-        } else {
-            this.person = person;            
-        }
-        
-        // If model is null, exits application - saving would be impossible
-        if (model == null) {            
-            throw new IllegalArgumentException(TAG 
-                    + " - Model is null. Exiting dialog");
-        } else {
-            this.model = model;
-        }            
-        
+                    + " - Person is null. Exiting dialog" );        
+        }       
+        this.person = person;            
+        this.pobService = ServiceFactory.getPobService();
+        this.personService = ServiceFactory.getPersonService();
         initComponents();
         initPresentationLogic();
         readGUIState();
@@ -89,64 +88,21 @@ public class EditBoardedDialog extends javax.swing.JDialog {
      * @param person    the Person instance which is having its boarding
                   data edited
      */
-    public EditBoardedDialog(Dialog dialog, boolean modal,
-            VoyagerModel model, Person person) {
+    public EditBoardedDialog(Dialog dialog, boolean modal, Person person) {
         super(dialog, modal);
-        
-        // A null person is result of improper usage by programmer
+                
         if (person == null) {            
             throw new IllegalArgumentException(TAG 
                     + " - Person is null. Exiting dialog" );
-        } else {
-            this.person = person;            
-        }
-        
-        // If model is null, exits application - saving would be impossible
-        if (model == null) {            
-            throw new IllegalArgumentException(TAG 
-                    + " - Model is null. Exiting dialog");
-        } else {
-            this.model = model;
-        }            
-        
+        }           
+        this.person = person;            
+        this.pobService = ServiceFactory.getPobService();
+        this.personService = ServiceFactory.getPersonService();        
         initComponents();
         initPresentationLogic();
         readGUIState();        
-    }
-    
-    /**
-     * Creates new form EditBoardedDialog. It is assumed there is an already
-     * existent Person.
-     * 
-     * @param frame    the parent JFrame view of this dialog     * 
-     * @param model     the model used by the dialog to retrieve and persist
-     *                  its data
-     * @param person    the Person instance which is having its boarding
-                  data edited
-     */
-    public EditBoardedDialog(Frame frame, VoyagerModel model, Person person) {
-        super(frame, true);
+    }   
 
-        // A null person is result of improper usage by programmer
-        if (person == null) {            
-            throw new IllegalArgumentException(TAG 
-                    + " - Person is null. Exiting dialog" );
-        } else {
-            this.person = person;            
-        }
-        
-        // If model is null, exits application - saving would be impossible
-        if (model == null) {            
-            throw new IllegalArgumentException(TAG 
-                    + " - Model is null. Exiting dialog");
-        } else {
-            this.model = model;
-        }            
-        
-        initComponents();
-        initPresentationLogic();
-        readGUIState();        
-    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -430,17 +386,17 @@ public class EditBoardedDialog extends javax.swing.JDialog {
         staticDataButton.addActionListener(handler);
         
         // Initializes crewField list with fixed crew data from model
-        model.getAllCrews().forEach(s -> {
+        pobService.getAllCrews().forEach(s -> {
             crewField.addItem(s);
         });
         
         // Initializes cabinField list with mutable cabin data from model
-        model.getAllCabins().forEach(s -> {
-            cabinField.addItem(s);
+        pobService.getAllCabins().forEach(s -> {
+            cabinField.addItem(s.toString());
         });
         
         // Initializes shiftField with fixed shift values from model
-        model.getAllShifts().forEach(s -> {
+        pobService.getAllShifts().forEach(s -> {
             shiftField.addItem(s);
         });
         
@@ -462,28 +418,35 @@ public class EditBoardedDialog extends javax.swing.JDialog {
     }
     
     private void readGUIState() {
+        BoardingData bd = person.getBoardingData();
         nameField.setText(person.getName());
-        crewField.setSelectedItem(person.getCrew());
-        isBoardedField.setSelected(person.isBoarded());
-        cabinField.setSelectedItem(person.getCabin());
-        shiftField.setSelectedItem(person.getShift());        
-        boardingDateField.setText(person.getBoardingDate().format(FORMATTER));
-        boardingPlaceField.setText(person.getBoardingPlace());
-        arrivalDateField.setText(person.getArrivalDate().format(FORMATTER));
-        arrivalPlaceField.setText(person.getArrivalPlace());        
+        crewField.setSelectedItem(bd.getCrew());
+        isBoardedField.setSelected(bd.isBoarded());
+        cabinField.setSelectedItem(bd.getCabin());
+        shiftField.setSelectedItem(bd.getShift());        
+        boardingPlaceField.setText(bd.getBoardingPlace());
+        arrivalPlaceField.setText(bd.getArrivalPlace());        
+        
+        if (!bd.getBoardingDate().isEqual(LocalDate.MIN)) {
+            boardingDateField.setText(bd.getBoardingDate().format(FORMATTER));            
+        } 
+        if (!bd.getArrivalDate().isEqual(LocalDate.MIN)) {
+            arrivalDateField.setText(bd.getArrivalDate().format(FORMATTER));            
+        }
     }
     
     private void writeGUIState() {
-        person.setCrew(crewField.getSelectedItem().toString());
-        person.setBoarded(isBoardedField.isSelected());
-        person.setCabin(cabinField.getSelectedItem().toString());
-        person.setShift(shiftField.getSelectedItem().toString());
-        person.setBoardingDate(LocalDate.parse(boardingDateField.getText(),
+        BoardingData bd = person.getBoardingData();
+        bd.setCrew(crewField.getSelectedItem().toString());
+        bd.setBoarded(isBoardedField.isSelected());
+        bd.setCabin(new Cabin(cabinField.getSelectedItem().toString()));
+        bd.setShift(shiftField.getSelectedItem().toString());
+        bd.setBoardingDate(LocalDate.parse(boardingDateField.getText(),
                 FORMATTER));
-        person.setBoardingPlace(boardingPlaceField.getText());
-        person.setArrivalDate(LocalDate.parse(arrivalDateField.getText(),
+        bd.setBoardingPlace(boardingPlaceField.getText());
+        bd.setArrivalDate(LocalDate.parse(arrivalDateField.getText(),
                 FORMATTER));
-        person.setArrivalPlace(arrivalPlaceField.getText());
+        bd.setArrivalPlace(arrivalPlaceField.getText());
     }
     
     
@@ -495,7 +458,8 @@ public class EditBoardedDialog extends javax.swing.JDialog {
             switch(e.getActionCommand()) {
                 case "save":
                     writeGUIState();
-                    model.updatePerson(person);
+                    personService.updatePerson(person);
+                    VoyagerContext.getContext().fireStateChanged();
                     dispose();
                     break;
                 
@@ -506,8 +470,7 @@ public class EditBoardedDialog extends javax.swing.JDialog {
                 case "staticData":
                     EditPersonDialog d = new EditPersonDialog(
                             EditBoardedDialog.this,
-                            true,
-                            model, person);
+                            true);                          
                     d.getBoardingDataButton().setEnabled(false);
                     d.setVisible(true);
                     break;                

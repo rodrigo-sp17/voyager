@@ -345,6 +345,7 @@
             <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="0" green="0" red="0" type="rgb"/>
             </Property>
+            <Property name="text" type="java.lang.String" value="BRASILEIRA"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel6">
@@ -452,8 +453,8 @@
             </Property>
           </Properties>
           <AuxValues>
-            <AuxValue name="JavaCodeGenerator_AddingCodePost" type="java.lang.String" value="ComboBoxRenderer renderer = new ComboBoxRenderer();&#xa;functionField.setRenderer(renderer);"/>
-            <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;Function&gt;"/>
+            <AuxValue name="JavaCodeGenerator_AddingCodePost" type="java.lang.String" value="//ComboBoxRenderer renderer = new ComboBoxRenderer();&#xa;//functionField.setRenderer(renderer);"/>
+            <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;com.nauta.voyager.entity.Post&gt;"/>
           </AuxValues>
         </Component>
         <Component class="javax.swing.JButton" name="cancelButton">

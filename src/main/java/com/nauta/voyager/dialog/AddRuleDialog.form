@@ -187,7 +187,7 @@
             </Property>
           </Properties>
           <AuxValues>
-            <AuxValue name="JavaCodeGenerator_AddingCodePost" type="java.lang.String" value="ValueRenderer renderer = new ValueRenderer();&#xa;valueField.setRenderer(renderer);"/>
+            <AuxValue name="JavaCodeGenerator_AddingCodePost" type="java.lang.String" value="//ValueRenderer renderer = new ValueRenderer();&#xa;//valueField.setRenderer(renderer);"/>
             <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value=""/>
           </AuxValues>
         </Component>

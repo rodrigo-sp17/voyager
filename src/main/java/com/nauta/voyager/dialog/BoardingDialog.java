@@ -5,8 +5,12 @@
  */
 package com.nauta.voyager.dialog;
 
-import com.nauta.voyager.people.Person;
+import com.nauta.voyager.util.VoyagerContext;
+import com.nauta.voyager.util.ServiceFactory;
+import com.nauta.voyager.entity.Person;
 import com.nauta.voyager.VoyagerModel;
+import com.nauta.voyager.service.PersonService;
+import com.nauta.voyager.service.PobService;
 import com.nauta.voyager.util.StateListener;
 import java.awt.Component;
 import java.awt.Frame;
@@ -32,27 +36,22 @@ import javax.swing.table.TableRowSorter;
 public class BoardingDialog extends javax.swing.JDialog implements
         StateListener {
     
-    private static final String TAG = BoardingDialog.class.getSimpleName();
-    
-    private final VoyagerModel model;
+    private static final String TAG = BoardingDialog.class.getSimpleName();   
     
     private TableRowSorter<PeopleTableModel> sorter;
+    
+    private final PersonService personService;
+    private final PobService pobService;
+    
 
     /**
      * Creates new form PobManagerDialog
      */
-    public BoardingDialog(
-            Frame frame,
-            boolean modal,
-            VoyagerModel model) {
+    public BoardingDialog(Frame frame, boolean modal) {
         super(frame, modal);
         
-        // Ensures model is not null
-        if (model != null) {
-            this.model = model;
-        } else {
-            throw new IllegalArgumentException(TAG + "Null model received");
-        }
+        personService = ServiceFactory.getPersonService();
+        pobService = ServiceFactory.getPobService();
         
         initComponents();
         initPresentationLogic();
@@ -60,30 +59,13 @@ public class BoardingDialog extends javax.swing.JDialog implements
         setVisible(true);
     }
     
-    // Constructor when the parent can't be found
-    public BoardingDialog(VoyagerModel model) {
-        super();
-        
-        // Ensures model is not null
-        if (model != null) {
-            this.model = model;
-        } else {
-            throw new IllegalArgumentException(TAG + "Null model received");
-        }
-        
-        initComponents();
-        initPresentationLogic();        
-        setVisible(true);
-    }
-    
     @Override
     public void onListenedStateChanged() {
         readGUIStateFromDomain();
-    }
-    
+    }    
     
     private void initPresentationLogic() {
-        model.addStateListener(this);        
+        VoyagerContext.getContext().addStateListener(this);        
 
         // Sets people table up
         PeopleTableModel model = new PeopleTableModel();
@@ -171,22 +153,21 @@ public class BoardingDialog extends javax.swing.JDialog implements
                             peopleTable.getSelectedRow());
                     
                     // 1 is the ID row
-                    Person member = model
-                            .getPerson((Integer) peopleTable
+                    Person member = personService
+                            .getPersonById((Long) peopleTable
                             .getModel()
                             .getValueAt(correctedRow, 1));
                     
-                    member.setBoarded(true);
+                    member.getBoardingData().setBoarded(true);
                     
                     JDialog d = new EditBoardedDialog(BoardingDialog.this, true,
-                            model, member);
+                            member);
                     d.setVisible(true);
                     break;                
                 
                 case "add":
                     // Calls new dialog to build a Person
-                    JDialog f = new EditPersonDialog(BoardingDialog.this, true,
-                            model);
+                    JDialog f = new EditPersonDialog(BoardingDialog.this, true);
                     f.setVisible(true);                
                     break;
                     
@@ -243,13 +224,13 @@ public class BoardingDialog extends javax.swing.JDialog implements
         
         private void loadData() {
             
-            List<Person> list = model.getAllNonBoardedPeople();
+            List<Person> list = pobService.getAllNonBoardedPeople();
             
             int size = list.size();
             data = new Object[size][getColumnCount() + 1];
             for (int i = 0; i < size; i++) {
                 data[i][0] = list.get(i).getName();
-                data [i][1] = list.get(i).getId();
+                data [i][1] = list.get(i).getPersonId();
             }
             
             fireTableDataChanged();

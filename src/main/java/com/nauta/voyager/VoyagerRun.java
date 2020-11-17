@@ -5,6 +5,9 @@
  */
 package com.nauta.voyager;
 
+import com.nauta.voyager.util.ServiceFactory;
+import com.nauta.voyager.util.VoyagerContext;
+import com.nauta.voyager.util.DatabaseUtil;
 import com.nauta.voyager.people.PeoplePresenter;
 import com.nauta.voyager.pob.PobPresenter;
 import com.formdev.flatlaf.FlatLightLaf;
@@ -31,16 +34,19 @@ public class VoyagerRun {
         java.awt.EventQueue.invokeLater(new Runnable() {            
             @Override
             public void run() {
+                VoyagerContext context = new VoyagerContext();
+                DatabaseUtil du = DatabaseUtil.init();                
+                ServiceFactory sf = new ServiceFactory(du.getSessionFactory());
+                                                
+                //VoyagerModel model = new VoyagerModel();
                 MainView mainView = new MainView();                
-                
-                VoyagerModel model = new VoyagerModel();
-                
-                MainPresenter presenter = new MainPresenter(mainView, model);
+                                
+                MainPresenter presenter = new MainPresenter(mainView);
                 
                 PeoplePresenter peoplePresenter = 
-                        new PeoplePresenter(mainView.peoplePane, model);
+                        new PeoplePresenter(mainView.peoplePane, context);
                 PobPresenter pobPresenter = 
-                        new PobPresenter(mainView.pobPane, model);
+                        new PobPresenter(mainView.pobPane, context);
                 
                 mainView.setVisible(true);                
                 

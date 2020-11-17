@@ -1,10 +1,9 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.nauta.voyager.people;
 
+import com.nauta.voyager.util.VoyagerContext;
+import com.nauta.voyager.entity.Person;
+import com.nauta.voyager.service.PersonService;
+import com.nauta.voyager.util.ServiceFactory;
 import com.nauta.voyager.VoyagerModel;
 import com.nauta.voyager.dialog.EditPersonDialog;
 import com.nauta.voyager.util.StateListener;
@@ -26,23 +25,26 @@ import javax.swing.table.TableColumnModel;
  * @author rodrigo
  */
 public class PeoplePresenter implements StateListener {
-    final private PeopleView view;
-    final private VoyagerModel model;    
+    private final PeopleView view;
+    
+    private final VoyagerContext context;
+    
+    private final PersonService personService;
     
     // JTable variables
-    private TableRowSorter<CrewTableModel> sorter;
+    private TableRowSorter<CrewTableModel> sorter;    
     
-    
-    public PeoplePresenter(PeopleView view, VoyagerModel model) {
+    public PeoplePresenter(PeopleView view, VoyagerContext context) {
         this.view = view;
-        this.model = model;        
+        this.context = context;
+        
+        this.personService = ServiceFactory.getPersonService();
         initPresentationLogic();
     }   
        
     private void initPresentationLogic() {
         // UI Models / Handle Events / Swing Actions
-        model.addStateListener(this);
-        
+        context.addStateListener(this);
                 
         // Sets crewDBTable Table Model and appearance
         CrewTableModel tModel = new CrewTableModel();
@@ -150,13 +152,14 @@ public class PeoplePresenter implements StateListener {
             Point point = e.getPoint();
             int row = table.rowAtPoint(point);
             if (e.getClickCount() == 2) {
-                Integer id = (Integer) view.crewDBTable.getModel()
+                Long id = (Long) view.crewDBTable.getModel()
                     .getValueAt(view.crewDBTable.convertRowIndexToModel(row),
                             0);
                 JFrame mainView = (JFrame) SwingUtilities
                         .getWindowAncestor(view);
-                JDialog d = new EditPersonDialog(mainView, true,
-                        model, model.getPerson(id));
+                JDialog d = new EditPersonDialog(mainView, true)
+                        .withPerson(id);
+                        
                 d.setVisible(true);
             }            
         }
@@ -194,12 +197,12 @@ public class PeoplePresenter implements StateListener {
                     JTable table = view.crewDBTable;
                     TableModel tableModel = table.getModel();
                     
-                    Integer id = (Integer) tableModel
+                    Long id = (Long) tableModel
                             .getValueAt(table.convertRowIndexToModel(0), 0);
                     JFrame mainView = (JFrame) SwingUtilities
                         .getWindowAncestor(view);
-                    JDialog d = new EditPersonDialog(mainView, true, model, 
-                            model.getPerson(id));
+                    JDialog d = new EditPersonDialog(mainView, true)
+                            .withPerson(id);
                     d.setVisible(true);
                     break;
                 
@@ -208,7 +211,7 @@ public class PeoplePresenter implements StateListener {
                     // Instantiates new EditPersonDialog for creation
                     JFrame mainView2 = (JFrame) SwingUtilities
                         .getWindowAncestor(view);
-                    JDialog f = new EditPersonDialog(mainView2, true, model);
+                    JDialog f = new EditPersonDialog(mainView2, true);
                     f.setVisible(true);
                     break;
                 
@@ -229,12 +232,12 @@ public class PeoplePresenter implements StateListener {
                     if (delete == JOptionPane.OK_OPTION) {
                         int counter = 0;
                         for (int rowIndex : rows) {
-                            Integer personId = (Integer) view.crewDBTable
+                            Long personId = (Long) view.crewDBTable
                                     .getModel()
                                     .getValueAt(view.crewDBTable
                                             .convertRowIndexToModel(rowIndex),
                                             0);
-                            if (model.deletePerson(personId) < 0) {
+                            if (!personService.deletePerson(personId)) {
                                 JOptionPane.showMessageDialog(view,
                                         "Ops...Não foi possível deletar!",
                                         "Erro de Exclusão",
@@ -323,15 +326,14 @@ public class PeoplePresenter implements StateListener {
         // Implements logic to retrieve the objects that will compose the rows 
         // of the table
         public void loadData() {
-            List<Person> list = model.getAllPeople();            
+            List<Person> list = personService.getAllPeople();            
             int listSize = list.size();            
             
             this.data = new Object[listSize][getColumnCount()];
             for (int i = 0; i < listSize; i++) {
-                this.data[i][0] = list.get(i).getId();
+                this.data[i][0] = list.get(i).getPersonId();
                 this.data[i][1] = list.get(i).getName();                               
-                this.data[i][2] = list.get(i).getFunction()
-                        .getFormalDescription();                
+                this.data[i][2] = list.get(i).getFunction();                
                 this.data[i][3] = list.get(i).getCompany();
                 this.data[i][4] = list.get(i).getSispat();
                 this.data[i][5] = list.get(i).getNationality();
