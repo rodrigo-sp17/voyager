@@ -37,6 +37,49 @@ public class PersonRepository {
         return persons;       
     }
     
+    public List<Person> findByCrew(String crew) {
+        EntityManager em = emf.createEntityManager();
+        em.getTransaction().begin();
+        String query = "select p from Person p "
+                + "where crew = :crew";
+        List<Person> persons = em.createQuery(query)
+                .setParameter("crew", crew)
+                .getResultList();
+        em.getTransaction().commit();
+        em.close();
+        return persons;
+    }
+    
+    public List<Person> findByCrewAndCrewMember(String crew,
+            boolean isCrewMember) {
+        EntityManager em = emf.createEntityManager();
+        em.getTransaction().begin();
+        String query = "select p from Person p "
+                + "where crew = :crew "
+                + "and function.crewMember = :isCrewMember";
+        List<Person> persons = em.createQuery(query)
+                .setParameter("crew", crew)
+                .setParameter("isCrewMember", isCrewMember)
+                .getResultList();
+        em.getTransaction().commit();
+        em.close();
+        return persons;
+    }
+    
+    public List<Person> findByCrewMember(boolean isCrewMember) {
+        EntityManager em = emf.createEntityManager();
+        em.getTransaction().begin();
+        String query = "select p from Person p "
+                + "where function.crewMember = :isCrewMember";
+        List<Person> persons = em.createQuery(query)
+                .setParameter("isCrewMember", isCrewMember)
+                .getResultList();
+        em.getTransaction().commit();
+        em.close();
+        
+        return persons;
+    }
+    
     public Person findById(Long personId) {
         EntityManager em = emf.createEntityManager();
         em.getTransaction().begin();
@@ -77,6 +120,41 @@ public class PersonRepository {
         em.close();
         
         return savedPerson;
+    }
+    
+    public void updateAll(List<Person> persons) {
+        EntityManager em = emf.createEntityManager();        
+        em.getTransaction().begin();
+        for (Person p : persons) {
+            em.merge(p);
+        }       
+        em.getTransaction().commit();
+        
+        em.close();        
+    }
+    
+    public void unboardAll() {
+        EntityManager em = emf.createEntityManager();        
+        em.getTransaction().begin();
+        em.createQuery("update Person p "
+                + "set boarded = false where boarded = true")
+                .executeUpdate();        
+        em.getTransaction().commit();        
+        em.close();  
+    }
+    
+    public void unboardByCrew(String crew, boolean isCrewMember) {
+        EntityManager em = emf.createEntityManager();        
+        em.getTransaction().begin();
+        em.createQuery("update Person p "
+                + "set boarded = false "
+                + "where crew = :crew "
+                + "and function.crewMember = :isCrewMember")
+                .setParameter("crew", crew)
+                .setParameter("isCrewMember", isCrewMember)
+                .executeUpdate();        
+        em.getTransaction().commit();        
+        em.close();  
     }
     
     public void delete(Long personId) {

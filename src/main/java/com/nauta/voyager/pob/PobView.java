@@ -52,6 +52,7 @@ public class PobView extends javax.swing.JPanel {
         printPobButton = new javax.swing.JButton();
         raftRuleButton = new javax.swing.JButton();
         jLabel4 = new javax.swing.JLabel();
+        changeCrewButton = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(255, 255, 255));
         setPreferredSize(new java.awt.Dimension(1120, 700));
@@ -117,6 +118,7 @@ public class PobView extends javax.swing.JPanel {
         crewField.setBackground(new java.awt.Color(255, 255, 255));
         crewField.setFont(new java.awt.Font("Verdana", 0, 18)); // NOI18N
         crewField.setForeground(new java.awt.Color(0, 0, 0));
+        crewField.setEnabled(false);
 
         deleteMemberButton.setBackground(new java.awt.Color(255, 51, 51));
         deleteMemberButton.setFont(new java.awt.Font("Verdana", 1, 18)); // NOI18N
@@ -150,6 +152,13 @@ public class PobView extends javax.swing.JPanel {
         jLabel4.setForeground(new java.awt.Color(0, 0, 0));
         jLabel4.setText("POB");
 
+        changeCrewButton.setBackground(new java.awt.Color(255, 255, 255));
+        changeCrewButton.setFont(new java.awt.Font("Verdana", 1, 14)); // NOI18N
+        changeCrewButton.setForeground(new java.awt.Color(0, 0, 0));
+        changeCrewButton.setText("Trocar Turma");
+        changeCrewButton.setToolTipText("Edita as regras para definição dos postos de abandono");
+        changeCrewButton.setActionCommand("changeCrew");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -170,17 +179,19 @@ public class PobView extends javax.swing.JPanel {
                                 .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(0, 0, Short.MAX_VALUE))
                             .addComponent(jScrollPane2)
-                            .addGroup(layout.createSequentialGroup()
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addComponent(pobDateField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(40, 40, 40)
                                 .addComponent(pobSizeField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(40, 40, 40)
-                                .addComponent(crewField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 203, Short.MAX_VALUE)
+                                .addComponent(crewField, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, Short.MAX_VALUE)
+                                .addComponent(changeCrewButton)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(raftRuleButton)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(printPobButton)
-                                .addGap(50, 50, 50)
+                                .addGap(30, 30, 30)
                                 .addComponent(addMemberButton)
                                 .addGap(18, 18, 18)
                                 .addComponent(deleteMemberButton)))
@@ -210,9 +221,11 @@ public class PobView extends javax.swing.JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(printPobButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(raftRuleButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                .addGap(18, 18, 18)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 567, Short.MAX_VALUE)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(raftRuleButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(changeCrewButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 573, Short.MAX_VALUE)
                 .addGap(20, 20, 20))
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -249,8 +262,15 @@ public class PobView extends javax.swing.JPanel {
         return raftRuleButton;
     }
 
+    public JButton getChangeCrewButton() {
+        return changeCrewButton;
+    }
+    
+    
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addMemberButton;
+    private javax.swing.JButton changeCrewButton;
     private javax.swing.JComboBox<String> crewField;
     private javax.swing.JButton deleteMemberButton;
     private javax.swing.JLabel jLabel1;

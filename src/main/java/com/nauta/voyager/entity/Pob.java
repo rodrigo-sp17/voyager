@@ -3,16 +3,12 @@ package com.nauta.voyager.entity;
 import com.nauta.voyager.entity.Person;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import org.hibernate.annotations.ColumnDefault;
 
 @Entity
 public class Pob {

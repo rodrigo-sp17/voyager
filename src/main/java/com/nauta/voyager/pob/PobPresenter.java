@@ -10,6 +10,7 @@ import com.nauta.voyager.entity.Pob;
 import com.nauta.voyager.service.RaftService;
 import com.nauta.voyager.util.ServiceFactory;
 import com.nauta.voyager.dialog.BoardingDialog;
+import com.nauta.voyager.dialog.ChangeCrewDialog;
 import com.nauta.voyager.entity.Person;
 import com.nauta.voyager.dialog.EditBoardedDialog;
 import com.nauta.voyager.util.StateListener;
@@ -86,7 +87,7 @@ public class PobPresenter implements StateListener {
         
         // Sets CrewField
         pobService.getAllCrews().forEach(s -> view.getCrewField().addItem(s));
-        view.getCrewField().addItemListener(new CrewFieldHandler());
+        //view.getCrewField().addItemListener(new CrewFieldHandler());
         
         // Sets up pobTable
         JTable table = view.getPobTable();
@@ -109,6 +110,7 @@ public class PobPresenter implements StateListener {
         view.getDeleteMemberButton().addActionListener(bHandler);
         view.getPrintPobButton().addActionListener(bHandler);
         view.getRaftRuleButton().addActionListener(bHandler);
+        view.getChangeCrewButton().addActionListener(bHandler);
     }
     
     private void setTableRenderingPreferences() {
@@ -258,10 +260,10 @@ public class PobPresenter implements StateListener {
 
         @Override
         public void actionPerformed(ActionEvent e) {
+            JFrame topFrame = (JFrame) SwingUtilities
+                .getWindowAncestor(view);
             switch (e.getActionCommand()) {
                 case "add":
-                    JFrame topFrame = (JFrame) SwingUtilities
-                        .getWindowAncestor(view);
                     JDialog d = new BoardingDialog(topFrame, true);
                     break;
                     
@@ -326,10 +328,13 @@ public class PobPresenter implements StateListener {
                     break;
                 
                 
-                case "raft":
-                    JFrame topFrame2 = (JFrame) SwingUtilities
-                            .getWindowAncestor(view);
-                    JDialog f = new RaftRuleDialog(topFrame2, false);
+                case "raft":                    
+                    JDialog f = new RaftRuleDialog(topFrame, false);
+                    break;
+                    
+                case "changeCrew":
+                    JDialog c = new ChangeCrewDialog(topFrame, true);
+                    c.setVisible(true);
                     break;
                 
                 default:                

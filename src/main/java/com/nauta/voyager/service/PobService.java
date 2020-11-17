@@ -1,5 +1,6 @@
 package com.nauta.voyager.service;
 
+import com.nauta.voyager.entity.BoardingData;
 import com.nauta.voyager.repository.PobRepository;
 import com.nauta.voyager.util.VoyagerContext;
 import com.nauta.voyager.entity.Person;
@@ -56,7 +57,35 @@ public class PobService {
     
     public List<Person> getAllBoardedPeople() {
         return personRepository.findAllByBoardingStatus(true);
-    } 
+    }
+    
+    public void unboardAll() {
+        personRepository.unboardAll();        
+    }
+   
+    public void changeCrew(String crew, boolean isCrewMember,
+            boolean shouldBoard, Pob pob) {
+               
+        List<Person> persons = personRepository
+                .findByCrewMember(isCrewMember);
+        
+        for (Person p : persons) {
+            BoardingData bd = p.getBoardingData();
+            if (bd.getCrew().equals(crew)) {
+
+                bd.setBoarded(shouldBoard);           
+
+                bd.setArrivalDate(pob.getArrivalDate());
+                bd.setArrivalPlace(pob.getArrivalPlace());
+                bd.setBoardingDate(pob.getBoardingDate());
+                bd.setBoardingPlace(pob.getBoardingPlace());               
+            } else {
+                bd.setBoarded(!shouldBoard);
+            }
+        }
+        
+        personRepository.updateAll(persons);        
+    }
     
     
     public Pob getLastPob() {
