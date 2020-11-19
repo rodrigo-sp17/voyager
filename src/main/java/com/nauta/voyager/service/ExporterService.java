@@ -3,6 +3,7 @@ package com.nauta.voyager.service;
 import com.nauta.voyager.util.ServiceFactory;
 import com.nauta.voyager.entity.Person;
 import com.nauta.voyager.entity.Pob;
+import com.nauta.voyager.service.exception.ExportException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -37,7 +38,8 @@ public class ExporterService {
     
     // Exports the POB to the chosen outputFile
     // The template use is POB_std.xls
-    public void exportPOBToExcel(Pob pob, File outputFile) {
+    public void exportPOBToExcel(Pob pob, File outputFile) 
+            throws ExportException {
         // TODO - remove hardcoded file reference
         try (InputStream in = getClass().getClassLoader()
                 .getResourceAsStream("POB_std.xls")) {
@@ -95,7 +97,8 @@ public class ExporterService {
         } catch (IOException e) {
             System.err.println(TAG + "Could not write to Excel" 
                     + e.getMessage());
-        }       
+            throw new ExportException("Error exporting Excel");
+        }        
     }
     
         

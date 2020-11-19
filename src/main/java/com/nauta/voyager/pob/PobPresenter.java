@@ -18,6 +18,7 @@ import com.nauta.voyager.dialog.RaftRuleDialog;
 import com.nauta.voyager.service.ExporterService;
 import com.nauta.voyager.service.PersonService;
 import com.nauta.voyager.service.PobService;
+import com.nauta.voyager.service.exception.ExportException;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -32,6 +33,8 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -326,8 +329,21 @@ public class PobPresenter implements StateListener {
                     int returnVal = fc.showSaveDialog(view);                    
                     if (returnVal == JFileChooser.APPROVE_OPTION) {
                         File outputFile = fc.getSelectedFile();                        
-                        exporterService.exportPOBToExcel(pob, outputFile);
+                        
+                        try {
+                            exporterService.exportPOBToExcel(pob, outputFile);
+                        } catch (ExportException ex) {
+                            JOptionPane.showMessageDialog(topFrame,
+                                    "Não foi possível exportar o excel!",
+                                    "Ops...",
+                                    JOptionPane.WARNING_MESSAGE);
+                        }
                     }
+                    JOptionPane.showMessageDialog(topFrame,
+                            "POB exportado com sucesso!",
+                            "Exportar para Excel",
+                            JOptionPane.INFORMATION_MESSAGE,
+                            null);
                     break;
                 
                 
