@@ -73,7 +73,7 @@ public class ExporterService {
                 
                 // Ensures the formula is correct
                 Cell daysOnBoardCell = currentRow.getCell(7);
-                daysOnBoardCell.setCellFormula("D3-F"+ (currentRowIndex + 1));
+                daysOnBoardCell.setCellFormula("$D$3-F"+ (currentRowIndex + 1));
                 
                 currentRow.getCell(8).setCellValue(member.getSispat());               
                 
