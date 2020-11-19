@@ -9,6 +9,7 @@ import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Transient;
 
 @Entity
 public class Pob {
@@ -16,7 +17,7 @@ public class Pob {
     @Id    
     private Long pobId;
     
-    @ElementCollection
+    @Transient
     private List<Person> people;
     
     //private Integer numMembers;

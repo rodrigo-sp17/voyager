@@ -311,6 +311,8 @@ public class PobPresenter implements StateListener {
                     // Shows final chooser for selecting place for new worksheet
                     writeGUIStateToDomain();
                     Pob pob = pobService.getLastPob();
+                    List<Person> boarded = pobService.getAllBoardedPeople();
+                    pob.setPeople(boarded);
                     
                     // Opens File Chooser with default name
                     final JFileChooser fc = new JFileChooser();
