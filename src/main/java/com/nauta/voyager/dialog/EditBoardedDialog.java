@@ -422,7 +422,7 @@ public class EditBoardedDialog extends javax.swing.JDialog {
         nameField.setText(person.getName());
         crewField.setSelectedItem(bd.getCrew());
         isBoardedField.setSelected(bd.isBoarded());
-        cabinField.setSelectedItem(bd.getCabin());
+        cabinField.setSelectedItem(bd.getCabin().toString());
         shiftField.setSelectedItem(bd.getShift());        
         boardingPlaceField.setText(bd.getBoardingPlace());
         arrivalPlaceField.setText(bd.getArrivalPlace());        
@@ -470,7 +470,7 @@ public class EditBoardedDialog extends javax.swing.JDialog {
                 case "staticData":
                     EditPersonDialog d = new EditPersonDialog(
                             EditBoardedDialog.this,
-                            true);                          
+                            true).withPerson(person.getPersonId());                          
                     d.getBoardingDataButton().setEnabled(false);
                     d.setVisible(true);
                     break;                

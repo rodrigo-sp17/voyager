@@ -39,7 +39,8 @@ public class ExporterService {
     // The template use is POB_std.xls
     public void exportPOBToExcel(Pob pob, File outputFile) {
         // TODO - remove hardcoded file reference
-        try (InputStream in = new FileInputStream("POB_std.xls")) {
+        try (InputStream in = getClass().getClassLoader()
+                .getResourceAsStream("POB_std.xls")) {
             Workbook wb = WorkbookFactory.create(in);
             Sheet sheet = wb.getSheetAt(0);
             

@@ -171,7 +171,8 @@ public class PobPresenter implements StateListener {
 
         @Override
         public void focusLost(FocusEvent e) {
-            writeGUIStateToDomain();            
+            writeGUIStateToDomain();
+            context.fireStateChanged();
         }        
     }
     
