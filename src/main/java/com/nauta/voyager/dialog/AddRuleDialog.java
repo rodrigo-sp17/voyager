@@ -199,7 +199,7 @@ public class AddRuleDialog extends javax.swing.JDialog {
         
         
         raftField.setSelectedItem(raftService.getRaftByKey(key));        
-        System.out.println("Key is" + key.toString());
+        
         
         if (key.getType().equals(RaftKeyType.FUNCTION)) {            
             linkField.setSelectedItem(FUNCTION);

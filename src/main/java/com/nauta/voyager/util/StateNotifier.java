@@ -11,6 +11,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * @author rodrigo
@@ -21,6 +23,8 @@ import java.util.Set;
  * observers which implement the StateListener interface. 
  */
 public class StateNotifier {
+    private static final Logger log = LogManager.getLogger();
+    
     private List<StateListener> listeners;
     
     private Set<String> screamers;
@@ -45,7 +49,7 @@ public class StateNotifier {
         listeners.forEach(l -> {
             l.onListenedStateChanged();            
         });
-        System.out.println("State changed returned");
+        log.info("State changed returned");
     }
     
     public void addScreamer(String... screamers) {

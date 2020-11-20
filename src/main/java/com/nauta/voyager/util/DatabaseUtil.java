@@ -9,6 +9,8 @@ import java.util.Properties;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Contains methods handling database connection and persistence frameworks
@@ -17,7 +19,7 @@ import javax.persistence.Persistence;
  * @author rodrigo
  */
 public class DatabaseUtil {        
-    private final static String TAG = DatabaseUtil.class.getSimpleName();
+    private final static Logger log = LogManager.getLogger();
     
     // Flag that holds if a instance was already created
     private static boolean exists = false;
@@ -36,7 +38,7 @@ public class DatabaseUtil {
         
     
     private DatabaseUtil() {
-        emf = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT_NAME);       
+        emf = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT_NAME);               
     }
     
     // Initiates the database connection routine
@@ -61,11 +63,10 @@ public class DatabaseUtil {
         try (InputStream in = ClassLoader
                     .getSystemResource("database.properties").openStream()) {
                 databaseProperties.load(in);
-                System.out.println("Database properties loaded successfully!");
+                log.info("Database properties loaded successfully!");
         } catch (IOException e) {
-                System.err.println(TAG 
-                        + " - Error loading database properties! "  
-                        + e.getMessage());
+                log.error("Error loading database properties!");
+                log.error(e);                        
         }                   
         
         Connection conn = null;        
@@ -74,25 +75,22 @@ public class DatabaseUtil {
             conn = DriverManager.getConnection(url);            
             //DatabaseMetaData meta = conn.getMetaData();
         } catch (SQLException e) {
-            System.err.println(TAG + " - SQLException: " + e.getMessage());   
-            System.err.println("SQLState: " + e.getSQLState());
-            System.out.println("Url from properties may be invalid. "
+            log.warn(e);               
+            log.warn("Url from properties may be invalid. "
                     + "Attempting default...");
             try {
                conn = DriverManager.getConnection(DEFAULT_URL);
-               System.out.println("Default url loaded successfully!");
-            } catch (SQLException f) {
-                System.err.println(TAG + " - SQLException: " + e.getMessage());   
-                System.err.println("SQLState: " + e.getSQLState());
+               log.info("Default url loaded successfully!");
+            } catch (SQLException f) {                
+                log.error(f);
                 throw new RuntimeException("Could not find database."
                         + " Check properties, local folders and try again.");
             }
         } finally {
             if (conn != null) {
-                System.out.println("Database connected succesfully!");                
+                log.info("Database connected succesfully!");                
             } else {
-                System.err.println(TAG 
-                        + " - Database connection failed!");                
+                log.error("Database connection failed!");                
             }            
         }       
         

@@ -23,6 +23,8 @@ import javax.swing.JComponent;
 import javax.swing.JFormattedTextField;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 
 /**
@@ -31,7 +33,7 @@ import javax.swing.JTextField;
  */
 public class EditPersonDialog extends javax.swing.JDialog {
     
-    private static final String TAG = EditPersonDialog.class.getSimpleName();
+    private static final Logger log = LogManager.getLogger();
     
     private static final int MAX_NAME_SIZE = 60;
     private static final int MAX_COMPANY_SIZE = 40;
@@ -469,7 +471,8 @@ public class EditPersonDialog extends javax.swing.JDialog {
             person.setCirExpDate(LocalDate.parse(cirExpDateField.getText(),
                     FORMATTER));
         } catch (DateTimeParseException e) {
-            System.err.println(TAG + "Could not save date to Person" + e);
+            log.error("Could not save date to Person");
+            log.error(e);           
         }
     }    
     

@@ -13,11 +13,17 @@ import com.nauta.voyager.pob.PobPresenter;
 import com.formdev.flatlaf.FlatLightLaf;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
         
 /**
  * @author rodrigo
  */
 public class VoyagerRun {
+    
+    private static final Logger log = LogManager.getLogger();
+    
     /**
      * @param args the command line arguments
      */
@@ -25,8 +31,8 @@ public class VoyagerRun {
         // Tries to get FlatLightLaf theme
         try {
             UIManager.setLookAndFeel( new FlatLightLaf() );
-        } catch( UnsupportedLookAndFeelException ex ) {
-            System.err.println( "Failed to initialize LaF" );
+        } catch( UnsupportedLookAndFeelException ex ) {            
+            log.warn("Failed to initialize Laf theme");
         }
         
         
@@ -34,20 +40,21 @@ public class VoyagerRun {
         java.awt.EventQueue.invokeLater(new Runnable() {            
             @Override
             public void run() {
+                log.info("Starting Voyager...");
                 VoyagerContext context = new VoyagerContext();
                 DatabaseUtil du = DatabaseUtil.init();                
                 ServiceFactory sf = new ServiceFactory(du.getSessionFactory());
-                                                
+
                 //VoyagerModel model = new VoyagerModel();
                 MainView mainView = new MainView();                
-                                
+
                 MainPresenter presenter = new MainPresenter(mainView);
-                
+
                 PeoplePresenter peoplePresenter = 
                         new PeoplePresenter(mainView.peoplePane, context);
                 PobPresenter pobPresenter = 
                         new PobPresenter(mainView.pobPane, context);
-                
+
                 mainView.setVisible(true);                
                 
             }

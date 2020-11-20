@@ -11,6 +11,8 @@ import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Loads the application context, which holds necessary dependencies in an easy
@@ -19,7 +21,7 @@ import java.util.Properties;
  */
 public class VoyagerContext extends StateNotifier {
     
-    private static final String TAG = VoyagerContext.class.getSimpleName();
+    private static final Logger log = LogManager.getLogger();
     
     private Map<String, Object> contextObjects;
     
@@ -41,23 +43,22 @@ public class VoyagerContext extends StateNotifier {
         try (InputStream in = ClassLoader
                 .getSystemResource("default.properties").openStream()) {
             defaults.load(in);            
-            System.out.println("Default properties loaded successfully!");
+            log.info("Default properties loaded successfully!");
         } catch (IOException f) {
-            System.err.println(TAG 
-                    + " - Error loading properties! "  
-                    + f.getMessage());
+            log.error("Error loading local properties");                      
+            log.error(f);
         }
         
         Properties result = new Properties(defaults);
         try (InputStream in = new FileInputStream("local.properties")) {                
             result.load(in);
-            System.out.println("Local Properties loaded successfully!");            
+            log.info("Local Properties loaded successfully!");            
         } catch (FileNotFoundException e) {
-            System.out.println("Could not find local properties. "
+            log.info("Could not find local properties. "
                     + "Using defaults...");
         } catch (IOException g) {
-            System.err.println(TAG + " - Error loading local properties: " 
-                    + g.getMessage());
+            log.error("Error loading local properties"); 
+            log.error(g);
             throw new RuntimeException("IOException while loading properties."
                     + " Closing application!");
         }        
@@ -69,10 +70,10 @@ public class VoyagerContext extends StateNotifier {
         
         try (InputStream in = new FileInputStream("raft.properties")) {    
             result.load(in);
-            System.out.println("Raft Properties loaded successfully!");        
+            log.info("Raft Properties loaded successfully!");        
         } catch (IOException g) {
-            System.err.println("Error loading local properties: " 
-                    + g.getMessage());            
+            log.error("Error loading local properties"); 
+            log.error(g);            
         }        
         contextObjects.put("raftProperties", result);
     }
@@ -81,23 +82,23 @@ public class VoyagerContext extends StateNotifier {
         Properties raftProperties = (Properties) 
                 contextObjects.get("raftProperties");
         try (OutputStream out = new FileOutputStream("raft.properties")) {
-            System.out.println("Saving raft properties...");
+            log.info("Saving raft properties...");
             raftProperties.store(out, "DO NOT MODIFY");
-            System.out.println("Raft properties saved!");
+            log.info("Raft properties saved!");
         } catch (IOException e) {
-            System.err.println("IO errror saving Raft properties: " 
-                    + e.getMessage());
+            log.error("IO errror saving Raft properties"); 
+            log.error(e);
         }
     }
     
     private void saveProperties() {
         try (OutputStream out = new FileOutputStream("local.properties")) {
-            System.out.println("Saving local properties...");
+            log.info("Saving local properties...");
             localProperties.store(out, "DO NOT MODIFY");
-            System.out.println("Properties saved!");
+            log.info("Properties saved!");
         } catch (IOException e) {
-            System.err.println(TAG + " - IO errror saving properties: " 
-                    + e.getMessage());
+            log.error("IO errror saving properties"); 
+            log.error(e);
         }
     }
     
@@ -118,7 +119,8 @@ public class VoyagerContext extends StateNotifier {
     public String getLocalProperty(String key) {
         String result = localProperties.getProperty(key);
         if (result == null) {
-            throw new PropertyNotFoundException("Could not find properties in context");
+            throw new PropertyNotFoundException(
+                    "Could not find properties in context");
         }
         return result;
     }   
